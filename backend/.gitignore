@@ -1,0 +1,21 @@
+# Environment
+.env
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Runtime guild persistence
+data/guilds.json
+
+# OS
+.DS_Store
+Thumbs.db
