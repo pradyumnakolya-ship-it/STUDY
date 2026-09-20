@@ -77,3 +77,18 @@ async def generate_answer(question: str) -> str:
     model_instance = get_model()
     response = model_instance.generate_content(question)
     return response.text
+
+
+async def generate_answer_stream(question: str):
+    """
+    Stream token-by-token chunks from Gemini.
+
+    Yields:
+        Text chunk strings.
+    """
+    model_instance = get_model()
+    response = model_instance.generate_content(question, stream=True)
+    for chunk in response:
+        if chunk.text:
+            yield chunk.text
+

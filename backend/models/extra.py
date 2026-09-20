@@ -1,4 +1,4 @@
-﻿"""
+"""
 Conversations, Roadmaps, Quizzes, and Social Models
 """
 
@@ -81,3 +81,36 @@ class QuizQuestion(BaseModel):
 class QuizSubmitRequest(BaseModel):
     topic: str
     answers: Dict[str, str] # question_id -> chosen_answer
+
+
+# --- Practice Drills System (Step 14) ---
+class PracticeGenerateRequest(BaseModel):
+    topic: str
+    difficulty: str = "Beginner" # Beginner, Intermediate, Advanced
+    count: int = 5
+
+class PracticeQuestion(BaseModel):
+    id: str
+    question: str
+    options: List[str]
+    correct_answer: str
+    hint: str
+    explanation: str
+    difficulty: str
+    concept_tag: str
+    xp_value: int = 10
+
+class PracticeCheckRequest(BaseModel):
+    question_id: str
+    chosen_answer: str
+    correct_answer: str
+    xp_value: int = 10
+    topic: str = "General"
+
+class PracticeCheckResponse(BaseModel):
+    correct: bool
+    message: str
+    earned_xp: int
+    correct_answer: str
+    explanation: str
+
