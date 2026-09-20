@@ -13,6 +13,7 @@ from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Uploa
 from models.material import (
     MaterialItem,
     MaterialUploadResponse,
+    MaterialListResponse,
     MaterialQueryRequest,
     MaterialQueryResponse,
     MaterialChunk,
@@ -99,13 +100,13 @@ async def upload_material(
     )
 
 
-@router.get("", response_model=List[MaterialItem])
+@router.get("", response_model=MaterialListResponse)
 async def list_user_materials(
     x_user_name: str = Header(default="Harsha A", alias="X-User-Name")
 ):
     """List all study materials uploaded by the current user."""
     user_id = _extract_username(x_user_name)
-    return material_store.list_materials(user_id)
+    return {"materials": material_store.list_materials(user_id)}
 
 
 @router.get("/{material_id}")

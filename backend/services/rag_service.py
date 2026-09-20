@@ -79,7 +79,7 @@ def chunk_text_by_pages(
                         end = space_boundary
 
             chunk_content = clean_text[start:end].strip()
-            if len(chunk_content) > 30:  # avoid empty or microscopic chunks
+            if len(chunk_content) > 30 or (len(chunks) == 0 and len(chunk_content) > 0):  # allow short docs to produce at least one chunk
                 chunk_id = f"chk-{uuid.uuid4().hex[:8]}"
                 chunks.append(
                     MaterialChunk(

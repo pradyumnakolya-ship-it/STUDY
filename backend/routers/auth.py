@@ -1,4 +1,4 @@
-﻿"""
+"""
 Authentication Router
 Endpoints:
 - POST /auth/signup
@@ -15,7 +15,10 @@ from models.user import (
     UserLoginRequest,
     UserProfile,
     AuthTokenResponse,
-    UsernameAvailability
+    UsernameAvailability,
+    ForgotPasswordRequest,
+    ResetPasswordRequest,
+    MessageResponse,
 )
 from services import auth_service
 
@@ -91,10 +94,17 @@ async def signup(req: UserRegisterRequest):
     )
     return AuthTokenResponse(access_token=token, token_type="bearer", user=user_profile)
 
+@router.post("/register", response_model=AuthTokenResponse, status_code=status.HTTP_200_OK)
+async def register(req: UserRegisterRequest):
+    """Register endpoint returning 200 OK."""
+    return await signup(req)
+
 @router.post("/login", response_model=AuthTokenResponse)
 async def login(req: UserLoginRequest):
     """Log in with email or username + password."""
-    target = req.email_or_username.strip()
+    target = (req.email_or_username or req.email or "").strip()
+    if not target:
+        raise HTTPException(status_code=400, detail="Please provide an email or username.")
     user_record = None
     if "@" in target:
         user_record = await auth_service.get_user_by_email(target)
@@ -102,7 +112,7 @@ async def login(req: UserLoginRequest):
         user_record = await auth_service.get_user_by_username(target)
     
     if not user_record or not auth_service.verify_password(req.password, user_record["password_hash"]):
-        raise HTTPException(status_code=400, detail="Incorrect email/username or password.")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email/username or password.")
     
     token = auth_service.create_access_token({"sub": user_record["username"], "email": user_record["email"]})
     user_profile = UserProfile(
@@ -119,3 +129,50 @@ async def login(req: UserLoginRequest):
 async def get_me(current_user: UserProfile = Depends(get_current_user)):
     """Return the authenticated user profile."""
     return current_user
+
+@router.post("/forgot-password", response_model=MessageResponse)
+async def forgot_password(req: ForgotPasswordRequest):
+    """
+    Request a password reset link for the given email address.
+
+    In development mode the reset link/token is returned directly in the response
+    (since no email provider is configured). In production, integrate an email
+    service (e.g. SendGrid) and send the link via email instead.
+    """
+    email = req.email.strip().lower()
+    user_record = await auth_service.get_user_by_email(email)
+
+    # Always return 200 even if email not found — avoids user enumeration
+    if not user_record:
+        return MessageResponse(
+            message="If an account with that email exists, a reset link has been sent.",
+        )
+
+    token = await auth_service.create_reset_token(email)
+
+    # Build the frontend reset URL (port 3000 for development)
+    reset_link = f"http://localhost:3000/auth/reset-password?token={token}"
+
+    return MessageResponse(
+        message=(
+            "Password reset link generated. "
+            "In production, this would be emailed to you. "
+            "For development, use the reset_link in this response."
+        ),
+        reset_link=reset_link,
+    )
+
+
+@router.post("/reset-password", response_model=MessageResponse)
+async def reset_password(req: ResetPasswordRequest):
+    """
+    Reset the user's password using a valid reset token.
+    Tokens expire after 15 minutes and can only be used once.
+    """
+    success = await auth_service.consume_reset_token(req.token, req.new_password)
+    if not success:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid or expired reset token. Please request a new password reset link.",
+        )
+    return MessageResponse(message="Password reset successfully. You can now sign in with your new password.")

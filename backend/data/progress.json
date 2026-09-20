@@ -1,0 +1,53 @@
+{
+  "user-1cc38589f4": {
+    "user_id": "user-1cc38589f4",
+    "username": "testuser_72da87",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-20"
+    ]
+  },
+  "user-c6ec1da7e0": {
+    "user_id": "user-c6ec1da7e0",
+    "username": "testuser_45c3ac",
+    "total_xp": 125,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-c63e0d83",
+        "topic": "Math",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-20T17:51:43.424988+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-20"
+    ]
+  },
+  "user-1648a0c29d": {
+    "user_id": "user-1648a0c29d",
+    "username": "testuser_8233bb",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-b3f02686",
+        "topic": "Geography",
+        "difficulty": "General",
+        "correct": false,
+        "xp": 0,
+        "timestamp": "2026-09-20T17:51:44.686273+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-20"
+    ]
+  }
+}

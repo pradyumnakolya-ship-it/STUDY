@@ -474,7 +474,8 @@ export async function listMaterials(): Promise<MaterialItemData[]> {
     headers: { 'X-User-Name': USER_NAME },
   });
   if (!res.ok) throw new Error('Failed to load study materials');
-  return res.json();
+  const data = await res.json();
+  return Array.isArray(data) ? data : (data.materials || []);
 }
 
 export async function getMaterialDetail(
@@ -567,6 +568,88 @@ export async function getDirectMessages(connectionId: string): Promise<any[]> {
     },
   });
   if (!res.ok) return [];
+  return res.json();
+}
+
+// ── Practice Drills System (Step 14) ──────────────────────────────────
+
+export interface PracticeQuestionData {
+  id: string;
+  question: string;
+  options: string[];
+  correct_answer: string;
+  hint: string;
+  explanation: string;
+  difficulty: string;
+  concept_tag: string;
+  xp_value: number;
+}
+
+export interface PracticeGenerateResult {
+  topic: string;
+  difficulty: string;
+  questions: PracticeQuestionData[];
+}
+
+export interface PracticeCheckResult {
+  correct: boolean;
+  message: string;
+  earned_xp: number;
+  correct_answer: string;
+  explanation: string;
+}
+
+export async function generatePracticeQuestions(
+  topic: string,
+  difficulty: string = 'Beginner',
+  count: number = 5
+): Promise<PracticeGenerateResult> {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('studygpt_token') : null;
+  const res = await fetch(`${API_BASE}/practice/generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'X-User-Name': USER_NAME,
+    },
+    body: JSON.stringify({ topic, difficulty, count }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.detail || 'Failed to generate practice questions');
+  }
+  return res.json();
+}
+
+export async function checkPracticeAnswer(
+  questionId: string,
+  chosenAnswer: string,
+  correctAnswer: string,
+  xpValue: number = 10,
+  topic: string = 'General'
+): Promise<PracticeCheckResult> {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('studygpt_token') : null;
+  const res = await fetch(`${API_BASE}/practice/check`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'X-User-Name': USER_NAME,
+    },
+    body: JSON.stringify({
+      question_id: questionId,
+      chosen_answer: chosenAnswer,
+      correct_answer: correctAnswer,
+      xp_value: xpValue,
+      topic,
+    }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.detail || 'Failed to evaluate practice answer');
+  }
   return res.json();
 }
 

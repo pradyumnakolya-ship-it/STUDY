@@ -347,3 +347,61 @@ async def generate_study_answer(
         "model": resolved_model or "default",
         "provider_display": display_names.get(prov, prov.capitalize()),
     }
+
+
+async def generate_study_answer_stream(
+    question: str,
+    provider: Optional[str] = "gemini",
+    model: Optional[str] = None,
+):
+    """
+    Async generator that streams study tutor answer chunks token by token.
+
+    Gemini supports native streaming via the SDK; other providers yield the full
+    answer as a single chunk (still consistent SSE protocol from the client's perspective).
+
+    Yields:
+        str: Text chunks / tokens.
+    """
+    prov = (provider or "gemini").lower().strip()
+
+    # Normalize aliases
+    if prov in ("chatgpt", "gpt"):
+        prov = "openai"
+    elif prov in ("claude",):
+        prov = "anthropic"
+    elif prov in ("xai",):
+        prov = "grok"
+    elif prov in ("google",):
+        prov = "gemini"
+
+    # Resolve model
+    resolved_model = model
+    if not resolved_model:
+        if prov == "gemini":
+            resolved_model = settings.GEMINI_MODEL
+        elif prov == "openai":
+            resolved_model = settings.OPENAI_MODEL
+        elif prov == "anthropic":
+            resolved_model = settings.ANTHROPIC_MODEL
+        elif prov == "grok":
+            resolved_model = settings.GROK_MODEL
+
+    if prov == "gemini":
+        # Native Gemini streaming via google-generativeai SDK
+        if not settings.is_provider_configured("gemini"):
+            raise ValueError("Google Gemini API key is not configured.")
+        import google.generativeai as genai
+        genai.configure(api_key=settings.GEMINI_API_KEY)
+        model_instance = genai.GenerativeModel(
+            model_name=resolved_model or settings.GEMINI_MODEL,
+            system_instruction=STUDY_TUTOR_PROMPT,
+        )
+        response = model_instance.generate_content(question, stream=True)
+        for chunk in response:
+            if chunk.text:
+                yield chunk.text
+    else:
+        # Non-streaming providers: call normally and yield full answer as one chunk
+        result = await generate_study_answer(question, provider=prov, model=resolved_model)
+        yield result["answer"]

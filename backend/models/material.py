@@ -41,6 +41,11 @@ class MaterialUploadResponse(BaseModel):
     preview_chunks: List[str] = []
 
 
+class MaterialListResponse(BaseModel):
+    """Response containing list of materials."""
+    materials: List[MaterialItem]
+
+
 class Citation(BaseModel):
     """Specific excerpt citation backing an AI answer."""
     chunk_id: str

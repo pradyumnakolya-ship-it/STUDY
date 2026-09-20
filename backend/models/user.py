@@ -1,4 +1,4 @@
-﻿"""
+"""
 User Models for Authentication and Profile
 """
 
@@ -12,7 +12,8 @@ class UserRegisterRequest(BaseModel):
     password: str = Field(..., min_length=6)
 
 class UserLoginRequest(BaseModel):
-    email_or_username: str
+    email_or_username: Optional[str] = None
+    email: Optional[str] = None
     password: str
 
 class UserProfile(BaseModel):
@@ -32,3 +33,14 @@ class UsernameAvailability(BaseModel):
     username: str
     available: bool
     message: str
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str = Field(..., min_length=6)
+
+class MessageResponse(BaseModel):
+    message: str
+    reset_link: str = None

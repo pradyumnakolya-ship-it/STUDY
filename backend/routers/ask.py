@@ -1,10 +1,13 @@
 """
 StudyGPT Backend — Ask Router
 
-Provides the POST /ask endpoint for the AI tutor.
+Provides the POST /ask endpoint and GET /ask/stream SSE endpoint for the AI tutor.
 """
 
-from fastapi import APIRouter, HTTPException
+import json
+from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import StreamingResponse
+from typing import Optional
 from models.ask import AskRequest, AskResponse, AIModelCatalogResponse
 from services import ai_service
 
@@ -58,3 +61,42 @@ async def ask_question(request: AskRequest):
             status_code=500,
             detail=f"Failed to generate answer: {str(e)}",
         )
+
+
+@router.get("/ask/stream")
+async def stream_question(
+    question: str = Query(..., description="The student's question"),
+    provider: Optional[str] = Query("gemini", description="AI provider: gemini, openai, anthropic, grok"),
+    model: Optional[str] = Query(None, description="Specific model ID (optional)"),
+):
+    """
+    Stream an AI tutor answer token-by-token using Server-Sent Events (SSE).
+
+    Gemini uses native SDK streaming; other providers send the full response as
+    one SSE event. The final event is always: data: {"done": true}
+
+    Client should use fetch() + ReadableStream to consume events.
+    """
+    async def sse_generator():
+        try:
+            async for chunk in ai_service.generate_study_answer_stream(
+                question=question,
+                provider=provider,
+                model=model,
+            ):
+                yield f"data: {json.dumps({'token': chunk})}\n\n"
+        except ValueError as e:
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'error': f'AI stream error: {str(e)}'})}\n\n"
+        finally:
+            yield f"data: {json.dumps({'done': True})}\n\n"
+
+    return StreamingResponse(
+        sse_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )

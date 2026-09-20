@@ -35,6 +35,126 @@
       "chunk_count": 1,
       "summary": "Water is H2O. It is a molecule.",
       "created_at": "2026-09-20T16:18:43.132868+00:00"
+    },
+    {
+      "id": "mat-5904642a",
+      "user_id": "Harsha A",
+      "title": "Operating Systems Notes",
+      "filename": "Pasted Notes",
+      "file_type": "notes",
+      "file_size": 338,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Page 1 text: A process is a program in execution. It includes program counter, stack, and data section. Page 2 text: Deadlock occurs when processes are blocked because each holds a...",
+      "created_at": "2026-09-20T17:11:09.005748+00:00"
+    },
+    {
+      "id": "mat-72dd8af6",
+      "user_id": "testuser_1363d0",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-20T17:45:29.572151+00:00"
+    },
+    {
+      "id": "mat-75c27a70",
+      "user_id": "testuser_762242",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-20T17:45:29.584194+00:00"
+    },
+    {
+      "id": "mat-2de5681d",
+      "user_id": "testuser_c800ee",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-20T17:45:30.027227+00:00"
+    },
+    {
+      "id": "mat-39b59d69",
+      "user_id": "testuser_de82f3",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-20T17:51:01.017010+00:00"
+    },
+    {
+      "id": "mat-be8ed1c0",
+      "user_id": "testuser_83f12f",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-20T17:51:01.250894+00:00"
+    },
+    {
+      "id": "mat-7b5f7b3b",
+      "user_id": "testuser_fa1b3a",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-20T17:51:02.032699+00:00"
+    },
+    {
+      "id": "mat-99c4747f",
+      "user_id": "testuser_f078e4",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-20T17:51:45.720435+00:00"
+    },
+    {
+      "id": "mat-673b6d8a",
+      "user_id": "testuser_de2ff0",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-20T17:51:45.977683+00:00"
+    },
+    {
+      "id": "mat-129e13c8",
+      "user_id": "testuser_9b1625",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-20T17:51:56.162456+00:00"
     }
   ],
   "chunks": {
@@ -64,6 +184,116 @@
       {
         "id": "chk-0c139393",
         "material_id": "mat-c17b9dca",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-5904642a": [
+      {
+        "id": "chk-70e1d382",
+        "material_id": "mat-5904642a",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Page 1 text: A process is a program in execution. It includes program counter, stack, and data section. Page 2 text: Deadlock occurs when processes are blocked because each holds a resource and waits for another resource held by another process. Four conditions for deadlock: Mutual Exclusion, Hold and Wait, No Preemption, Circular Wait.",
+        "char_count": 338,
+        "embedding": null
+      }
+    ],
+    "mat-72dd8af6": [
+      {
+        "id": "chk-b54d7526",
+        "material_id": "mat-72dd8af6",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-75c27a70": [
+      {
+        "id": "chk-50c5d829",
+        "material_id": "mat-75c27a70",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-2de5681d": [
+      {
+        "id": "chk-e65f1877",
+        "material_id": "mat-2de5681d",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-39b59d69": [
+      {
+        "id": "chk-7e44459e",
+        "material_id": "mat-39b59d69",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-be8ed1c0": [
+      {
+        "id": "chk-a0bfb068",
+        "material_id": "mat-be8ed1c0",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-7b5f7b3b": [
+      {
+        "id": "chk-e0fe4da5",
+        "material_id": "mat-7b5f7b3b",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-99c4747f": [
+      {
+        "id": "chk-6b9135bb",
+        "material_id": "mat-99c4747f",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-673b6d8a": [
+      {
+        "id": "chk-b8ebd6a5",
+        "material_id": "mat-673b6d8a",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-129e13c8": [
+      {
+        "id": "chk-c145cb39",
+        "material_id": "mat-129e13c8",
         "chunk_index": 0,
         "page_number": 1,
         "text": "Water is H2O. It is a molecule.",

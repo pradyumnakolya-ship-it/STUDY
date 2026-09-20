@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export interface UserProfile {
   id: string;
@@ -15,6 +16,7 @@ interface AuthContextType {
   user: UserProfile | null;
   token: string | null;
   isLoading: boolean;
+  isAuthenticated: boolean;
   login: (emailOrUsername: string, password: string) => Promise<void>;
   signup: (email: string, username: string, password: string) => Promise<void>;
   logout: () => void;
@@ -29,6 +31,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const router = useRouter();
+
+  const isAuthenticated = !!(token && user && user.id !== "user-default");
 
   useEffect(() => {
     const storedToken = localStorage.getItem("studygpt_token");
@@ -39,17 +44,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(JSON.parse(storedUser));
       } catch (e) {
         console.error("Failed to parse stored user", e);
+        setUser(null);
+        setToken(null);
       }
-    } else {
-      const defaultUser: UserProfile = {
-        id: "user-default",
-        email: "harsha@studygpt.ai",
-        username: "Harsha A",
-        created_at: new Date().toISOString(),
-        total_xp: 120
-      };
-      setUser(defaultUser);
     }
+    // No default user — user stays null until they log in or sign up
     setIsLoading(false);
   }, []);
 
@@ -92,6 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     localStorage.removeItem("studygpt_token");
     localStorage.removeItem("studygpt_user");
+    router.push("/auth/login");
   };
 
   const checkUsername = async (username: string) => {
@@ -101,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, signup, logout, checkUsername }}>
+    <AuthContext.Provider value={{ user, token, isLoading, isAuthenticated, login, signup, logout, checkUsername }}>
       {children}
     </AuthContext.Provider>
   );

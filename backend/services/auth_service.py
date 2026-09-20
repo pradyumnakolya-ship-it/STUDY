@@ -10,13 +10,12 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from passlib.context import CryptContext
+import bcrypt
 from jose import JWTError, jwt
 from config import settings
 import database
 from models.user import UserProfile
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 FALLBACK_USERS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "users.json")
 
 def _ensure_fallback_store():
@@ -39,10 +38,16 @@ def _save_fallback_users(users: dict):
         json.dump(users, f, indent=2, default=str)
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    pwd_bytes = password.encode("utf-8")[:72]
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(pwd_bytes, salt).decode("utf-8")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        pwd_bytes = plain_password.encode("utf-8")[:72]
+        return bcrypt.checkpw(pwd_bytes, hashed_password.encode("utf-8"))
+    except Exception:
+        return False
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
@@ -113,6 +118,7 @@ async def create_user(email: str, username: str, password_hash: str) -> dict:
     # Always keep in sync with fallback
     users = _load_fallback_users()
     users[user_id] = record
+    _save_fallback_users(users)
     return record
 
 
@@ -163,3 +169,80 @@ async def search_users(query: str, exclude_username: str = "") -> list:
 
     return results
 
+# ── Password Reset Token Store ──────────────────────────────────────────────
+
+import secrets as _secrets
+from datetime import timedelta
+
+RESET_TOKENS_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'reset_tokens.json')
+RESET_TOKEN_TTL_MINUTES = 15
+
+
+def _load_reset_tokens() -> dict:
+    try:
+        os.makedirs(os.path.dirname(RESET_TOKENS_FILE), exist_ok=True)
+        if not os.path.exists(RESET_TOKENS_FILE):
+            return {}
+        with open(RESET_TOKENS_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _save_reset_tokens(tokens: dict):
+    os.makedirs(os.path.dirname(RESET_TOKENS_FILE), exist_ok=True)
+    with open(RESET_TOKENS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(tokens, f, indent=2, default=str)
+
+
+async def create_reset_token(email: str) -> str:
+    """Generate a time-limited reset token for the given email."""
+    token = _secrets.token_urlsafe(32)
+    expires_at = (datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_TTL_MINUTES)).isoformat()
+    tokens = _load_reset_tokens()
+    tokens[token] = {'email': email.strip().lower(), 'expires_at': expires_at}
+    _save_reset_tokens(tokens)
+    return token
+
+
+async def validate_reset_token(token: str) -> Optional[str]:
+    """Return the email for this token if valid, else None."""
+    tokens = _load_reset_tokens()
+    entry = tokens.get(token)
+    if not entry:
+        return None
+    try:
+        expires_at = datetime.fromisoformat(entry['expires_at'])
+        if datetime.now(timezone.utc) > expires_at:
+            return None
+    except Exception:
+        return None
+    return entry.get('email')
+
+
+async def consume_reset_token(token: str, new_password: str) -> bool:
+    """Validate token, update the user password, and remove the token. Returns True on success."""
+    email = await validate_reset_token(token)
+    if not email:
+        return False
+
+    new_hash = hash_password(new_password)
+
+    # Update in MongoDB if connected
+    import database
+    col = database.get_users_collection()
+    if database.is_connected and col is not None:
+        await col.update_one({'email': email}, {'$set': {'password_hash': new_hash}})
+
+    # Always update in JSON fallback
+    users = _load_fallback_users()
+    for uid, u in users.items():
+        if u.get('email') == email:
+            u['password_hash'] = new_hash
+    _save_fallback_users(users)
+
+    # Remove the used token
+    tokens = _load_reset_tokens()
+    tokens.pop(token, None)
+    _save_reset_tokens(tokens)
+    return True

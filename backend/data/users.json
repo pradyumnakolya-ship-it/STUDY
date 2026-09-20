@@ -8,5 +8,185 @@
     "avatar": null,
     "created_at": "2026-09-14T14:43:09.781525+00:00",
     "total_xp": 0
+  },
+  "user-87a0b1d00c": {
+    "id": "user-87a0b1d00c",
+    "email": "testuser_8386dd@example.com",
+    "username": "testuser_8386dd",
+    "username_lower": "testuser_8386dd",
+    "password_hash": "$2b$12$a.HrevD6U1xrBVEM.oH9cOAj1aV.VnX0Ws2HOhj.FqZc0FRdhzIBi",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:38.100077+00:00",
+    "total_xp": 0
+  },
+  "user-da57a80d91": {
+    "id": "user-da57a80d91",
+    "email": "testuser_979d0c@example.com",
+    "username": "testuser_979d0c",
+    "username_lower": "testuser_979d0c",
+    "password_hash": "$2b$12$3kArQxk4.XcWs7Ejll8Di.6HsVe1E10azgn.n6H5kh6a8tfV6L1hC",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:38.362781+00:00",
+    "total_xp": 0
+  },
+  "user-b69c8a83b7": {
+    "id": "user-b69c8a83b7",
+    "email": "testuser_d73183@example.com",
+    "username": "testuser_d73183",
+    "username_lower": "testuser_d73183",
+    "password_hash": "$2b$12$9o.e4qfbeyaUFmHxsHKXkuf1E/BAQ2bW1cbCKPqOzGEkc8oDb7O0W",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:38.621380+00:00",
+    "total_xp": 0
+  },
+  "user-99b63db9c3": {
+    "id": "user-99b63db9c3",
+    "email": "testuser_efd353@example.com",
+    "username": "testuser_efd353",
+    "username_lower": "testuser_efd353",
+    "password_hash": "$2b$12$ackMP1UJqe0x0/SQTOZKUOvQMyhx8pHdEHCJ1EhZ3SK9K263NV9jC",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:39.106748+00:00",
+    "total_xp": 0
+  },
+  "user-8220471c34": {
+    "id": "user-8220471c34",
+    "email": "testuser_9e22a4@example.com",
+    "username": "testuser_9e22a4",
+    "username_lower": "testuser_9e22a4",
+    "password_hash": "$2b$12$xtD/gcWxkyy54gRTguAr6O/xbIu.qPgI/u3t6nO6FvMklfbr288qm",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:39.642992+00:00",
+    "total_xp": 0
+  },
+  "user-1cc38589f4": {
+    "id": "user-1cc38589f4",
+    "email": "testuser_72da87@example.com",
+    "username": "testuser_72da87",
+    "username_lower": "testuser_72da87",
+    "password_hash": "$2b$12$a.4Z009UcYjDBz9IyFyf/edRzaTyKlo4vSwt6U2MfYTNb2bd4Vs4e",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:39.912499+00:00",
+    "total_xp": 0
+  },
+  "user-78028181fc": {
+    "id": "user-78028181fc",
+    "email": "testuser_937a71@example.com",
+    "username": "testuser_937a71",
+    "username_lower": "testuser_937a71",
+    "password_hash": "$2b$12$0wd8KmjdcShJT97HAGiZouRnEoSBevysSOJ8DwYsulFOEC1F/VJ3O",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:40.254703+00:00",
+    "total_xp": 0
+  },
+  "user-bb34d0c1a7": {
+    "id": "user-bb34d0c1a7",
+    "email": "testuser_f2bf2c@example.com",
+    "username": "testuser_f2bf2c",
+    "username_lower": "testuser_f2bf2c",
+    "password_hash": "$2b$12$TgPVk4jwUuBcMZsr0gQf6u5Us242.vx9KR0ahEeyEFpen/wJXdFQW",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:41.799524+00:00",
+    "total_xp": 0
+  },
+  "user-e2c34b884e": {
+    "id": "user-e2c34b884e",
+    "email": "testuser_ee4004@example.com",
+    "username": "testuser_ee4004",
+    "username_lower": "testuser_ee4004",
+    "password_hash": "$2b$12$wke1ITbOcM93kB.Z0z/c9.b/wNfS0t.RhmOtC8g36jkqoEI8DW51C",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:42.325170+00:00",
+    "total_xp": 0
+  },
+  "user-c6ec1da7e0": {
+    "id": "user-c6ec1da7e0",
+    "email": "testuser_45c3ac@example.com",
+    "username": "testuser_45c3ac",
+    "username_lower": "testuser_45c3ac",
+    "password_hash": "$2b$12$Ry6Z6a0wQAeazGp6LOsoiuocMhnu2InHf.arkcxGDqSqA3j8dXkpO",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:42.855187+00:00",
+    "total_xp": 0
+  },
+  "user-1648a0c29d": {
+    "id": "user-1648a0c29d",
+    "email": "testuser_8233bb@example.com",
+    "username": "testuser_8233bb",
+    "username_lower": "testuser_8233bb",
+    "password_hash": "$2b$12$uSz29F1N/lXQ.VX9r/ZJxOnihelqKZgdkbp28K4.9cAvq40LyadCS",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:43.658900+00:00",
+    "total_xp": 0
+  },
+  "user-e940f11726": {
+    "id": "user-e940f11726",
+    "email": "testuser_fc27ed@example.com",
+    "username": "testuser_fc27ed",
+    "username_lower": "testuser_fc27ed",
+    "password_hash": "$2b$12$2XVi8Kj/z/D.86KVqpM/x.scISVT3ik7rlf6hiiq.9q8pGAWweNyW",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:44.917511+00:00",
+    "total_xp": 0
+  },
+  "user-3c26deea9e": {
+    "id": "user-3c26deea9e",
+    "email": "testuser_5e60f5@example.com",
+    "username": "testuser_5e60f5",
+    "username_lower": "testuser_5e60f5",
+    "password_hash": "$2b$12$P/1Ujl1YtRk4KUjf79/HZOwDrjHmIwKzOlsjqGuf84mJtFfVYdHoa",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:45.176932+00:00",
+    "total_xp": 0
+  },
+  "user-c46fab4a61": {
+    "id": "user-c46fab4a61",
+    "email": "testuser_87d109@example.com",
+    "username": "testuser_87d109",
+    "username_lower": "testuser_87d109",
+    "password_hash": "$2b$12$nXf8sroX3jGgcalfVlsSrOebXKY/T9OonDNG4Lm47S5eZjPU7SuEC",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:45.449057+00:00",
+    "total_xp": 0
+  },
+  "user-344749fd1e": {
+    "id": "user-344749fd1e",
+    "email": "testuser_f078e4@example.com",
+    "username": "testuser_f078e4",
+    "username_lower": "testuser_f078e4",
+    "password_hash": "$2b$12$H75cOiQ2wia4fvGAxp4G5.aaD5w56bBgpl83U2yXrh28D0tDUOaL2",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:45.715150+00:00",
+    "total_xp": 0
+  },
+  "user-9d35b20735": {
+    "id": "user-9d35b20735",
+    "email": "testuser_de2ff0@example.com",
+    "username": "testuser_de2ff0",
+    "username_lower": "testuser_de2ff0",
+    "password_hash": "$2b$12$KlOAN7Y0RDJb0EReZuFjye7hhwB/1ff0bAMtd1wtraa1STFl75C0q",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:45.969224+00:00",
+    "total_xp": 0
+  },
+  "user-07d2c2b588": {
+    "id": "user-07d2c2b588",
+    "email": "testuser_9b1625@example.com",
+    "username": "testuser_9b1625",
+    "username_lower": "testuser_9b1625",
+    "password_hash": "$2b$12$CbOvVmoZBGXAo5UvfC79Z.oZqmHHtZjeQuuncRbP.AI/dSOTtWm9y",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:56.158408+00:00",
+    "total_xp": 0
+  },
+  "user-523e8a8e5e": {
+    "id": "user-523e8a8e5e",
+    "email": "testuser_6621e2@example.com",
+    "username": "testuser_6621e2",
+    "username_lower": "testuser_6621e2",
+    "password_hash": "$2b$12$vS7/blMwyZJq6KlES5zDhO8Z8M1NO./uWX0peArk62cg7HMwdZ/Vq",
+    "avatar": null,
+    "created_at": "2026-09-20T17:51:57.990789+00:00",
+    "total_xp": 0
   }
 }
