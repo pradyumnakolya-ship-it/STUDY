@@ -14,15 +14,22 @@ import {
   Lightbulb,
   Maximize2,
   Minimize2,
-  BookOpen
+  BookOpen,
+  ChevronDown,
+  Check,
+  Brain,
+  Zap,
+  Cpu
 } from "lucide-react";
-import { askQuestion } from "@/lib/api";
+import { askQuestionDetailed, getAvailableAIModels, AIModelInfo } from "@/lib/api";
 
 export interface ChatMessage {
   id: string;
   role: "user" | "ai";
   content: string;
   timestamp: string;
+  provider?: string;
+  model?: string;
 }
 
 interface AITutorPanelProps {
@@ -51,7 +58,26 @@ export default function AITutorPanel({
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [models, setModels] = useState<AIModelInfo[]>([]);
+  const [selectedModel, setSelectedModel] = useState<AIModelInfo | null>(null);
+  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function loadCatalog() {
+      try {
+        const cat = await getAvailableAIModels();
+        setModels(cat.models);
+        const initial = cat.models.find(m => m.id === cat.default_model) 
+          || cat.models.find(m => m.is_configured) 
+          || cat.models[0];
+        setSelectedModel(initial || null);
+      } catch (err) {
+        console.warn("Studio tutor failed to load models catalog:", err);
+      }
+    }
+    loadCatalog();
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -84,13 +110,19 @@ export default function AITutorPanel({
 
     try {
       const promptWithContext = `Context: Currently studying "${currentTopic}".\n\nStudent Question: ${textToSend.trim()}`;
-      const answer = await askQuestion(promptWithContext);
+      const result = await askQuestionDetailed(
+        promptWithContext,
+        selectedModel?.provider,
+        selectedModel?.id
+      );
 
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "ai",
-        content: answer,
+        content: result.answer,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        provider: result.provider,
+        model: result.model,
       };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error: unknown) {
@@ -147,17 +179,52 @@ export default function AITutorPanel({
       }`}
     >
       {/* Panel Header */}
-      <div className="p-3.5 border-b border-[#E4DFD1] flex items-center justify-between bg-[#FFFFFF]">
+      <div className="p-3.5 border-b border-[#E4DFD1] flex items-center justify-between bg-[#FFFFFF] relative z-20">
         <div className="flex items-center gap-2.5">
           <div className="p-1.5 rounded-[8px] bg-[#FBF9F3] border border-[#E4DFD1] text-[#2C2A24]">
             <Bot size={20} />
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 relative">
               <h3 className="font-bold text-sm text-[#2C2A24]">StudyGPT Tutor</h3>
-              <span className="text-[10px] bg-[#FBF9F3] text-[#5F5E5A] font-bold px-1.5 py-0.5 rounded-[6px] border border-[#E4DFD1]">
-                gemini-3.6-flash
-              </span>
+              
+              {/* Interactive model selector */}
+              <div className="relative">
+                <button
+                  onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
+                  className="flex items-center gap-1 text-[10px] bg-[#FBF9F3] hover:bg-[#EDE8DB] text-[#2C2A24] font-bold px-2 py-0.5 rounded-[6px] border border-[#E4DFD1] transition-colors"
+                  title="Switch AI Model"
+                >
+                  <span className="truncate max-w-[90px]">{selectedModel?.name || "Model"}</span>
+                  <ChevronDown size={11} className="text-[#888780]" />
+                </button>
+
+                {modelDropdownOpen && (
+                  <div className="absolute left-0 mt-1 w-64 bg-[#FFFFFF] border border-[#E4DFD1] rounded-lg shadow-lg z-50 p-1.5 animate-in fade-in duration-100">
+                    <p className="text-[10px] font-bold text-[#888780] px-2 py-1 uppercase tracking-wider">Select AI Model</p>
+                    <div className="max-h-56 overflow-y-auto space-y-0.5">
+                      {models.map((m) => (
+                        <button
+                          key={m.id}
+                          onClick={() => {
+                            setSelectedModel(m);
+                            setModelDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-2 py-1.5 rounded text-xs flex items-center justify-between transition-colors ${
+                            selectedModel?.id === m.id ? "bg-[#F7F3EA] font-semibold text-[#D85A30]" : "hover:bg-[#FBF9F3] text-[#2C2A24]"
+                          }`}
+                        >
+                          <div className="truncate">
+                            <span>{m.name}</span>
+                            <span className="block text-[9px] text-[#888780] truncate">{m.provider_display}</span>
+                          </div>
+                          {selectedModel?.id === m.id && <Check size={12} className="text-[#D85A30] shrink-0" />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex items-center gap-1 text-[11px] text-[#5F5E5A]">
               <BookOpen size={11} className="text-[#3C3489]" />

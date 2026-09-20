@@ -7,11 +7,151 @@ async function guildRequest(path: string, init: RequestInit = {}): Promise<Respo
   return fetch(`${API_BASE}${path}`, { ...init, headers });
 }
 
-export async function askQuestion(question: string): Promise<string> {
+export interface AIModelInfo {
+  id: string;
+  provider: string;
+  name: string;
+  provider_display: string;
+  badge: string;
+  description: string;
+  icon: string;
+  env_var: string;
+  is_configured: boolean;
+  is_default: boolean;
+}
+
+export interface AskQuestionResult {
+  answer: string;
+  provider: string;
+  model: string;
+  provider_display: string;
+}
+
+export async function getAvailableAIModels(): Promise<{
+  models: AIModelInfo[];
+  default_provider: string;
+  default_model: string;
+}> {
+  try {
+    const res = await fetch(`${API_BASE}/ask/models`);
+    if (!res.ok) throw new Error('Failed to fetch AI models');
+    return await res.json();
+  } catch (err) {
+    console.warn("Could not fetch remote AI models catalog, using defaults:", err);
+    return {
+      models: [
+        {
+          id: "gemini-1.5-flash",
+          provider: "gemini",
+          name: "Gemini 1.5 Flash",
+          provider_display: "Google Gemini",
+          badge: "Fast & Smart",
+          description: "Lightning fast, great for quick study explanations and instant concept checks.",
+          icon: "Sparkles",
+          env_var: "GEMINI_API_KEY",
+          is_configured: true,
+          is_default: true,
+        },
+        {
+          id: "gemini-1.5-pro",
+          provider: "gemini",
+          name: "Gemini 1.5 Pro",
+          provider_display: "Google Gemini",
+          badge: "Deep Academic",
+          description: "Excellent for long-form study, complex scientific papers, and deep code analysis.",
+          icon: "Sparkles",
+          env_var: "GEMINI_API_KEY",
+          is_configured: true,
+          is_default: false,
+        },
+        {
+          id: "gpt-4o-mini",
+          provider: "openai",
+          name: "ChatGPT (GPT-4o Mini)",
+          provider_display: "OpenAI ChatGPT",
+          badge: "Fast & Balanced",
+          description: "Affordable and intelligent tutor for everyday study questions and homework help.",
+          icon: "Bot",
+          env_var: "OPENAI_API_KEY",
+          is_configured: false,
+          is_default: false,
+        },
+        {
+          id: "gpt-4o",
+          provider: "openai",
+          name: "ChatGPT (GPT-4o)",
+          provider_display: "OpenAI ChatGPT",
+          badge: "Flagship Reasoning",
+          description: "State-of-the-art multimodal tutor with exceptional reasoning across STEM & humanities.",
+          icon: "Bot",
+          env_var: "OPENAI_API_KEY",
+          is_configured: false,
+          is_default: false,
+        },
+        {
+          id: "claude-3-5-haiku-20241022",
+          provider: "anthropic",
+          name: "Claude 3.5 Haiku",
+          provider_display: "Anthropic Claude",
+          badge: "Rapid & Clear",
+          description: "Fast and articulate explanations with exceptional writing clarity.",
+          icon: "Brain",
+          env_var: "ANTHROPIC_API_KEY",
+          is_configured: false,
+          is_default: false,
+        },
+        {
+          id: "claude-3-5-sonnet-20241022",
+          provider: "anthropic",
+          name: "Claude 3.5 Sonnet",
+          provider_display: "Anthropic Claude",
+          badge: "Master Pedagogy",
+          description: "Exceptional nuance, coding instruction, and structured breakdown of hard theories.",
+          icon: "Brain",
+          env_var: "ANTHROPIC_API_KEY",
+          is_configured: false,
+          is_default: false,
+        },
+        {
+          id: "grok-2-latest",
+          provider: "grok",
+          name: "Grok 2",
+          provider_display: "xAI Grok",
+          badge: "Direct & Witty",
+          description: "Straightforward, intuitive, no-fluff answers with fresh problem-solving insights.",
+          icon: "Zap",
+          env_var: "XAI_API_KEY",
+          is_configured: false,
+          is_default: false,
+        },
+        {
+          id: "grok-beta",
+          provider: "grok",
+          name: "Grok Beta",
+          provider_display: "xAI Grok",
+          badge: "Experimental",
+          description: "Cutting-edge Grok model tuned for rapid coding and technical reasoning.",
+          icon: "Zap",
+          env_var: "XAI_API_KEY",
+          is_configured: false,
+          is_default: false,
+        },
+      ],
+      default_provider: "gemini",
+      default_model: "gemini-1.5-flash",
+    };
+  }
+}
+
+export async function askQuestionDetailed(
+  question: string,
+  provider?: string,
+  model?: string
+): Promise<AskQuestionResult> {
   const res = await fetch(`${API_BASE}/ask`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ question }),
+    body: JSON.stringify({ question, provider, model }),
   });
   if (!res.ok) {
     let errorMsg = 'Failed to get answer';
@@ -23,7 +163,15 @@ export async function askQuestion(question: string): Promise<string> {
     }
     throw new Error(errorMsg);
   }
-  const data = await res.json();
+  return await res.json();
+}
+
+export async function askQuestion(
+  question: string,
+  provider?: string,
+  model?: string
+): Promise<string> {
+  const data = await askQuestionDetailed(question, provider, model);
   return data.answer;
 }
 
