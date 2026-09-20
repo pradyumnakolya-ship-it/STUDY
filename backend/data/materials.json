@@ -1,4 +1,75 @@
 {
-  "materials": [],
-  "chunks": {}
+  "materials": [
+    {
+      "id": "mat-cf71c967",
+      "user_id": "testuser_17e025",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-20T16:18:43.114270+00:00"
+    },
+    {
+      "id": "mat-a4040aa6",
+      "user_id": "testuser_4cb11d",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-20T16:18:43.122633+00:00"
+    },
+    {
+      "id": "mat-c17b9dca",
+      "user_id": "testuser_26fbcd",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-20T16:18:43.132868+00:00"
+    }
+  ],
+  "chunks": {
+    "mat-cf71c967": [
+      {
+        "id": "chk-26067ca3",
+        "material_id": "mat-cf71c967",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-a4040aa6": [
+      {
+        "id": "chk-06e63b16",
+        "material_id": "mat-a4040aa6",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-c17b9dca": [
+      {
+        "id": "chk-0c139393",
+        "material_id": "mat-c17b9dca",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ]
+  }
 }

@@ -10,3 +10,8 @@ motor
 passlib[bcrypt]
 python-jose[cryptography]
 email-validator
+# Test dependencies
+pytest
+pytest-asyncio
+httpx
+anyio[trio]
