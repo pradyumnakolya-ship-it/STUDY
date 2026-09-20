@@ -15,7 +15,9 @@ import {
   ArrowRight, 
   Award, 
   LogOut,
-  Compass
+  Compass,
+  Zap,
+  Target
 } from "lucide-react";
 
 export default function HomePage() {
@@ -61,6 +63,14 @@ export default function HomePage() {
       icon: HelpCircle,
       badge: "Adaptive",
       accent: "bg-[#FAEAF0] text-[#72243E] border-[#F4C0D1]"
+    },
+    {
+      title: "Practice Drills",
+      description: "One-question-at-a-time AI drills with instant feedback, hints, concept breakdowns, and XP rewards.",
+      href: "/practice",
+      icon: Target,
+      badge: "Drills",
+      accent: "bg-[#EEEDFE] text-[#3C3489] border-[#DDD9FC]"
     },
     {
       title: "Social Connect & DMs",

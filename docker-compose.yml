@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+  # ──────────────────────────────────────────────
+  # MongoDB Database
+  # ──────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: studygpt_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: studygpt
+      MONGO_INITDB_ROOT_PASSWORD: studygpt_secret
+      MONGO_INITDB_DATABASE: studygpt
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - studygpt_net
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # ──────────────────────────────────────────────
+  # FastAPI Backend
+  # ──────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: studygpt_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - MONGODB_URL=mongodb://studygpt:studygpt_secret@mongo:27017/studygpt?authSource=admin
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - backend_data:/app/data
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - studygpt_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # ──────────────────────────────────────────────
+  # Next.js Frontend
+  # ──────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: studygpt_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE=http://localhost:8000
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    networks:
+      - studygpt_net
+
+networks:
+  studygpt_net:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  backend_data:

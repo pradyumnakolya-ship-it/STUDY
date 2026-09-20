@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { 
@@ -9,66 +10,42 @@ import {
   MessageSquare, 
   Menu, 
   Bot, 
+  Trash2, 
+  ArrowLeft, 
   Sparkles, 
-  Brain, 
-  Zap, 
-  ChevronDown, 
-  Check, 
-  Key, 
-  X, 
-  ShieldAlert,
-  Cpu
+  Loader2,
+  X 
 } from "lucide-react";
-import { askQuestionDetailed, getAvailableAIModels, AIModelInfo } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
+import { askQuestion } from "@/lib/api";
 
-type Message = {
-  role: "user" | "ai";
+interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
   content: string;
-  provider?: string;
-  model?: string;
-  providerDisplay?: string;
-};
+  timestamp?: string;
+}
+
+interface ConversationItem {
+  id: string;
+  user_id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+  messages: ChatMessage[];
+}
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { user } = useAuth();
+  const [conversations, setConversations] = useState<ConversationItem[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [models, setModels] = useState<AIModelInfo[]>([]);
-  const [selectedModel, setSelectedModel] = useState<AIModelInfo | null>(null);
-  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
-  const [configModalModel, setConfigModalModel] = useState<AIModelInfo | null>(null);
+  const [loadingConversations, setLoadingConversations] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Load available models from backend on mount
-  useEffect(() => {
-    async function loadModels() {
-      try {
-        const catalog = await getAvailableAIModels();
-        setModels(catalog.models);
-        // Default to configured model or default
-        const defaultChoice = catalog.models.find(m => m.id === catalog.default_model) 
-          || catalog.models.find(m => m.is_configured) 
-          || catalog.models[0];
-        setSelectedModel(defaultChoice || null);
-      } catch (err) {
-        console.error("Failed to load AI models:", err);
-      }
-    }
-    loadModels();
-  }, []);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setModelDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -76,54 +53,211 @@ export default function ChatPage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, loading]);
+  }, [messages, isStreaming]);
 
-  const handleSelectModel = (m: AIModelInfo) => {
-    setSelectedModel(m);
-    setModelDropdownOpen(false);
-    if (!m.is_configured) {
-      setConfigModalModel(m);
+  // Load user conversations on mount
+  useEffect(() => {
+    loadUserConversations();
+  }, [user]);
+
+  const getAuthHeaders = () => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("studygpt_token") : null;
+    return {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    };
+  };
+
+  const loadUserConversations = async () => {
+    setLoadingConversations(true);
+    try {
+      const res = await fetch("http://localhost:8000/chat/conversations", {
+        headers: getAuthHeaders()
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setConversations(data);
+        if (data.length > 0 && !activeConversationId) {
+          selectConversation(data[0]);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load conversations", err);
+    } finally {
+      setLoadingConversations(false);
+    }
+  };
+
+  const selectConversation = (conv: ConversationItem) => {
+    setActiveConversationId(conv.id);
+    setMessages(conv.messages || []);
+    setSidebarOpen(false);
+  };
+
+  const handleNewChat = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/chat/conversations", {
+        method: "POST",
+        headers: getAuthHeaders()
+      });
+      if (res.ok) {
+        const newConv = await res.json();
+        setConversations(prev => [newConv, ...prev]);
+        setActiveConversationId(newConv.id);
+        setMessages([]);
+      }
+    } catch (err) {
+      // Fallback offline session
+      const mockId = `conv-${Date.now()}`;
+      setActiveConversationId(mockId);
+      setMessages([]);
+    }
+    setSidebarOpen(false);
+  };
+
+  const handleDeleteConversation = async (cid: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await fetch(`http://localhost:8000/chat/conversations/${cid}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+      });
+      setConversations(prev => prev.filter(c => c.id !== cid));
+      if (activeConversationId === cid) {
+        const remaining = conversations.filter(c => c.id !== cid);
+        if (remaining.length > 0) {
+          selectConversation(remaining[0]);
+        } else {
+          setActiveConversationId(null);
+          setMessages([]);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to delete conversation", err);
     }
   };
 
   const handleSend = async () => {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || isStreaming) return;
 
-    const userMsg = input.trim();
+    const userMsgText = input.trim();
     setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: userMsg }]);
-    setLoading(true);
+
+    const userMsg: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: "user",
+      content: userMsgText,
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    };
+
+    const initialAiMsg: ChatMessage = {
+      id: `ai-${Date.now()}`,
+      role: "assistant",
+      content: "",
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    };
+
+    setMessages(prev => [...prev, userMsg, initialAiMsg]);
+    setIsStreaming(true);
+
+    let cid = activeConversationId;
+    if (!cid) {
+      cid = `conv-${Date.now()}`;
+      setActiveConversationId(cid);
+    }
 
     try {
-      const result = await askQuestionDetailed(
-        userMsg,
-        selectedModel?.provider,
-        selectedModel?.id
-      );
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "ai",
-          content: result.answer,
-          provider: result.provider,
-          model: result.model,
-          providerDisplay: result.provider_display,
-        },
-      ]);
-    } catch (error: unknown) {
-      const msg = error instanceof Error ? error.message : "Sorry, I encountered an error. Please ensure the backend is running.";
-      setMessages((prev) => [
-        ...prev,
-        { 
-          role: "ai", 
-          content: msg,
-          provider: selectedModel?.provider || "system",
-          model: selectedModel?.id || "error",
-          providerDisplay: selectedModel?.provider_display || "System Notice",
-        },
-      ]);
+      const response = await fetch(`http://localhost:8000/chat/conversations/${cid}/messages/stream`, {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ message: userMsgText })
+      });
+
+      if (!response.ok || !response.body) {
+        throw new Error("Stream not available");
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+      let accumulatedText = "";
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        if (value) {
+          const chunkStr = decoder.decode(value, { stream: true });
+          const lines = chunkStr.split("\n");
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                if (data.token) {
+                  accumulatedText += data.token;
+                  setMessages(prev => {
+                    const updated = [...prev];
+                    const lastIdx = updated.length - 1;
+                    if (lastIdx >= 0 && updated[lastIdx].role === "assistant") {
+                      updated[lastIdx] = {
+                        ...updated[lastIdx],
+                        content: accumulatedText
+                      };
+                    }
+                    return updated;
+                  });
+                }
+              } catch {
+                // Ignore parse errors on partial chunks
+              }
+            }
+          }
+        }
+      }
+
+      // Update conversations list title if new
+      setConversations(prev => {
+        const found = prev.find(c => c.id === cid);
+        if (found) {
+          return prev.map(c => c.id === cid ? { ...c, updated_at: new Date().toISOString() } : c);
+        } else {
+          return [{
+            id: cid!,
+            user_id: user?.id || "default",
+            title: userMsgText.slice(0, 32),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            messages: [...messages, userMsg, { ...initialAiMsg, content: accumulatedText }]
+          }, ...prev];
+        }
+      });
+
+    } catch (error) {
+      // Fallback to standard askQuestion
+      try {
+        const answer = await askQuestion(userMsgText);
+        setMessages(prev => {
+          const updated = [...prev];
+          const lastIdx = updated.length - 1;
+          if (lastIdx >= 0) {
+            updated[lastIdx] = { ...updated[lastIdx], content: answer };
+          }
+          return updated;
+        });
+      } catch (err: any) {
+        setMessages(prev => {
+          const updated = [...prev];
+          const lastIdx = updated.length - 1;
+          if (lastIdx >= 0) {
+            updated[lastIdx] = {
+              ...updated[lastIdx],
+              content: `⚠️ Failed to get answer: ${err.message || "Please check backend server connection"}.`
+            };
+          }
+          return updated;
+        });
+      }
     } finally {
-      setLoading(false);
+      setIsStreaming(false);
     }
   };
 
@@ -134,387 +268,266 @@ export default function ChatPage() {
     }
   };
 
-  // Helper to render icon per provider
-  const renderProviderIcon = (provider?: string, size = 16) => {
-    switch (provider?.toLowerCase()) {
-      case "gemini":
-        return <Sparkles size={size} className="text-amber-500" />;
-      case "openai":
-        return <Bot size={size} className="text-emerald-600" />;
-      case "anthropic":
-        return <Brain size={size} className="text-purple-600" />;
-      case "grok":
-        return <Zap size={size} className="text-rose-500" />;
-      default:
-        return <Cpu size={size} className="text-[#3C3489]" />;
-    }
-  };
+  // Group conversations by time
+  const now = new Date();
+  const todayConvs = conversations.filter(c => {
+    const d = new Date(c.updated_at || c.created_at);
+    return now.toDateString() === d.toDateString();
+  });
+  const pastConvs = conversations.filter(c => {
+    const d = new Date(c.updated_at || c.created_at);
+    return now.toDateString() !== d.toDateString();
+  });
 
   return (
-    <div className="flex h-screen w-full bg-[#F7F3EA] overflow-hidden text-[#2C2A24]">
-      {/* Sidebar - Desktop & Mobile overlay */}
+    <div className="flex h-screen w-full bg-[var(--background)] overflow-hidden text-[var(--text-primary)]">
+      
+      {/* Sidebar (Desktop & Mobile Overlay) */}
       <div 
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#FBF9F3] border-r border-[#E4DFD1] transform transition-transform duration-300 md:relative md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-[var(--border)] transform transition-transform duration-300 md:relative md:translate-x-0 flex flex-col shadow-sm ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="p-4 h-full flex flex-col">
+        <div className="p-4 border-b border-[var(--border)] flex items-center justify-between">
+          <Link href="/home" className="flex items-center gap-2 text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Hub</span>
+          </Link>
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden p-1 text-[var(--text-secondary)]">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="p-4 flex-1 flex flex-col overflow-hidden">
           <button 
-            onClick={() => setMessages([])}
-            className="flex items-center gap-2 bg-[#D85A30] hover:bg-[#D85A30]/90 text-white w-full py-2.5 px-4 rounded-[8px] font-bold text-sm transition-colors mb-6 shadow-sm"
+            onClick={handleNewChat}
+            className="flex items-center justify-center gap-2 bg-[var(--cta-primary)] hover:bg-[var(--cta-primary-hover)] text-white w-full py-2.5 px-4 rounded-xl font-bold text-xs transition-all shadow-xs cursor-pointer mb-5"
           >
-            <Plus size={18} />
-            New Chat
+            <Plus className="w-4 h-4" />
+            <span>New Chat Session</span>
           </button>
           
-          <div className="flex-1 overflow-y-auto space-y-6">
-            <div>
-              <h3 className="text-xs font-bold text-[#888780] uppercase tracking-wider mb-3 px-2">Recent Sessions</h3>
-              <div className="space-y-1">
-                <button className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-[8px] bg-[#FFFFFF] border border-[#E4DFD1] text-[#2C2A24] font-medium card-elevation">
-                  <MessageSquare size={16} className="text-[#3C3489]" />
-                  <span className="truncate">Active Study Tutor</span>
-                </button>
+          <div className="flex-1 overflow-y-auto space-y-5 pr-1">
+            {loadingConversations ? (
+              <div className="py-6 text-center text-xs text-[var(--text-secondary)] flex flex-col items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin text-[var(--cta-primary)]" />
+                <span>Loading sessions...</span>
               </div>
-            </div>
-
-            {/* Provider quick status in sidebar */}
-            <div className="pt-4 border-t border-[#E4DFD1]">
-              <h3 className="text-xs font-bold text-[#888780] uppercase tracking-wider mb-2.5 px-2">Supported AI</h3>
-              <div className="space-y-1.5 px-2 text-xs">
-                {[
-                  { name: "Google Gemini", prov: "gemini" },
-                  { name: "ChatGPT (OpenAI)", prov: "openai" },
-                  { name: "Claude (Anthropic)", prov: "anthropic" },
-                  { name: "Grok (xAI)", prov: "grok" }
-                ].map((item) => {
-                  const isReady = models.some(m => m.provider === item.prov && m.is_configured);
-                  return (
-                    <div key={item.prov} className="flex items-center justify-between py-1 text-[#5F5E5A]">
-                      <span className="flex items-center gap-1.5">
-                        {renderProviderIcon(item.prov, 14)}
-                        {item.name}
-                      </span>
-                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
-                        isReady 
-                          ? "bg-emerald-100 text-emerald-700 border border-emerald-300" 
-                          : "bg-stone-200 text-stone-600 border border-stone-300"
-                      }`}>
-                        {isReady ? "Active" : "Key Needed"}
-                      </span>
+            ) : conversations.length === 0 ? (
+              <div className="py-6 text-center text-xs text-[var(--text-secondary)]">
+                No past sessions yet. Ask a question to start!
+              </div>
+            ) : (
+              <>
+                {todayConvs.length > 0 && (
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2 px-2">Today</h3>
+                    <div className="space-y-1">
+                      {todayConvs.map(conv => (
+                        <div
+                          key={conv.id}
+                          onClick={() => selectConversation(conv)}
+                          className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer group ${
+                            activeConversationId === conv.id 
+                              ? "bg-[var(--surface-nested)] border border-[var(--cta-primary)] text-[var(--text-primary)]" 
+                              : "hover:bg-[var(--surface-nested)] text-[var(--text-secondary)]"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <MessageSquare className="w-3.5 h-3.5 shrink-0 text-[var(--cta-primary)]" />
+                            <span className="truncate">{conv.title || "Study Session"}</span>
+                          </div>
+                          <button
+                            title="Delete Chat"
+                            onClick={(e) => handleDeleteConversation(conv.id, e)}
+                            className="p-1 text-[var(--text-secondary)] hover:text-[#72243E] opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                  );
-                })}
-              </div>
-            </div>
+                  </div>
+                )}
+
+                {pastConvs.length > 0 && (
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2 px-2">Previous 7 Days</h3>
+                    <div className="space-y-1">
+                      {pastConvs.map(conv => (
+                        <div
+                          key={conv.id}
+                          onClick={() => selectConversation(conv)}
+                          className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer group ${
+                            activeConversationId === conv.id 
+                              ? "bg-[var(--surface-nested)] border border-[var(--cta-primary)] text-[var(--text-primary)]" 
+                              : "hover:bg-[var(--surface-nested)] text-[var(--text-secondary)]"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <MessageSquare className="w-3.5 h-3.5 shrink-0 text-[var(--text-tertiary)]" />
+                            <span className="truncate">{conv.title || "Study Session"}</span>
+                          </div>
+                          <button
+                            title="Delete Chat"
+                            onClick={(e) => handleDeleteConversation(conv.id, e)}
+                            className="p-1 text-[var(--text-secondary)] hover:text-[#72243E] opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Mobile Sidebar Overlay */}
+      {/* Mobile Backdrop */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs" 
+          className="fixed inset-0 bg-black/30 z-40 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-[#F7F3EA]">
-        {/* Header with Multi-AI Model Switcher */}
-        <header className="h-16 border-b border-[#E4DFD1] bg-[#FFFFFF] flex items-center justify-between px-4 gap-4 sticky top-0 z-30 shadow-xs">
+      {/* Main Chat Interface */}
+      <div className="flex-1 flex flex-col h-full bg-[var(--surface-nested)]">
+        {/* Header */}
+        <header className="h-16 border-b border-[var(--border)] bg-white px-6 flex items-center justify-between shadow-xs">
           <div className="flex items-center gap-3">
             <button 
-              className="md:hidden text-[#5F5E5A] hover:text-[#2C2A24]"
               onClick={() => setSidebarOpen(true)}
+              className="md:hidden p-1.5 rounded-lg border border-[var(--border)] text-[var(--text-secondary)]"
             >
-              <Menu size={22} />
+              <Menu className="w-5 h-5" />
             </button>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-[#2C2A24] text-base hidden sm:inline">StudyGPT</span>
-              <span className="text-[#888780] hidden sm:inline">•</span>
-              <span className="text-sm font-semibold text-[#5F5E5A]">AI Tutor</span>
+            <div className="w-8 h-8 rounded-xl bg-[#FAECE7] text-[var(--cta-primary)] flex items-center justify-center font-bold text-sm">
+              <Bot className="w-4 h-4" />
+            </div>
+            <div>
+              <h1 className="font-bold text-xs text-[var(--text-primary)]">AI Study Tutor</h1>
+              <p className="text-[10px] text-[var(--text-secondary)]">Token-by-Token Streaming • Beginner-Friendly Explanations</p>
             </div>
           </div>
 
-          {/* Model Selector Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#E4DFD1] bg-[#FBF9F3] hover:bg-[#FFFFFF] text-xs font-semibold text-[#2C2A24] transition-all shadow-xs"
-            >
-              {renderProviderIcon(selectedModel?.provider, 15)}
-              <span className="font-bold">{selectedModel?.name || "Select AI Model"}</span>
-              {selectedModel?.is_configured ? (
-                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" title="Ready to chat" />
-              ) : (
-                <span className="text-[10px] bg-amber-100 text-amber-800 px-1 rounded font-medium">Key Needed</span>
-              )}
-              <ChevronDown size={14} className="text-[#888780]" />
-            </button>
-
-            {/* Dropdown Menu */}
-            {modelDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-80 bg-[#FFFFFF] border border-[#E4DFD1] rounded-xl shadow-xl z-50 p-2 text-left animate-in fade-in slide-in-from-top-1 duration-150">
-                <div className="px-3 py-2 border-b border-[#E4DFD1] mb-1">
-                  <p className="text-xs font-bold text-[#2C2A24]">Switch AI Study Engine</p>
-                  <p className="text-[11px] text-[#888780]">Select which frontier model powers your study tutor</p>
-                </div>
-                
-                <div className="max-h-80 overflow-y-auto space-y-1">
-                  {models.map((m) => {
-                    const isSelected = selectedModel?.id === m.id;
-                    return (
-                      <button
-                        key={m.id}
-                        onClick={() => handleSelectModel(m)}
-                        className={`w-full text-left p-2.5 rounded-lg transition-colors flex items-start justify-between gap-2 ${
-                          isSelected ? "bg-[#F7F3EA] border border-[#D85A30]/40" : "hover:bg-[#FBF9F3]"
-                        }`}
-                      >
-                        <div className="flex items-start gap-2.5 min-w-0">
-                          <div className="mt-0.5">{renderProviderIcon(m.provider, 16)}</div>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="font-semibold text-xs text-[#2C2A24] truncate">{m.name}</span>
-                              <span className="text-[10px] px-1.5 py-0.2 rounded bg-stone-100 text-stone-600 font-mono">
-                                {m.badge}
-                              </span>
-                            </div>
-                            <p className="text-[11px] text-[#888780] line-clamp-1 mt-0.5">{m.description}</p>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end gap-1 shrink-0">
-                          {m.is_configured ? (
-                            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-                              Ready
-                            </span>
-                          ) : (
-                            <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
-                              Add Key
-                            </span>
-                          )}
-                          {isSelected && <Check size={14} className="text-[#D85A30]" />}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-2 pt-2 border-t border-[#E4DFD1] px-2 text-[11px] text-[#888780] flex items-center justify-between">
-                  <span>Supports Gemini, ChatGPT, Claude & Grok</span>
-                  <a 
-                    href="#config" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setModelDropdownOpen(false);
-                      setConfigModalModel(selectedModel);
-                    }}
-                    className="text-[#D85A30] font-semibold hover:underline flex items-center gap-1"
-                  >
-                    <Key size={11} /> API Keys
-                  </a>
-                </div>
-              </div>
-            )}
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#E1F5EE] text-[#085041] border border-[#B7EBD8] flex items-center gap-1">
+              <Sparkles className="w-3 h-3" />
+              <span>Active Tutor</span>
+            </span>
           </div>
-
-          <a
-            href="/home"
-            className="px-3 py-1.5 rounded-lg border border-[#E4DFD1] text-xs font-semibold text-[#5F5E5A] hover:text-[#2C2A24] hover:bg-[#FBF9F3] transition-colors"
-          >
-            ← Home
-          </a>
         </header>
 
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
+        {/* Message Feed */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 max-w-4xl w-full mx-auto">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center max-w-2xl mx-auto">
-              <div className="w-16 h-16 bg-[#FFFFFF] border border-[#E4DFD1] rounded-[16px] flex items-center justify-center mb-6 card-elevation shadow-sm">
-                {renderProviderIcon(selectedModel?.provider, 32)}
+            <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto">
+              <div className="w-12 h-12 rounded-2xl bg-[#FAECE7] text-[var(--cta-primary)] flex items-center justify-center mb-4">
+                <Bot className="w-6 h-6" />
               </div>
-              <h2 className="text-3xl font-bold mb-3 text-[#2C2A24]">
-                Learn with {selectedModel?.name || "StudyGPT"}
+              <h2 className="text-base font-bold text-[var(--text-primary)] mb-1">
+                How can I help you study today?
               </h2>
-              <p className="text-sm text-[#888780] max-w-md mb-8">
-                Your personal AI study tutor. Switch anytime between Gemini, ChatGPT, Claude, and Grok to see different explanations and insights.
+              <p className="text-xs text-[var(--text-secondary)] mb-6">
+                Ask me to break down difficult concepts, explain code with real-world analogies, or test your knowledge.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full text-left">
                 {[
-                  "Explain recursion with a real-life analogy",
-                  "What is Big O notation in simple terms?",
-                  "How do neural networks learn?",
-                  "Teach me dynamic programming step by step",
-                ].map((suggestion, i) => (
-                  <button 
+                  "Explain dynamic programming for beginners",
+                  "How does virtual memory work in OS?",
+                  "Give me 2 practice questions on graph BFS",
+                  "Why do we need normalization in databases?"
+                ].map((prompt, i) => (
+                  <button
                     key={i}
                     onClick={() => {
-                      setInput(suggestion);
+                      setInput(prompt);
                     }}
-                    className="p-4 bg-[#FFFFFF] hover:bg-[#FBF9F3] rounded-[12px] text-left text-sm transition-all border border-[#E4DFD1] text-[#2C2A24] card-elevation hover:border-[#D85A30]/50"
+                    className="p-3 rounded-xl border border-[var(--border)] bg-white hover:border-[var(--cta-primary)] hover:text-[var(--cta-primary)] text-xs transition-all text-left shadow-xs cursor-pointer"
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[11px] font-semibold text-[#D85A30]">Topic {i + 1}</span>
-                      <ChevronDown size={13} className="-rotate-90 text-[#888780]" />
-                    </div>
-                    {suggestion}
+                    {prompt}
                   </button>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="max-w-3xl mx-auto space-y-6">
-              {messages.map((msg, i) => (
-                <div key={i} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
-                  {/* Model badge header for AI messages */}
-                  {msg.role === "ai" && (
-                    <div className="flex items-center gap-1.5 mb-1.5 px-1 text-[11px] font-semibold text-[#888780]">
-                      {renderProviderIcon(msg.provider, 13)}
-                      <span>{msg.providerDisplay || "AI Tutor"}</span>
-                      {msg.model && (
-                        <span className="font-mono text-[10px] bg-[#EDE8DB] text-[#5F5E5A] px-1.5 py-0.2 rounded">
-                          {msg.model}
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  <div className={`flex gap-3 max-w-[90%] ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                    {msg.role === "ai" && (
-                      <div className="w-8 h-8 rounded-[8px] bg-[#FFFFFF] border border-[#E4DFD1] flex items-center justify-center flex-shrink-0 mt-1 card-elevation">
-                        {renderProviderIcon(msg.provider, 18)}
+            messages.map((m) => {
+              const isUser = m.role === "user";
+              return (
+                <div 
+                  key={m.id}
+                  className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
+                >
+                  <div 
+                    className={`max-w-[85%] rounded-2xl p-4 text-xs leading-relaxed shadow-xs ${
+                      isUser 
+                        ? "bg-[var(--cta-primary)] text-white font-medium rounded-tr-xs" 
+                        : "bg-white border border-[var(--border)] text-[var(--text-primary)] rounded-tl-xs"
+                    }`}
+                  >
+                    {!isUser && !m.content ? (
+                      <div className="flex items-center gap-1.5 py-1 text-[var(--text-secondary)]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--cta-primary)] animate-ping"></span>
+                        <span className="italic">Thinking & streaming response...</span>
                       </div>
+                    ) : (
+                      <ReactMarkdown 
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          h1: ({node, ...props}) => <h1 className="text-sm font-bold mt-2 mb-1" {...props} />,
+                          h2: ({node, ...props}) => <h2 className="text-xs font-bold mt-2 mb-1" {...props} />,
+                          h3: ({node, ...props}) => <h3 className="text-xs font-semibold mt-1 mb-0.5" {...props} />,
+                          p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                          ul: ({node, ...props}) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
+                          ol: ({node, ...props}) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
+                          code: ({node, ...props}) => (
+                            <code className="bg-[var(--surface-nested)] text-[var(--cta-primary)] px-1.5 py-0.5 rounded text-[11px] font-mono" {...props} />
+                          )
+                        }}
+                      >
+                        {m.content}
+                      </ReactMarkdown>
                     )}
-                    <div 
-                      className={`px-4 py-3 rounded-[12px] card-elevation ${
-                        msg.role === "user" 
-                          ? "bg-[#D85A30] text-white rounded-br-none font-medium" 
-                          : "bg-[#FFFFFF] text-[#2C2A24] border border-[#EDE8DB] rounded-bl-none prose prose-xs max-w-none prose-p:leading-relaxed prose-pre:bg-[#FBF9F3] prose-pre:border prose-pre:border-[#EDE8DB]"
-                      }`}
-                    >
-                      {msg.role === "ai" ? (
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {msg.content}
-                        </ReactMarkdown>
-                      ) : (
-                        msg.content
-                      )}
-                    </div>
                   </div>
+                  {m.timestamp && (
+                    <span className="text-[9px] text-[var(--text-tertiary)] mt-1 px-1">{m.timestamp}</span>
+                  )}
                 </div>
-              ))}
-              
-              {loading && (
-                <div className="flex flex-col items-start">
-                  <div className="flex items-center gap-1.5 mb-1.5 px-1 text-[11px] font-semibold text-[#888780]">
-                    {renderProviderIcon(selectedModel?.provider, 13)}
-                    <span>{selectedModel?.name || "AI Tutor"} is thinking...</span>
-                  </div>
-                  <div className="flex gap-3 justify-start">
-                    <div className="w-8 h-8 rounded-[8px] bg-[#FFFFFF] border border-[#E4DFD1] flex items-center justify-center flex-shrink-0 mt-1 card-elevation">
-                      {renderProviderIcon(selectedModel?.provider, 18)}
-                    </div>
-                    <div className="px-5 py-4 rounded-[12px] bg-[#FFFFFF] border border-[#EDE8DB] rounded-bl-none flex items-center gap-1.5 card-elevation">
-                      <div className="w-2 h-2 bg-[#D85A30] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                      <div className="w-2 h-2 bg-[#D85A30] rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                      <div className="w-2 h-2 bg-[#D85A30] rounded-full animate-bounce"></div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
+              );
+            })
           )}
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Input Bar */}
-        <div className="p-4 bg-[#F7F3EA] border-t border-[#E4DFD1]">
-          <div className="max-w-3xl mx-auto relative flex items-end">
-            <textarea
+        <div className="p-4 border-t border-[var(--border)] bg-white">
+          <div className="max-w-4xl mx-auto flex gap-2">
+            <input
+              type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={`Ask ${selectedModel?.name || "StudyGPT"} anything...`}
-              className="w-full bg-[#FFFFFF] border border-[#E4DFD1] rounded-[8px] pl-4 pr-12 py-3.5 text-[#2C2A24] placeholder:text-[#888780] focus:outline-none focus:ring-1 focus:ring-[#D85A30] resize-none max-h-48 overflow-y-auto text-sm shadow-xs"
-              rows={1}
-              style={{ minHeight: "52px" }}
+              placeholder="Ask a question or request an explanation..."
+              className="flex-1 px-4 py-2.5 text-xs rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] focus:outline-none focus:border-[var(--cta-primary)] focus:bg-white transition-all"
             />
             <button
               onClick={handleSend}
-              disabled={!input.trim() || loading}
-              className="absolute right-2.5 bottom-2.5 p-2 bg-[#D85A30] hover:bg-[#D85A30]/90 disabled:opacity-30 text-white rounded-[6px] transition-colors flex items-center justify-center shadow-xs"
+              disabled={!input.trim() || isStreaming}
+              className="px-4 py-2.5 rounded-xl bg-[var(--cta-primary)] text-white font-semibold text-xs hover:bg-[var(--cta-primary-hover)] transition-all flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50"
             >
-              <Send size={16} />
+              {isStreaming ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Send className="w-3.5 h-3.5" />
+              )}
+              <span>Send</span>
             </button>
-          </div>
-          <div className="flex items-center justify-center gap-3 text-xs text-[#888780] mt-2.5">
-            <span>Powered by {selectedModel?.provider_display || "Google Gemini"}</span>
-            <span>•</span>
-            <span>StudyGPT can make mistakes. Verify critical facts.</span>
           </div>
         </div>
       </div>
-
-      {/* API Key Configuration Guidance Modal */}
-      {configModalModel && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-[#FFFFFF] border border-[#E4DFD1] rounded-2xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-amber-50 border border-amber-200">
-                  <Key size={18} className="text-amber-600" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-sm text-[#2C2A24]">
-                    Configure {configModalModel.name}
-                  </h3>
-                  <p className="text-[11px] text-[#888780]">{configModalModel.provider_display}</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => setConfigModalModel(null)}
-                className="text-[#888780] hover:text-[#2C2A24] p-1"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs text-[#5F5E5A] mb-6">
-              <p>
-                To enable <strong>{configModalModel.name}</strong>, you need to add your API key to your backend configuration.
-              </p>
-
-              <div className="p-3 bg-[#FBF9F3] border border-[#E4DFD1] rounded-lg space-y-1 font-mono text-[11px]">
-                <p className="text-[#888780] font-sans text-[10px] uppercase font-bold tracking-wider">Required Variable in backend/.env</p>
-                <p className="text-[#D85A30] font-bold select-all">{configModalModel.env_var}=your_api_key_here</p>
-              </div>
-
-              <div className="space-y-1 pt-1">
-                <p className="font-semibold text-[#2C2A24]">How to set it up:</p>
-                <ol className="list-decimal pl-4 space-y-1 text-[11px]">
-                  <li>Open the file <code className="bg-[#EDE8DB] px-1 py-0.5 rounded text-[#2C2A24]">backend/.env</code> in your editor.</li>
-                  <li>Add your <code className="text-[#D85A30]">{configModalModel.env_var}</code> key.</li>
-                  <li>Save and restart the backend server.</li>
-                </ol>
-              </div>
-
-              <div className="p-2.5 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-2 text-[11px] text-blue-800">
-                <ShieldAlert size={15} className="text-blue-600 shrink-0 mt-0.5" />
-                <span>Google Gemini is already pre-configured and ready to use immediately without extra setup!</span>
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setConfigModalModel(null)}
-                className="px-4 py-2 rounded-lg bg-[#D85A30] text-white font-semibold text-xs hover:bg-[#D85A30]/90 transition-colors"
-              >
-                Got it
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
