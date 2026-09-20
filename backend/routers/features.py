@@ -1,4 +1,4 @@
-﻿"""
+"""
 Features Router:
 - AI Tutor Conversations (/chat)
 - Standalone Roadmap Generator (/roadmap)
@@ -10,7 +10,7 @@ Features Router:
 import uuid
 from datetime import datetime, timezone
 from typing import List, Optional
-from fastapi import APIRouter, HTTPException, Depends, Header
+from fastapi import APIRouter, HTTPException, Depends, Header, WebSocket, WebSocketDisconnect, Query
 
 from models.user import UserProfile
 from routers.auth import get_current_user
@@ -20,7 +20,8 @@ from models.extra import (
     QuizGenerateRequest, QuizQuestion, QuizSubmitRequest,
     ConnectionStatus, DirectMessageItem, SendDMRequest
 )
-from services import gemini_service
+from services import gemini_service, auth_service
+from services.websocket_manager import ws_manager, save_direct_message, get_conversation_messages
 import database
 
 router = APIRouter(tags=["Extended Features"])
@@ -284,33 +285,103 @@ async def get_friends(current_user: UserProfile = Depends(get_current_user)):
                 friends.append({"connection_id": c["id"], "username": c["sender_username"]})
     return friends
 
+@router.get("/social/users/search")
+async def search_students(
+    q: str = Query("", description="Username search query"),
+    current_user: UserProfile = Depends(get_current_user)
+):
+    """Search registered students to connect with."""
+    return await auth_service.search_users(q, exclude_username=current_user.username)
+
+
 @router.get("/social/dm/{connection_id}")
 async def get_direct_messages(connection_id: str, current_user: UserProfile = Depends(get_current_user)):
-    return [m for m in MESSAGES_STORE.values() if m["connection_id"] == connection_id]
+    """Retrieve persisted direct messages for a conversation."""
+    return get_conversation_messages(connection_id)
+
 
 @router.post("/social/dm/{connection_id}")
-async def send_direct_message(connection_id: str, req: SendDMRequest, current_user: UserProfile = Depends(get_current_user)):
-    if connection_id not in CONNECTIONS_STORE:
-        # Auto-create open channel
-        CONNECTIONS_STORE[connection_id] = {
-            "id": connection_id,
-            "sender_username": current_user.username,
-            "receiver_username": "StudyPartner",
-            "status": "accepted",
-            "created_at": datetime.now(timezone.utc).isoformat()
-        }
-    
-    mid = f"dm-{uuid.uuid4().hex[:8]}"
-    msg = {
-        "id": mid,
-        "connection_id": connection_id,
-        "sender_username": current_user.username,
-        "receiver_username": "StudyPartner",
-        "message": req.message,
-        "timestamp": datetime.now(timezone.utc).isoformat()
-    }
-    MESSAGES_STORE[mid] = msg
+async def send_direct_message(
+    connection_id: str,
+    req: SendDMRequest,
+    current_user: UserProfile = Depends(get_current_user)
+):
+    """Send a direct message via HTTP and broadcast in real-time over WebSocket."""
+    receiver = "StudyPartner"
+    if connection_id in CONNECTIONS_STORE:
+        conn = CONNECTIONS_STORE[connection_id]
+        if conn["sender_username"].lower() == current_user.username.lower():
+            receiver = conn["receiver_username"]
+        else:
+            receiver = conn["sender_username"]
+
+    msg = await save_direct_message(
+        connection_id=connection_id,
+        sender_username=current_user.username,
+        receiver_username=receiver,
+        text=req.message
+    )
+
+    # Broadcast to active WebSockets in real time
+    await ws_manager.broadcast_to_room(connection_id, {
+        "type": "message",
+        "data": msg
+    })
+
     return msg
+
+
+@router.websocket("/ws/chat/{connection_id}")
+async def websocket_chat_endpoint(
+    websocket: WebSocket,
+    connection_id: str,
+    username: Optional[str] = Query(default="Student")
+):
+    """
+    Real-time WebSocket endpoint for 1:1 direct chat, live typing indicators, and presence.
+    """
+    user_name = username.strip() if username and username.strip() else "Student"
+    await ws_manager.connect(websocket, connection_id, user_name)
+
+    try:
+        while True:
+            data = await websocket.receive_json()
+            event_type = data.get("type", "message")
+
+            if event_type == "message":
+                text = data.get("text", "").strip()
+                if text:
+                    receiver = data.get("receiver_username", "StudyPartner")
+                    saved_msg = await save_direct_message(
+                        connection_id=connection_id,
+                        sender_username=user_name,
+                        receiver_username=receiver,
+                        text=text
+                    )
+                    # Broadcast to everyone in room including sender
+                    await ws_manager.broadcast_to_room(connection_id, {
+                        "type": "message",
+                        "data": saved_msg
+                    })
+
+            elif event_type == "typing":
+                is_typing = bool(data.get("is_typing", False))
+                await ws_manager.broadcast_to_room(connection_id, {
+                    "type": "typing",
+                    "username": user_name,
+                    "is_typing": is_typing
+                }, exclude_socket=websocket)
+
+    except WebSocketDisconnect:
+        ws_manager.disconnect(websocket, connection_id, user_name)
+        await ws_manager.broadcast_to_room(connection_id, {
+            "type": "presence",
+            "username": user_name,
+            "status": "offline"
+        })
+    except Exception as exc:
+        ws_manager.disconnect(websocket, connection_id, user_name)
+
 
 
 # ----------------- 5. PROGRESS & ANALYTICS -----------------

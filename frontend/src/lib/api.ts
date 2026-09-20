@@ -250,3 +250,175 @@ export async function analyzeQuizMistakes(
   }
   return res.json();
 }
+
+// ── Materials & RAG Document Q&A ──────────────────────────────────────────
+
+export interface MaterialItemData {
+  id: string;
+  user_id: string;
+  title: string;
+  filename: string;
+  file_type: string;
+  file_size: number;
+  total_pages: number;
+  chunk_count: number;
+  summary?: string;
+  created_at: string;
+}
+
+export interface MaterialChunkData {
+  id: string;
+  material_id: string;
+  chunk_index: number;
+  page_number?: number;
+  text: string;
+  char_count: number;
+}
+
+export interface CitationData {
+  chunk_id: string;
+  material_id: string;
+  material_title: string;
+  page_number?: number;
+  excerpt: string;
+  relevance_score: number;
+}
+
+export interface MaterialUploadResult {
+  material: MaterialItemData;
+  message: string;
+  preview_chunks: string[];
+}
+
+export interface MaterialQueryResult {
+  question: string;
+  answer: string;
+  material_id?: string;
+  citations: CitationData[];
+  generated_at: string;
+}
+
+export async function uploadMaterial(
+  title: string,
+  notesText: string = '',
+  file?: File
+): Promise<MaterialUploadResult> {
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('notes_text', notesText);
+  if (file) formData.append('file', file, file.name);
+
+  const res = await fetch(`${API_BASE}/materials/upload`, {
+    method: 'POST',
+    headers: { 'X-User-Name': USER_NAME },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.detail || 'Failed to upload study material');
+  }
+  return res.json();
+}
+
+export async function listMaterials(): Promise<MaterialItemData[]> {
+  const res = await fetch(`${API_BASE}/materials`, {
+    headers: { 'X-User-Name': USER_NAME },
+  });
+  if (!res.ok) throw new Error('Failed to load study materials');
+  return res.json();
+}
+
+export async function getMaterialDetail(
+  materialId: string
+): Promise<{ material: MaterialItemData; chunks: MaterialChunkData[] }> {
+  const res = await fetch(`${API_BASE}/materials/${materialId}`, {
+    headers: { 'X-User-Name': USER_NAME },
+  });
+  if (!res.ok) throw new Error('Failed to load material details');
+  return res.json();
+}
+
+export async function deleteMaterial(materialId: string): Promise<{ status: string }> {
+  const res = await fetch(`${API_BASE}/materials/${materialId}`, {
+    method: 'DELETE',
+    headers: { 'X-User-Name': USER_NAME },
+  });
+  if (!res.ok) throw new Error('Failed to delete material');
+  return res.json();
+}
+
+export async function queryMaterial(
+  materialId: string,
+  question: string,
+  topK: number = 4
+): Promise<MaterialQueryResult> {
+  const res = await fetch(`${API_BASE}/materials/${materialId}/query`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-User-Name': USER_NAME,
+    },
+    body: JSON.stringify({ question, top_k: topK }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.detail || 'Failed to query study material');
+  }
+  return res.json();
+}
+
+export async function queryAllMaterials(
+  question: string,
+  topK: number = 4
+): Promise<MaterialQueryResult> {
+  const res = await fetch(`${API_BASE}/materials/query`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-User-Name': USER_NAME,
+    },
+    body: JSON.stringify({ question, top_k: topK }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.detail || 'Failed to query materials library');
+  }
+  return res.json();
+}
+
+// ── Social & WebSocket Helpers ──────────────────────────────────────────
+
+export interface UserSearchItem {
+  id: string;
+  username: string;
+  total_xp: number;
+  created_at: string;
+}
+
+export async function searchStudents(query: string = ''): Promise<UserSearchItem[]> {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('studygpt_token') : null;
+  const res = await fetch(`${API_BASE}/social/users/search?q=${encodeURIComponent(query)}`, {
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'X-User-Name': USER_NAME,
+    },
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
+
+export async function getDirectMessages(connectionId: string): Promise<any[]> {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('studygpt_token') : null;
+  const res = await fetch(`${API_BASE}/social/dm/${connectionId}`, {
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'X-User-Name': USER_NAME,
+    },
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
+
