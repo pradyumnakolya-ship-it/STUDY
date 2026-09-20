@@ -15,6 +15,7 @@ from routers.ask import router as ask_router
 from routers.guilds import router as guilds_router
 from routers.auth import router as auth_router
 from routers.features import router as features_router
+from routers.materials import router as materials_router
 import database
 
 # ── App Initialization ──────────────────────────────────────────────────────
@@ -42,6 +43,7 @@ app.include_router(auth_router)
 app.include_router(ask_router)
 app.include_router(guilds_router)
 app.include_router(features_router)
+app.include_router(materials_router)
 
 
 @app.get("/health")

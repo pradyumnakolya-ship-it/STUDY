@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -37,6 +37,14 @@ export default function HomePage() {
       icon: Bot,
       badge: "Interactive",
       accent: "bg-[#EEEDFE] text-[#3C3489] border-[#DDD9FC]"
+    },
+    {
+      title: "My Materials & RAG Q&A",
+      description: "Upload PDFs and notes to ask questions grounded directly in your study documents with page citations.",
+      href: "/materials",
+      icon: FileText,
+      badge: "RAG Docs",
+      accent: "bg-[#FAECE7] text-[var(--cta-primary)] border-[#F4C0D1]"
     },
     {
       title: "Study Roadmap Generator",

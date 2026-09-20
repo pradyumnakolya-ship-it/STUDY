@@ -1,4 +1,4 @@
-﻿"""
+"""
 Authentication and User Service
 Handles password hashing (bcrypt), JWT issuance & verification, and user storage
 with dual MongoDB and local JSON fallback for reliability.
@@ -113,6 +113,53 @@ async def create_user(email: str, username: str, password_hash: str) -> dict:
     # Always keep in sync with fallback
     users = _load_fallback_users()
     users[user_id] = record
-    _save_fallback_users(users)
-
     return record
+
+
+async def search_users(query: str, exclude_username: str = "") -> list:
+    """Search registered users by username substring."""
+    clean_q = query.strip().lower()
+    results = []
+    exclude_clean = exclude_username.strip().lower()
+
+    col = database.get_users_collection()
+    if database.is_connected and col is not None:
+        cursor = col.find({"username_lower": {"$regex": clean_q, "$options": "i"}}).limit(20)
+        async for doc in cursor:
+            uname = doc.get("username", "")
+            if uname.lower() != exclude_clean:
+                results.append({
+                    "id": str(doc.get("_id", doc.get("id"))),
+                    "username": uname,
+                    "total_xp": doc.get("total_xp", 0),
+                    "created_at": doc.get("created_at", "")
+                })
+        if results:
+            return results
+
+    # Fallback to local store
+    users = _load_fallback_users()
+    for uid, u in users.items():
+        uname = u.get("username", "")
+        if uname.lower() != exclude_clean and (not clean_q or clean_q in uname.lower()):
+            results.append({
+                "id": uid,
+                "username": uname,
+                "total_xp": u.get("total_xp", 0),
+                "created_at": u.get("created_at", "")
+            })
+
+    # Add default mock peer suggestions if few users exist
+    if len(results) < 3 and not clean_q:
+        peers = [
+            {"id": "user-alex", "username": "Alex_Code", "total_xp": 450, "created_at": "2026-01-10"},
+            {"id": "user-priya", "username": "Priya_Dev", "total_xp": 620, "created_at": "2026-01-12"},
+            {"id": "user-marcus", "username": "Marcus_ML", "total_xp": 310, "created_at": "2026-01-15"},
+            {"id": "user-elena", "username": "Elena_AI", "total_xp": 780, "created_at": "2026-01-18"},
+        ]
+        for p in peers:
+            if p["username"].lower() != exclude_clean and not any(r["username"] == p["username"] for r in results):
+                results.append(p)
+
+    return results
+
