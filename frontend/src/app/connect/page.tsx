@@ -18,6 +18,9 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { searchStudents, getDirectMessages, UserSearchItem } from "@/lib/api";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const wsBase = API_BASE.replace(/^http/, 'ws');
+
 interface MessageItem {
   id?: string;
   sender: string;
@@ -122,7 +125,7 @@ export default function ConnectPage() {
       socketRef.current.close();
     }
 
-    const wsUrl = `ws://localhost:8000/ws/chat/${cid}?username=${encodeURIComponent(currentUsername)}`;
+    const wsUrl = `${wsBase}/ws/chat/${cid}?username=${encodeURIComponent(currentUsername)}`;
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
@@ -169,7 +172,7 @@ export default function ConnectPage() {
   const handleSendRequest = async (targetUsername: string) => {
     try {
       const token = localStorage.getItem("studygpt_token");
-      await fetch(`http://localhost:8000/social/connect/${encodeURIComponent(targetUsername)}`, {
+      await fetch(`${API_BASE}/social/connect/${encodeURIComponent(targetUsername)}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -245,21 +248,21 @@ export default function ConnectPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] flex flex-col">
+    <div className="min-h-screen bg-[#000000] text-[#fcfdff] flex flex-col">
       {/* Top Header */}
-      <header className="border-b border-[var(--border)] bg-white sticky top-0 z-30 px-6 py-4 flex items-center justify-between shadow-xs">
+      <header className="border-b border-[rgba(255,255,255,0.08)] bg-[#0a0a0c] sticky top-0 z-30 px-6 py-4 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-4">
           <Link
             href="/home"
-            className="p-2 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface-nested)] transition-colors"
+            className="p-2 rounded-xl border border-[rgba(255,255,255,0.12)] text-[#888e90] hover:text-[#fcfdff] hover:bg-[#101012] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="font-bold text-base text-[var(--text-primary)] leading-tight">
+            <h1 className="font-bold text-base text-[#fcfdff] leading-tight">
               Social Connect & Direct Messaging
             </h1>
-            <p className="text-xs text-[var(--text-secondary)]">
+            <p className="text-xs text-[#888e90]">
               Study together, send follow requests, and chat in real-time over WebSockets
             </p>
           </div>
@@ -269,8 +272,8 @@ export default function ConnectPage() {
           <span
             className={`text-xs font-semibold px-3 py-1.5 rounded-xl border flex items-center gap-1.5 ${
               wsConnected
-                ? "bg-[#E1F5EE] border-[#B7EBD8] text-[#085041]"
-                : "bg-[var(--surface-nested)] border-[var(--border)] text-[var(--text-secondary)]"
+                ? "bg-[#085041]/20 border-[#085041]/40 text-[#2fe0b4]"
+                : "bg-[#101012] border-[rgba(255,255,255,0.08)] text-[#888e90]"
             }`}
           >
             {wsConnected ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
@@ -283,16 +286,16 @@ export default function ConnectPage() {
       <main className="max-w-6xl w-full mx-auto px-6 py-8 flex-1 grid grid-cols-1 md:grid-cols-12 gap-6">
         
         {/* Left Sidebar (4 Cols): Tabs (Discover, Friends, Requests) */}
-        <div className="md:col-span-4 bg-white border border-[var(--border)] rounded-2xl p-4 shadow-xs flex flex-col h-[680px]">
+        <div className="md:col-span-4 bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] rounded-2xl p-4 shadow-xs flex flex-col h-[680px]">
           
           {/* Tab Buttons */}
-          <div className="flex border-b border-[var(--border)] pb-2 mb-4 gap-1.5">
+          <div className="flex border-b border-[rgba(255,255,255,0.08)] pb-2 mb-4 gap-1.5">
             <button
               onClick={() => setActiveTab("find")}
               className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === "find"
-                  ? "bg-[var(--cta-primary)] text-white shadow-xs"
-                  : "text-[var(--text-secondary)] hover:bg-[var(--surface-nested)]"
+                  ? "bg-[#fcfdff] text-[#000000] shadow-xs"
+                  : "text-[#888e90] hover:bg-[#101012] hover:text-[#fcfdff]"
               }`}
             >
               Discover
@@ -301,8 +304,8 @@ export default function ConnectPage() {
               onClick={() => setActiveTab("friends")}
               className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === "friends"
-                  ? "bg-[var(--cta-primary)] text-white shadow-xs"
-                  : "text-[var(--text-secondary)] hover:bg-[var(--surface-nested)]"
+                  ? "bg-[#fcfdff] text-[#000000] shadow-xs"
+                  : "text-[#888e90] hover:bg-[#101012] hover:text-[#fcfdff]"
               }`}
             >
               Friends ({friendsList.length})
@@ -311,8 +314,8 @@ export default function ConnectPage() {
               onClick={() => setActiveTab("requests")}
               className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === "requests"
-                  ? "bg-[var(--cta-primary)] text-white shadow-xs"
-                  : "text-[var(--text-secondary)] hover:bg-[var(--surface-nested)]"
+                  ? "bg-[#fcfdff] text-[#000000] shadow-xs"
+                  : "text-[#888e90] hover:bg-[#101012] hover:text-[#fcfdff]"
               }`}
             >
               Requests ({requestsList.length})
@@ -323,7 +326,7 @@ export default function ConnectPage() {
           {activeTab === "find" && (
             <div className="flex-1 flex flex-col overflow-hidden">
               <div className="relative mb-3">
-                <Search className="w-3.5 h-3.5 text-[var(--text-tertiary)] absolute left-3 top-3" />
+                <Search className="w-3.5 h-3.5 text-[#888e90] absolute left-3 top-3" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -332,17 +335,17 @@ export default function ConnectPage() {
                     handleSearchUsers(e.target.value);
                   }}
                   placeholder="Search students by username..."
-                  className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] focus:outline-none focus:border-[var(--cta-primary)] focus:bg-white transition-all"
+                  className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-[rgba(255,255,255,0.1)] bg-[#101012] text-[#fcfdff] placeholder:text-[#888e90] focus:outline-none focus:border-[#fcfdff] transition-all"
                 />
               </div>
 
               {isSearching ? (
-                <div className="py-8 text-center text-xs text-[var(--text-secondary)] flex flex-col items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-[var(--cta-primary)]" />
+                <div className="py-8 text-center text-xs text-[#888e90] flex flex-col items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-[#fcfdff]" />
                   <span>Searching classmates...</span>
                 </div>
               ) : searchedUsers.length === 0 ? (
-                <div className="py-8 text-center text-xs text-[var(--text-secondary)]">
+                <div className="py-8 text-center text-xs text-[#888e90]">
                   No students found matching "{searchQuery}"
                 </div>
               ) : (
@@ -353,15 +356,15 @@ export default function ConnectPage() {
                     return (
                       <div
                         key={u.id}
-                        className="p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] flex items-center justify-between"
+                        className="p-3 rounded-xl border border-[rgba(255,255,255,0.06)] bg-[#101012] flex items-center justify-between"
                       >
                         <div>
-                          <p className="text-xs font-bold text-[var(--text-primary)]">{u.username}</p>
-                          <p className="text-[10px] text-[var(--text-secondary)]">{u.total_xp} XP • Active Scholar</p>
+                          <p className="text-xs font-bold text-[#fcfdff]">{u.username}</p>
+                          <p className="text-[10px] text-[#888e90]">{u.total_xp} XP • Active Scholar</p>
                         </div>
 
                         {isFriend ? (
-                          <span className="text-[10px] font-semibold px-2 py-1 rounded-md bg-[#E1F5EE] text-[#085041]">
+                          <span className="text-[10px] font-semibold px-2 py-1 rounded-md bg-[#085041]/20 text-[#2fe0b4] border border-[#085041]/40">
                             Friend
                           </span>
                         ) : (
@@ -370,8 +373,8 @@ export default function ConnectPage() {
                             disabled={isSent}
                             className={`p-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-all ${
                               isSent
-                                ? "bg-[#E1F5EE] text-[#085041] cursor-default"
-                                : "bg-[var(--cta-primary)] text-white hover:bg-[var(--cta-primary-hover)] cursor-pointer"
+                                ? "bg-[#085041]/20 text-[#2fe0b4] cursor-default"
+                                : "bg-[#fcfdff] text-[#000000] hover:bg-white/90 cursor-pointer"
                             }`}
                           >
                             {isSent ? <CheckCircle2 className="w-3.5 h-3.5" /> : <UserPlus className="w-3.5 h-3.5" />}
@@ -396,18 +399,18 @@ export default function ConnectPage() {
                     onClick={() => handleSelectFriend(f)}
                     className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
                       isSelected
-                        ? "border-[var(--cta-primary)] bg-[var(--surface-nested)] shadow-xs"
-                        : "border-[var(--border)] hover:bg-[var(--surface-nested)]"
+                        ? "border-[#fcfdff] bg-[#101012] shadow-xs text-[#fcfdff]"
+                        : "border-[rgba(255,255,255,0.06)] bg-[#0a0a0c] hover:bg-[#101012] text-[rgba(252,253,255,0.8)]"
                     }`}
                   >
                     <div>
-                      <p className="text-xs font-bold text-[var(--text-primary)]">{f.username}</p>
-                      <p className="text-[10px] text-[#085041] flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#085041]"></span>
+                      <p className="text-xs font-bold text-[#fcfdff]">{f.username}</p>
+                      <p className="text-[10px] text-[#2fe0b4] flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2fe0b4]"></span>
                         <span>Connected • Active</span>
                       </p>
                     </div>
-                    <MessageSquare className="w-4 h-4 text-[var(--cta-primary)]" />
+                    <MessageSquare className="w-4 h-4 text-[#a5b4fc]" />
                   </div>
                 );
               })}
@@ -418,29 +421,29 @@ export default function ConnectPage() {
           {activeTab === "requests" && (
             <div className="flex-1 overflow-y-auto space-y-2.5">
               {requestsList.length === 0 ? (
-                <div className="py-8 text-center text-xs text-[var(--text-secondary)]">
+                <div className="py-8 text-center text-xs text-[#888e90]">
                   No pending connection requests
                 </div>
               ) : (
                 requestsList.map((req) => (
                   <div
                     key={req.id}
-                    className="p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] space-y-2"
+                    className="p-3 rounded-xl border border-[rgba(255,255,255,0.06)] bg-[#101012] space-y-2"
                   >
                     <div>
-                      <p className="text-xs font-bold text-[var(--text-primary)]">{req.username}</p>
-                      <p className="text-[10px] text-[var(--text-secondary)]">{req.topic}</p>
+                      <p className="text-xs font-bold text-[#fcfdff]">{req.username}</p>
+                      <p className="text-[10px] text-[#888e90]">{req.topic}</p>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleAcceptRequest(req.id, req.username)}
-                        className="flex-1 py-1 rounded-lg bg-[var(--cta-primary)] text-white text-[11px] font-medium hover:bg-[var(--cta-primary-hover)] cursor-pointer"
+                        className="flex-1 py-1 rounded-lg bg-[#fcfdff] text-[#000000] text-[11px] font-medium hover:bg-white/90 cursor-pointer"
                       >
                         Accept
                       </button>
                       <button
                         onClick={() => handleDeclineRequest(req.id)}
-                        className="flex-1 py-1 rounded-lg border border-[var(--border)] text-[var(--text-secondary)] text-[11px] hover:bg-white cursor-pointer"
+                        className="flex-1 py-1 rounded-lg border border-[rgba(255,255,255,0.12)] text-[#888e90] text-[11px] hover:bg-[#16161a] cursor-pointer"
                       >
                         Decline
                       </button>
@@ -453,32 +456,32 @@ export default function ConnectPage() {
         </div>
 
         {/* Right Panel (8 Cols): 1:1 Direct Messaging Window */}
-        <div className="md:col-span-8 bg-white border border-[var(--border)] rounded-2xl shadow-xs flex flex-col h-[680px] overflow-hidden">
+        <div className="md:col-span-8 bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-xs flex flex-col h-[680px] overflow-hidden">
           
           {/* Chat Header */}
-          <div className="p-4 border-b border-[var(--border)] flex items-center justify-between bg-white">
+          <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between bg-[#0a0a0c]">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-[#FAECE7] text-[var(--cta-primary)] border border-[#F4C0D1] flex items-center justify-center font-bold text-xs shadow-xs">
+              <div className="w-9 h-9 rounded-full bg-[#101012] text-[#a5b4fc] border border-[rgba(255,255,255,0.12)] flex items-center justify-center font-bold text-xs shadow-xs">
                 {activeFriend ? activeFriend.charAt(0) : "S"}
               </div>
               <div>
-                <p className="font-bold text-xs text-[var(--text-primary)]">{activeFriend}</p>
-                <p className="text-[10px] text-[#085041] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#085041] animate-pulse"></span>
+                <p className="font-bold text-xs text-[#fcfdff]">{activeFriend}</p>
+                <p className="text-[10px] text-[#2fe0b4] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2fe0b4] animate-pulse"></span>
                   <span>Direct Peer Channel • WebSocket {wsConnected ? "Online" : "Connecting"}</span>
                 </p>
               </div>
             </div>
 
             <div className="text-right">
-              <span className="text-[10px] px-2.5 py-1 rounded-full bg-[var(--surface-nested)] border border-[var(--border)] text-[var(--text-secondary)] font-mono">
+              <span className="text-[10px] px-2.5 py-1 rounded-full bg-[#101012] border border-[rgba(255,255,255,0.08)] text-[#888e90] font-mono">
                 {activeConnectionId}
               </span>
             </div>
           </div>
 
           {/* Messages Feed */}
-          <div className="flex-1 p-5 overflow-y-auto space-y-3 bg-[var(--surface-nested)]">
+          <div className="flex-1 p-5 overflow-y-auto space-y-3 bg-[#000000]">
             {chatMessages.map((m, idx) => {
               const isMe = m.sender === "You";
               return (
@@ -486,21 +489,21 @@ export default function ConnectPage() {
                   <div
                     className={`max-w-[75%] p-3.5 rounded-2xl text-xs leading-relaxed ${
                       isMe
-                        ? "bg-[var(--cta-primary)] text-white rounded-tr-xs shadow-xs font-medium"
-                        : "bg-white border border-[var(--border)] text-[var(--text-primary)] rounded-tl-xs shadow-xs"
+                        ? "bg-[#fcfdff] text-[#000000] rounded-tr-xs shadow-xs font-medium"
+                        : "bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] text-[#fcfdff] rounded-tl-xs shadow-xs"
                     }`}
                   >
                     {m.text}
                   </div>
-                  <span className="text-[9px] text-[var(--text-tertiary)] mt-1 px-1">{m.time}</span>
+                  <span className="text-[9px] text-[#888e90] mt-1 px-1">{m.time}</span>
                 </div>
               );
             })}
 
             {/* Partner Typing Indicator */}
             {partnerIsTyping && (
-              <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)] bg-white px-3.5 py-2 rounded-2xl border border-[var(--border)] w-fit shadow-xs animate-pulse">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--cta-primary)]"></span>
+              <div className="flex items-center gap-2 text-xs text-[#888e90] bg-[#0a0a0c] px-3.5 py-2 rounded-2xl border border-[rgba(255,255,255,0.08)] w-fit shadow-xs animate-pulse">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#a5b4fc]"></span>
                 <span className="text-[11px] font-medium">{activeFriend} is typing...</span>
               </div>
             )}
@@ -509,18 +512,18 @@ export default function ConnectPage() {
           </div>
 
           {/* Input Bar */}
-          <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-[var(--border)] flex gap-2">
+          <form onSubmit={handleSendMessage} className="p-3 bg-[#0a0a0c] border-t border-[rgba(255,255,255,0.08)] flex gap-2">
             <input
               type="text"
               value={typedMessage}
               onChange={handleTypingChange}
               placeholder={`Message ${activeFriend}...`}
-              className="flex-1 px-4 py-2.5 text-xs rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] focus:outline-none focus:border-[var(--cta-primary)] focus:bg-white transition-all"
+              className="flex-1 px-4 py-2.5 text-xs rounded-xl border border-[rgba(255,255,255,0.1)] bg-[#101012] text-[#fcfdff] placeholder:text-[#888e90] focus:outline-none focus:border-[#fcfdff] transition-all"
             />
             <button
               type="submit"
               disabled={!typedMessage.trim()}
-              className="px-4 py-2.5 rounded-xl bg-[var(--cta-primary)] text-white font-semibold text-xs hover:bg-[var(--cta-primary-hover)] transition-all flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl bg-[#fcfdff] hover:bg-white/90 text-[#000000] font-semibold text-xs transition-all flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Send</span>

@@ -100,5 +100,470 @@
     "active_dates": [
       "2026-09-27"
     ]
+  },
+  "user-68914e3787": {
+    "user_id": "user-68914e3787",
+    "username": "testuser_d1c974",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-5405731ff5": {
+    "user_id": "user-5405731ff5",
+    "username": "testuser_a3e362",
+    "total_xp": 125,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-141e4adb",
+        "topic": "Math",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T15:39:06.456024+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-b40f94d51e": {
+    "user_id": "user-b40f94d51e",
+    "username": "testuser_a80706",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-b0d46034",
+        "topic": "Geography",
+        "difficulty": "General",
+        "correct": false,
+        "xp": 0,
+        "timestamp": "2026-09-27T15:39:07.213097+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-a23bf931c9": {
+    "user_id": "user-a23bf931c9",
+    "username": "testuser_23f4a9",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-fcb6c629dc": {
+    "user_id": "user-fcb6c629dc",
+    "username": "testuser_02e2f3",
+    "total_xp": 125,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-745242c5",
+        "topic": "Math",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T17:33:00.827255+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-8e741d6e09": {
+    "user_id": "user-8e741d6e09",
+    "username": "testuser_468281",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-f2cce9d6",
+        "topic": "Geography",
+        "difficulty": "General",
+        "correct": false,
+        "xp": 0,
+        "timestamp": "2026-09-27T17:33:02.127098+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-f8078a6748": {
+    "user_id": "user-f8078a6748",
+    "username": "harsha",
+    "total_xp": 135,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-e57f2d02",
+        "topic": "Data Structures & Linked Lists",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T18:34:44.470803+00:00"
+      },
+      {
+        "id": "prac-0719e08f",
+        "topic": "Data Structures & Linked Lists",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T18:35:06.923624+00:00"
+      },
+      {
+        "id": "prac-43ae5a97",
+        "topic": "Data Structures & Linked Lists",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T18:35:11.589481+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-92d341b164": {
+    "user_id": "user-92d341b164",
+    "username": "testuser_28cfa4",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-61fb2302cc": {
+    "user_id": "user-61fb2302cc",
+    "username": "testuser_1ca4c1",
+    "total_xp": 125,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-afb126cb",
+        "topic": "Math",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T18:41:01.998303+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-0bbed0680e": {
+    "user_id": "user-0bbed0680e",
+    "username": "testuser_3d8939",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-6a5310f4",
+        "topic": "Geography",
+        "difficulty": "General",
+        "correct": false,
+        "xp": 0,
+        "timestamp": "2026-09-27T18:41:02.884802+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-180cf669f2": {
+    "user_id": "user-180cf669f2",
+    "username": "testuser_e1a188",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-2ddc78b892": {
+    "user_id": "user-2ddc78b892",
+    "username": "testuser_72a136",
+    "total_xp": 125,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-e66af1f8",
+        "topic": "Math",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T18:43:43.984870+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-480de2743b": {
+    "user_id": "user-480de2743b",
+    "username": "testuser_dfecd2",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-e55fc914",
+        "topic": "Geography",
+        "difficulty": "General",
+        "correct": false,
+        "xp": 0,
+        "timestamp": "2026-09-27T18:43:57.556435+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-bff437e9f0": {
+    "user_id": "user-bff437e9f0",
+    "username": "testuser_05915a",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-d07b012d74": {
+    "user_id": "user-d07b012d74",
+    "username": "testuser_03afbb",
+    "total_xp": 125,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-17723ab8",
+        "topic": "Math",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T18:51:50.691511+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-03598fdb8f": {
+    "user_id": "user-03598fdb8f",
+    "username": "testuser_b1f094",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-29baa3fb",
+        "topic": "Geography",
+        "difficulty": "General",
+        "correct": false,
+        "xp": 0,
+        "timestamp": "2026-09-27T18:51:54.349147+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-2ee8eda7bc": {
+    "user_id": "user-2ee8eda7bc",
+    "username": "testuser_a9b221",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-63dde7391c": {
+    "user_id": "user-63dde7391c",
+    "username": "testuser_2a7a34",
+    "total_xp": 125,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-8f0ed91b",
+        "topic": "Math",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T19:08:14.106764+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-421ea3e025": {
+    "user_id": "user-421ea3e025",
+    "username": "testuser_53285b",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-b2a3a3ef",
+        "topic": "Geography",
+        "difficulty": "General",
+        "correct": false,
+        "xp": 0,
+        "timestamp": "2026-09-27T19:08:19.526106+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-d91650a1e4": {
+    "user_id": "user-d91650a1e4",
+    "username": "testuser_3c0c24",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-962cf996d6": {
+    "user_id": "user-962cf996d6",
+    "username": "testuser_0651a4",
+    "total_xp": 125,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-46a3d186",
+        "topic": "Math",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T19:13:53.666791+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-5446e6beb5": {
+    "user_id": "user-5446e6beb5",
+    "username": "testuser_09db3a",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-c287c74d",
+        "topic": "Geography",
+        "difficulty": "General",
+        "correct": false,
+        "xp": 0,
+        "timestamp": "2026-09-27T19:13:57.989235+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "testuser_108e3e": {
+    "user_id": "testuser_108e3e",
+    "username": "testuser_108e3e",
+    "total_xp": 140,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [
+      {
+        "id": "qatm-18d7996d",
+        "topic": "Singly Linked Lists & Node Architecture",
+        "score_percent": 100,
+        "total_questions": 1,
+        "correct_count": 1,
+        "xp": 20,
+        "timestamp": "2026-09-27T19:20:40.230297+00:00"
+      }
+    ],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "testuser_8c3d2b": {
+    "user_id": "testuser_8c3d2b",
+    "username": "testuser_8c3d2b",
+    "total_xp": 140,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [
+      {
+        "id": "qatm-fdf2fbb3",
+        "topic": "Singly Linked Lists & Node Architecture",
+        "score_percent": 100,
+        "total_questions": 1,
+        "correct_count": 1,
+        "xp": 20,
+        "timestamp": "2026-09-27T19:23:44.268042+00:00"
+      }
+    ],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "testuser_30febb": {
+    "user_id": "testuser_30febb",
+    "username": "testuser_30febb",
+    "total_xp": 140,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [
+      {
+        "id": "qatm-6b4a93d9",
+        "topic": "Singly Linked Lists & Node Architecture",
+        "score_percent": 100,
+        "total_questions": 1,
+        "correct_count": 1,
+        "xp": 20,
+        "timestamp": "2026-09-27T19:25:12.673475+00:00"
+      },
+      {
+        "id": "qatm-f91cee3d",
+        "topic": "Singly Linked Lists & Node Architecture",
+        "score_percent": 100,
+        "total_questions": 1,
+        "correct_count": 1,
+        "xp": 0,
+        "timestamp": "2026-09-27T19:25:12.675792+00:00"
+      }
+    ],
+    "active_dates": [
+      "2026-09-27"
+    ]
   }
 }

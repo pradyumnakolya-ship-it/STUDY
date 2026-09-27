@@ -240,29 +240,29 @@ export default function MaterialsPage() {
   const selectedMaterial = materials.find(m => m.id === selectedMaterialId);
 
   return (
-    <div className="min-h-screen bg-[var(--background)] flex flex-col">
+    <div className="min-h-screen bg-[#000000] text-[#fcfdff] flex flex-col">
       {/* Top Header */}
-      <header className="border-b border-[var(--border)] bg-white sticky top-0 z-30 px-6 py-4 flex items-center justify-between shadow-xs">
+      <header className="border-b border-[rgba(255,255,255,0.08)] bg-[#0a0a0c] sticky top-0 z-30 px-6 py-4 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-4">
           <Link
             href="/home"
-            className="p-2 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface-nested)] transition-colors"
+            className="p-2 rounded-xl border border-[rgba(255,255,255,0.12)] text-[#888e90] hover:text-[#fcfdff] hover:bg-[#101012] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[var(--cta-primary)] text-white flex items-center justify-center font-bold text-base shadow-sm">
-              <FileText className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-[#101012] text-[#fcfdff] border border-[rgba(255,255,255,0.12)] flex items-center justify-center font-bold text-base shadow-sm">
+              <FileText className="w-5 h-5 text-[#a5b4fc]" />
             </div>
             <div>
-              <h1 className="font-bold text-base text-[var(--text-primary)] leading-tight">My Materials & RAG Q&A</h1>
-              <p className="text-xs text-[var(--text-secondary)]">Upload notes or PDFs and query with verified source citations</p>
+              <h1 className="font-bold text-base text-[#fcfdff] leading-tight">My Materials & RAG Q&A</h1>
+              <p className="text-xs text-[#888e90]">Upload notes or PDFs and query with verified source citations</p>
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-[#E1F5EE] border border-[#B7EBD8] text-[#085041] flex items-center gap-1.5">
+          <span className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-[#085041]/20 border border-[#085041]/40 text-[#2fe0b4] flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
             <span>RAG Grounded AI</span>
           </span>
@@ -276,25 +276,25 @@ export default function MaterialsPage() {
         <div className="lg:col-span-5 flex flex-col gap-6">
           
           {/* Upload Card */}
-          <div className="p-5 rounded-2xl bg-white border border-[var(--border)] shadow-xs">
+          <div className="p-5 rounded-2xl bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] shadow-xs">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-sm text-[var(--text-primary)] flex items-center gap-2">
-                <Upload className="w-4 h-4 text-[var(--cta-primary)]" />
+              <h2 className="font-bold text-sm text-[#fcfdff] flex items-center gap-2">
+                <Upload className="w-4 h-4 text-[#a5b4fc]" />
                 <span>Upload Study Material</span>
               </h2>
 
-              <div className="flex bg-[var(--surface-nested)] p-0.5 rounded-lg border border-[var(--border)] text-[11px] font-medium">
+              <div className="flex bg-[#101012] p-0.5 rounded-lg border border-[rgba(255,255,255,0.08)] text-[11px] font-medium">
                 <button
                   type="button"
                   onClick={() => setUploadMode("file")}
-                  className={`px-2.5 py-1 rounded-md transition-colors ${uploadMode === "file" ? "bg-white shadow-xs text-[var(--text-primary)] font-bold" : "text-[var(--text-secondary)]"}`}
+                  className={`px-2.5 py-1 rounded-md transition-colors ${uploadMode === "file" ? "bg-[#fcfdff] text-[#000000] font-bold" : "text-[#888e90]"}`}
                 >
                   PDF File
                 </button>
                 <button
                   type="button"
                   onClick={() => setUploadMode("text")}
-                  className={`px-2.5 py-1 rounded-md transition-colors ${uploadMode === "text" ? "bg-white shadow-xs text-[var(--text-primary)] font-bold" : "text-[var(--text-secondary)]"}`}
+                  className={`px-2.5 py-1 rounded-md transition-colors ${uploadMode === "text" ? "bg-[#fcfdff] text-[#000000] font-bold" : "text-[#888e90]"}`}
                 >
                   Raw Notes
                 </button>
@@ -303,20 +303,20 @@ export default function MaterialsPage() {
 
             <form onSubmit={handleUpload} className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Document Title</label>
+                <label className="block text-xs font-medium text-[#888e90] mb-1">Document Title</label>
                 <input
                   type="text"
                   value={uploadTitle}
                   onChange={(e) => setUploadTitle(e.target.value)}
                   placeholder="e.g. Operating Systems - Virtual Memory Notes"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] focus:outline-none focus:border-[var(--cta-primary)] focus:bg-white transition-all"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-[rgba(255,255,255,0.1)] bg-[#101012] text-[#fcfdff] placeholder:text-[#888e90] focus:outline-none focus:border-[#fcfdff] transition-all"
                 />
               </div>
 
               {uploadMode === "file" ? (
                 <div>
-                  <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Select PDF or Text File</label>
-                  <div className="border border-dashed border-[var(--border)] rounded-xl p-4 text-center bg-[var(--surface-nested)] hover:border-[var(--cta-primary)] transition-colors">
+                  <label className="block text-xs font-medium text-[#888e90] mb-1">Select PDF or Text File</label>
+                  <div className="border border-dashed border-[rgba(255,255,255,0.12)] hover:border-[#fcfdff] rounded-xl p-4 text-center bg-[#101012] transition-colors">
                     <input
                       ref={fileInputRef}
                       type="file"
@@ -326,36 +326,36 @@ export default function MaterialsPage() {
                       id="material-file-input"
                     />
                     <label htmlFor="material-file-input" className="cursor-pointer flex flex-col items-center justify-center gap-1.5">
-                      <FileCheck className="w-6 h-6 text-[var(--text-secondary)]" />
-                      <span className="text-xs font-semibold text-[var(--cta-primary)] hover:underline">
+                      <FileCheck className="w-6 h-6 text-[#888e90]" />
+                      <span className="text-xs font-semibold text-[#fcfdff] hover:underline">
                         {selectedFile ? selectedFile.name : "Click to select a file"}
                       </span>
-                      <span className="text-[10px] text-[var(--text-secondary)]">PDF, TXT, or MD up to 20MB</span>
+                      <span className="text-[10px] text-[#888e90]">PDF, TXT, or MD up to 20MB</span>
                     </label>
                   </div>
                 </div>
               ) : (
                 <div>
-                  <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Paste Study Notes / Lecture Excerpts</label>
+                  <label className="block text-xs font-medium text-[#888e90] mb-1">Paste Study Notes / Lecture Excerpts</label>
                   <textarea
                     rows={4}
                     value={notesText}
                     onChange={(e) => setNotesText(e.target.value)}
                     placeholder="Paste lecture transcription, textbook summary, or key study formulas here..."
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] focus:outline-none focus:border-[var(--cta-primary)] focus:bg-white resize-none"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-[rgba(255,255,255,0.1)] bg-[#101012] text-[#fcfdff] placeholder:text-[#888e90] focus:outline-none focus:border-[#fcfdff] resize-none"
                   />
                 </div>
               )}
 
               {uploadError && (
-                <div className="p-2.5 rounded-xl bg-[#FAEAF0] border border-[#F4C0D1] text-[#72243E] text-xs flex items-center gap-2">
+                <div className="p-2.5 rounded-xl bg-[#72243E]/20 border border-[#72243E]/40 text-[#ff7b9c] text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{uploadError}</span>
                 </div>
               )}
 
               {uploadSuccess && (
-                <div className="p-2.5 rounded-xl bg-[#E1F5EE] border border-[#B7EBD8] text-[#085041] text-xs flex items-center gap-2">
+                <div className="p-2.5 rounded-xl bg-[#085041]/20 border border-[#085041]/40 text-[#2fe0b4] text-xs flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 shrink-0" />
                   <span>{uploadSuccess}</span>
                 </div>
@@ -364,7 +364,7 @@ export default function MaterialsPage() {
               <button
                 type="submit"
                 disabled={isUploading}
-                className="w-full py-2.5 rounded-xl bg-[var(--cta-primary)] text-white font-semibold text-xs hover:bg-[var(--cta-primary-hover)] transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:opacity-50"
+                className="w-full py-2.5 rounded-xl bg-[#fcfdff] hover:bg-white/90 text-[#000000] font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:opacity-50"
               >
                 {isUploading ? (
                   <>
@@ -382,30 +382,30 @@ export default function MaterialsPage() {
           </div>
 
           {/* Library Cards List */}
-          <div className="p-5 rounded-2xl bg-white border border-[var(--border)] shadow-xs flex-1 flex flex-col">
+          <div className="p-5 rounded-2xl bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] shadow-xs flex-1 flex flex-col">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-bold text-sm text-[var(--text-primary)] flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-[#3C3489]" />
+              <h2 className="font-bold text-sm text-[#fcfdff] flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-[#a5b4fc]" />
                 <span>Your Study Documents ({materials.length})</span>
               </h2>
 
               <button
                 onClick={() => setSelectedMaterialId(null)}
-                className={`text-xs px-2.5 py-1 rounded-lg border font-medium transition-colors ${selectedMaterialId === null ? "bg-[#3C3489] text-white border-[#3C3489]" : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface-nested)]"}`}
+                className={`text-xs px-2.5 py-1 rounded-lg border font-medium transition-colors ${selectedMaterialId === null ? "bg-[#fcfdff] text-[#000000] border-[#fcfdff]" : "border-[rgba(255,255,255,0.08)] text-[#888e90] hover:bg-[#101012]"}`}
               >
                 Search All
               </button>
             </div>
 
             {loadingList ? (
-              <div className="py-12 text-center text-xs text-[var(--text-secondary)] flex flex-col items-center gap-2">
-                <Loader2 className="w-5 h-5 animate-spin text-[var(--cta-primary)]" />
+              <div className="py-12 text-center text-xs text-[#888e90] flex flex-col items-center gap-2">
+                <Loader2 className="w-5 h-5 animate-spin text-[#fcfdff]" />
                 <span>Loading materials...</span>
               </div>
             ) : materials.length === 0 ? (
-              <div className="py-12 text-center text-xs text-[var(--text-secondary)] flex flex-col items-center gap-2 border border-dashed border-[var(--border)] rounded-xl p-6">
-                <FileText className="w-8 h-8 text-[var(--text-tertiary)]" />
-                <p className="font-semibold text-[var(--text-primary)]">No documents uploaded yet</p>
+              <div className="py-12 text-center text-xs text-[#888e90] flex flex-col items-center gap-2 border border-dashed border-[rgba(255,255,255,0.08)] rounded-xl p-6">
+                <FileText className="w-8 h-8 text-[#888e90]" />
+                <p className="font-semibold text-[#fcfdff]">No documents uploaded yet</p>
                 <p className="text-[11px] max-w-xs">Upload your course syllabus, lecture slides, or revision notes above to start asking grounded questions.</p>
               </div>
             ) : (
@@ -418,30 +418,30 @@ export default function MaterialsPage() {
                       onClick={() => setSelectedMaterialId(mat.id)}
                       className={`p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col gap-2 ${
                         isSelected 
-                          ? "border-[var(--cta-primary)] bg-[var(--surface-nested)] shadow-xs" 
-                          : "border-[var(--border)] hover:border-[var(--border-subtle)] hover:bg-[var(--surface-nested)]"
+                          ? "border-[#fcfdff] bg-[#101012] shadow-xs" 
+                          : "border-[rgba(255,255,255,0.06)] bg-[#0a0a0c] hover:border-[rgba(255,255,255,0.18)] hover:bg-[#101012]"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${mat.file_type === 'pdf' ? 'bg-[#FAECE7] text-[var(--cta-primary)]' : 'bg-[#EEEDFE] text-[#3C3489]'}`}>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${mat.file_type === 'pdf' ? 'bg-[#a5b4fc]/20 text-[#a5b4fc]' : 'bg-[#085041]/20 text-[#2fe0b4]'}`}>
                             {mat.file_type}
                           </span>
-                          <h3 className="font-bold text-xs text-[var(--text-primary)] truncate">{mat.title}</h3>
+                          <h3 className="font-bold text-xs text-[#fcfdff] truncate">{mat.title}</h3>
                         </div>
 
                         <div className="flex items-center gap-1.5 shrink-0">
                           <button
                             title="Inspect Chunks"
                             onClick={(e) => { e.stopPropagation(); handleInspect(mat.id); }}
-                            className="p-1 rounded text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white"
+                            className="p-1 rounded text-[#888e90] hover:text-[#fcfdff] hover:bg-[#16161a]"
                           >
                             <Layers className="w-3.5 h-3.5" />
                           </button>
                           <button
                             title="Delete Material"
                             onClick={(e) => handleDelete(mat.id, e)}
-                            className="p-1 rounded text-[var(--text-secondary)] hover:text-[#72243E] hover:bg-[#FAEAF0]"
+                            className="p-1 rounded text-[#888e90] hover:text-[#ff7b9c] hover:bg-[#72243E]/20"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -449,12 +449,12 @@ export default function MaterialsPage() {
                       </div>
 
                       {mat.summary && (
-                        <p className="text-[11px] text-[var(--text-secondary)] line-clamp-2 italic">
+                        <p className="text-[11px] text-[#888e90] line-clamp-2 italic">
                           "{mat.summary}"
                         </p>
                       )}
 
-                      <div className="flex items-center gap-3 text-[10px] text-[var(--text-tertiary)] pt-1 border-t border-[var(--border)]">
+                      <div className="flex items-center gap-3 text-[10px] text-[#888e90] pt-1 border-t border-[rgba(255,255,255,0.08)]">
                         <span>{mat.chunk_count} chunks</span>
                         <span>•</span>
                         <span>{mat.total_pages} page(s)</span>
@@ -470,22 +470,22 @@ export default function MaterialsPage() {
         </div>
 
         {/* Right Column (7 Cols): Grounded RAG Chat & Citations */}
-        <div className="lg:col-span-7 flex flex-col bg-white border border-[var(--border)] rounded-2xl shadow-xs overflow-hidden h-[750px]">
+        <div className="lg:col-span-7 flex flex-col bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-xs overflow-hidden h-[750px]">
           
           {/* Chat Scope Header */}
-          <div className="px-6 py-4 border-b border-[var(--border)] bg-white flex items-center justify-between">
+          <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] bg-[#0a0a0c] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#E1F5EE] text-[#085041] flex items-center justify-center font-bold text-xs">
+              <div className="w-8 h-8 rounded-full bg-[#085041]/20 text-[#2fe0b4] border border-[#085041]/40 flex items-center justify-center font-bold text-xs">
                 AI
               </div>
               <div>
-                <h3 className="font-bold text-xs text-[var(--text-primary)] flex items-center gap-2">
+                <h3 className="font-bold text-xs text-[#fcfdff] flex items-center gap-2">
                   <span>Document Tutor</span>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[var(--surface-nested)] border border-[var(--border)] text-[var(--text-secondary)]">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#101012] border border-[rgba(255,255,255,0.08)] text-[#888e90]">
                     {selectedMaterial ? `Scope: ${selectedMaterial.title}` : "Scope: All Study Library"}
                   </span>
                 </h3>
-                <p className="text-[10px] text-[var(--text-secondary)]">
+                <p className="text-[10px] text-[#888e90]">
                   Answers generated strictly from your uploaded course materials
                 </p>
               </div>
@@ -494,7 +494,7 @@ export default function MaterialsPage() {
             {selectedMaterial && (
               <button
                 onClick={() => handleInspect(selectedMaterial.id)}
-                className="text-xs text-[var(--cta-primary)] hover:underline flex items-center gap-1 font-semibold"
+                className="text-xs text-[#a5b4fc] hover:underline flex items-center gap-1 font-semibold"
               >
                 <Layers className="w-3.5 h-3.5" />
                 <span>View Excerpts</span>
@@ -503,21 +503,21 @@ export default function MaterialsPage() {
           </div>
 
           {/* Chat Messages Feed */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--surface-nested)]">
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[#000000]">
             {chatHistory.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto">
-                <div className="w-12 h-12 rounded-2xl bg-[#FAECE7] text-[var(--cta-primary)] flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#101012] border border-[rgba(255,255,255,0.1)] text-[#a5b4fc] flex items-center justify-center mb-4">
                   <Sparkles className="w-6 h-6" />
                 </div>
-                <h4 className="font-bold text-sm text-[var(--text-primary)] mb-1">
+                <h4 className="font-bold text-sm text-[#fcfdff] mb-1">
                   Ask Anything About Your Notes
                 </h4>
-                <p className="text-xs text-[var(--text-secondary)] mb-6">
+                <p className="text-xs text-[#888e90] mb-6">
                   Select a document on the left and ask questions. The AI Study Tutor will answer using only your uploaded materials and cite exact pages.
                 </p>
 
                 <div className="w-full space-y-2 text-left">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">Try asking:</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#888e90]">Try asking:</p>
                   {[
                     "What are the main concepts covered in this document?",
                     "Summarize the key definitions and formulas.",
@@ -526,7 +526,7 @@ export default function MaterialsPage() {
                     <button
                       key={idx}
                       onClick={() => handleAskQuestion(sample)}
-                      className="w-full text-left p-2.5 rounded-xl border border-[var(--border)] bg-white hover:border-[var(--cta-primary)] hover:text-[var(--cta-primary)] text-xs transition-all flex items-center justify-between group cursor-pointer"
+                      className="w-full text-left p-2.5 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0a0a0c] hover:border-[#fcfdff] hover:text-[#fcfdff] text-xs text-[rgba(252,253,255,0.85)] transition-all flex items-center justify-between group cursor-pointer"
                     >
                       <span className="truncate">{sample}</span>
                       <Send className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -545,8 +545,8 @@ export default function MaterialsPage() {
                     <div
                       className={`max-w-[85%] rounded-2xl p-4 text-xs leading-relaxed shadow-xs ${
                         isUser
-                          ? "bg-[var(--cta-primary)] text-white font-medium"
-                          : "bg-white text-[var(--text-primary)] border border-[var(--border)]"
+                          ? "bg-[#fcfdff] text-[#000000] font-medium"
+                          : "bg-[#0a0a0c] text-[#fcfdff] border border-[rgba(255,255,255,0.08)]"
                       }`}
                     >
                       <ReactMarkdown
@@ -559,7 +559,7 @@ export default function MaterialsPage() {
                           ul: ({node, ...props}) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
                           ol: ({node, ...props}) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
                           code: ({node, ...props}) => (
-                            <code className="bg-[var(--surface-nested)] text-[var(--cta-primary)] px-1.5 py-0.5 rounded text-[11px] font-mono" {...props} />
+                            <code className="bg-[#101012] text-[#a5b4fc] px-1.5 py-0.5 rounded text-[11px] font-mono" {...props} />
                           )
                         }}
                       >
@@ -568,9 +568,9 @@ export default function MaterialsPage() {
 
                       {/* Source Citations Shelf */}
                       {msg.citations && msg.citations.length > 0 && (
-                        <div className="mt-3 pt-3 border-t border-[var(--border)] space-y-1.5">
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-1.5">
-                            <BookOpen className="w-3 h-3 text-[var(--cta-primary)]" />
+                        <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.08)] space-y-1.5">
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-[#888e90] flex items-center gap-1.5">
+                            <BookOpen className="w-3 h-3 text-[#a5b4fc]" />
                             <span>Verified Source Citations ({msg.citations.length})</span>
                           </p>
 
@@ -582,18 +582,18 @@ export default function MaterialsPage() {
                                 <div
                                   key={cIdx}
                                   onClick={() => setExpandedCitations(prev => ({ ...prev, [citeKey]: !isExpanded }))}
-                                  className="p-2 rounded-xl bg-[var(--surface-nested)] border border-[var(--border)] text-[11px] hover:border-[var(--cta-primary)] cursor-pointer transition-colors"
+                                  className="p-2 rounded-xl bg-[#101012] border border-[rgba(255,255,255,0.08)] text-[11px] hover:border-[#fcfdff] cursor-pointer transition-colors"
                                 >
-                                  <div className="flex items-center justify-between font-semibold text-[var(--text-primary)]">
+                                  <div className="flex items-center justify-between font-semibold text-[#fcfdff]">
                                     <span className="truncate max-w-[120px]">
                                       {cite.page_number ? `Page ${cite.page_number}` : cite.material_title}
                                     </span>
-                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#E1F5EE] text-[#085041]">
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#085041]/20 text-[#2fe0b4]">
                                       {(cite.relevance_score * 100).toFixed(0)}% match
                                     </span>
                                   </div>
-                                  <p className="text-[10px] text-[var(--text-secondary)] mt-1 line-clamp-2 italic">
-                                    "{cite.excerpt}"
+                                  <p className="text-[10px] text-[#888e90] mt-1 line-clamp-2 italic">
+                                    &quot;{cite.excerpt}&quot;
                                   </p>
                                 </div>
                               );
@@ -602,15 +602,15 @@ export default function MaterialsPage() {
                         </div>
                       )}
                     </div>
-                    <span className="text-[9px] text-[var(--text-tertiary)] mt-1 px-1">{msg.timestamp}</span>
+                    <span className="text-[9px] text-[#888e90] mt-1 px-1">{msg.timestamp}</span>
                   </div>
                 );
               })
             )}
 
             {isAnswering && (
-              <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)] bg-white p-3 rounded-2xl border border-[var(--border)] w-fit shadow-xs">
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--cta-primary)]" />
+              <div className="flex items-center gap-2 text-xs text-[#888e90] bg-[#0a0a0c] p-3 rounded-2xl border border-[rgba(255,255,255,0.08)] w-fit shadow-xs">
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#fcfdff]" />
                 <span>Searching document excerpts and synthesizing answer...</span>
               </div>
             )}
@@ -618,7 +618,7 @@ export default function MaterialsPage() {
           </div>
 
           {/* Chat Input Bar */}
-          <div className="p-4 border-t border-[var(--border)] bg-white">
+          <div className="p-4 border-t border-[rgba(255,255,255,0.08)] bg-[#0a0a0c]">
             <form
               onSubmit={(e) => { e.preventDefault(); handleAskQuestion(); }}
               className="flex items-center gap-2"
@@ -628,12 +628,12 @@ export default function MaterialsPage() {
                 value={questionInput}
                 onChange={(e) => setQuestionInput(e.target.value)}
                 placeholder={selectedMaterial ? `Ask a question about ${selectedMaterial.title}...` : "Ask a question across all study materials..."}
-                className="flex-1 px-4 py-2.5 text-xs rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] focus:outline-none focus:border-[var(--cta-primary)] focus:bg-white transition-all"
+                className="flex-1 px-4 py-2.5 text-xs rounded-xl border border-[rgba(255,255,255,0.1)] bg-[#101012] text-[#fcfdff] placeholder:text-[#888e90] focus:outline-none focus:border-[#fcfdff] transition-all"
               />
               <button
                 type="submit"
                 disabled={!questionInput.trim() || isAnswering}
-                className="px-4 py-2.5 rounded-xl bg-[var(--cta-primary)] text-white font-semibold text-xs hover:bg-[var(--cta-primary-hover)] transition-all flex items-center gap-1.5 shadow-xs disabled:opacity-50 cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-[#fcfdff] hover:bg-white/90 text-[#000000] font-semibold text-xs transition-all flex items-center gap-1.5 shadow-xs disabled:opacity-50 cursor-pointer"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Ask</span>
@@ -645,16 +645,16 @@ export default function MaterialsPage() {
 
       {/* Chunk Inspector Modal */}
       {showChunkInspector && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl border border-[var(--border)] max-w-2xl w-full max-h-[80vh] flex flex-col shadow-lg overflow-hidden">
-            <div className="p-4 border-b border-[var(--border)] flex items-center justify-between">
-              <h3 className="font-bold text-sm text-[var(--text-primary)] flex items-center gap-2">
-                <Layers className="w-4 h-4 text-[var(--cta-primary)]" />
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0a0a0c] rounded-2xl border border-[rgba(255,255,255,0.12)] max-w-2xl w-full max-h-[80vh] flex flex-col shadow-lg overflow-hidden text-[#fcfdff]">
+            <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between">
+              <h3 className="font-bold text-sm text-[#fcfdff] flex items-center gap-2">
+                <Layers className="w-4 h-4 text-[#a5b4fc]" />
                 <span>Semantic Chunks Preview ({inspectChunks.length} Chunks)</span>
               </h3>
               <button
                 onClick={() => setShowChunkInspector(false)}
-                className="text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-bold px-2 py-1"
+                className="text-xs text-[#888e90] hover:text-[#fcfdff] font-bold px-2 py-1"
               >
                 ✕ Close
               </button>
@@ -662,12 +662,12 @@ export default function MaterialsPage() {
 
             <div className="p-4 overflow-y-auto space-y-3 flex-1">
               {inspectChunks.map((c, i) => (
-                <div key={c.id} className="p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] text-xs">
-                  <div className="flex items-center justify-between text-[10px] font-bold text-[var(--text-secondary)] mb-1">
+                <div key={c.id} className="p-3 rounded-xl border border-[rgba(255,255,255,0.06)] bg-[#101012] text-xs">
+                  <div className="flex items-center justify-between text-[10px] font-bold text-[#888e90] mb-1">
                     <span>Chunk #{i + 1} {c.page_number ? `• Page ${c.page_number}` : ""}</span>
                     <span>{c.char_count} chars</span>
                   </div>
-                  <p className="text-[var(--text-primary)] leading-relaxed">{c.text}</p>
+                  <p className="text-[rgba(252,253,255,0.85)] leading-relaxed">{c.text}</p>
                 </div>
               ))}
             </div>

@@ -1,7 +1,8 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import RouteGuard from "@/components/auth/RouteGuard";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en" className="h-full antialiased">
       <body className={`${inter.className} min-h-full flex flex-col bg-background text-text-primary`}>
         <AuthProvider>
-          {children}
+          <RouteGuard>
+            {children}
+          </RouteGuard>
         </AuthProvider>
       </body>
     </html>

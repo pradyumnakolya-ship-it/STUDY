@@ -28,29 +28,31 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [token, setToken] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("studygpt_token");
+    }
+    return null;
+  });
+
+  const [user, setUser] = useState<UserProfile | null>(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("studygpt_user");
+      if (storedUser) {
+        try {
+          return JSON.parse(storedUser);
+        } catch (e) {
+          console.error("Failed to parse stored user", e);
+        }
+      }
+    }
+    return null;
+  });
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const isAuthenticated = !!(token && user && user.id !== "user-default");
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("studygpt_token");
-    const storedUser = localStorage.getItem("studygpt_user");
-    if (storedToken && storedUser) {
-      try {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error("Failed to parse stored user", e);
-        setUser(null);
-        setToken(null);
-      }
-    }
-    // No default user — user stays null until they log in or sign up
-    setIsLoading(false);
-  }, []);
 
   const login = async (emailOrUsername: string, password: string) => {
     const res = await fetch(`${API_BASE}/auth/login`, {

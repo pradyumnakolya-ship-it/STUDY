@@ -25,6 +25,7 @@ import CreateGuildModal, { GuildItem } from "../guilds/CreateGuildModal";
 import JoinGuildModal from "../guilds/JoinGuildModal";
 import DailyLeaderboardModal from "../guilds/DailyLeaderboardModal";
 import FinalLeaderboardModal from "../guilds/FinalLeaderboardModal";
+import { SettingsModal } from "./SettingsModal";
 import { joinGuild, listGuilds } from "@/lib/api";
 
 export default function StudioLayout() {
@@ -174,6 +175,7 @@ def has_cycle(head):
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [isDailyLeaderboardOpen, setIsDailyLeaderboardOpen] = useState(false);
   const [isFinalLeaderboardOpen, setIsFinalLeaderboardOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [leaderboardInfo, setLeaderboardInfo] = useState({ day: 1, earnedXP: 0, passed: false });
 
   // Mobile layout state
@@ -245,7 +247,20 @@ def has_cycle(head):
   };
 
   const handleProceedNextDay = () => {
-    // Canvas will handle switching to next day
+    setGuilds((prev) =>
+      prev.map((g) => {
+        if (g.id === activeGuildId) {
+          const nextDay = Math.min(g.currentDay + 1, g.days.length);
+          const nextUnlocked = Math.min(g.unlockedDay + 1, g.days.length);
+          return {
+            ...g,
+            currentDay: nextDay,
+            unlockedDay: nextUnlocked
+          };
+        }
+        return g;
+      })
+    );
   };
 
   const handleAskAI = (prompt: string) => {
@@ -256,30 +271,30 @@ def has_cycle(head):
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#F7F3EA] overflow-hidden text-[#2C2A24]">
+    <div className="flex h-screen w-full bg-[#000000] overflow-hidden text-[#fcfdff]">
       {/* ── 1. LEFT COLUMN: GUILDS, ROADMAP NAV & XP ── */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#FBF9F3] border-r border-[#E4DFD1] flex flex-col justify-between transition-transform duration-300 md:relative md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#0a0a0c] border-r border-[rgba(255,255,255,0.08)] flex flex-col justify-between transition-transform duration-300 md:relative md:translate-x-0 ${
           isSidebarOpenMobile ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full overflow-hidden">
           {/* Studio Brand Header */}
-          <div className="p-4 border-b border-[#E4DFD1] flex items-center justify-between bg-[#FFFFFF]">
+          <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between bg-[#0a0a0c]">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#2C2A24] text-[#F7F3EA] flex items-center justify-center font-black text-sm">
+              <div className="w-8 h-8 rounded-lg bg-[#fcfdff] text-[#000000] flex items-center justify-center font-bold text-sm">
                 SG
               </div>
               <div>
-                <span className="font-extrabold text-sm tracking-tight flex items-center gap-1.5 text-[#2C2A24]">
+                <span className="font-bold text-sm tracking-tight flex items-center gap-1.5 text-[#fcfdff]">
                   Study<span>GPT</span>
-                  <span className="text-[10px] bg-[#EEEDFE] text-[#3C3489] font-bold px-2 py-0.5 rounded-[8px]">
+                  <span className="text-[10px] bg-[#101012] border border-[rgba(255,255,255,0.14)] text-[#ff801f] font-mono font-medium px-2 py-0.5 rounded-full">
                     GUILD
                   </span>
                 </span>
                 <div className="flex items-center gap-2">
-                  <p className="text-[10px] text-[#888780]">Section 8 Learning</p>
-                  <a href="/home" className="text-[10px] font-bold text-[#D85A30] hover:underline">
+                  <p className="text-[10px] text-[#888e90]">Section 8 Learning</p>
+                  <a href="/home" className="text-[10px] font-medium text-[#3b9eff] hover:underline">
                     • Dashboard
                   </a>
                 </div>
@@ -288,51 +303,51 @@ def has_cycle(head):
 
             <button 
               onClick={() => setIsSidebarOpenMobile(false)}
-              className="md:hidden text-[#5F5E5A] hover:text-[#2C2A24] p-1"
+              className="md:hidden text-[#888e90] hover:text-[#fcfdff] p-1"
             >
               <X size={18} />
             </button>
           </div>
 
           {/* Active Guild Switcher Card */}
-          <div className="p-3 border-b border-[#E4DFD1] bg-[#FFFFFF]">
-            <div className="text-[10px] uppercase tracking-wider font-bold text-[#888780] mb-1 px-1 flex items-center justify-between">
+          <div className="p-3 border-b border-[rgba(255,255,255,0.08)] bg-[#0a0a0c]">
+            <div className="text-[10px] uppercase tracking-wider font-mono text-[#888e90] mb-1 px-1 flex items-center justify-between">
               <span>Active Study Guild</span>
-              <span className="text-[#3C3489] font-mono font-bold">{guilds.length} Guilds</span>
+              <span className="text-[#3b9eff] font-mono font-medium">{guilds.length} Guilds</span>
             </div>
             <button 
               onClick={() => setIsJoinModalOpen(true)}
-              className="w-full p-2.5 rounded-[12px] bg-[#FBF9F3] border border-[#E4DFD1] hover:border-[#B4B2A9] transition-colors flex items-center justify-between text-left group"
+              className="w-full p-2.5 rounded-[8px] bg-[#101012] border border-[rgba(255,255,255,0.14)] hover:border-[rgba(255,255,255,0.3)] transition-all flex items-center justify-between text-left group cursor-pointer"
             >
               <div className="flex items-center gap-2 overflow-hidden">
-                <div className="w-7 h-7 rounded-[8px] bg-[#FFFFFF] border border-[#E4DFD1] text-[#2C2A24] flex items-center justify-center shrink-0 text-xs font-bold">
+                <div className="w-7 h-7 rounded-[6px] bg-[#000000] border border-[rgba(255,255,255,0.1)] text-[#fcfdff] flex items-center justify-center shrink-0 text-xs font-bold">
                   ⚔️
                 </div>
                 <div className="truncate">
-                  <div className="font-bold text-xs text-[#2C2A24] truncate transition-colors">
+                  <div className="font-medium text-xs text-[#fcfdff] truncate transition-colors">
                     {activeGuild.name}
                   </div>
-                  <div className="text-[10px] text-[#5F5E5A] truncate">
+                  <div className="text-[10px] text-[#888e90] truncate">
                     {activeGuild.days.length} Days • Click to switch
                   </div>
                 </div>
               </div>
-              <ChevronDown size={14} className="text-[#5F5E5A] shrink-0" />
+              <ChevronDown size={14} className="text-[#888e90] shrink-0" />
             </button>
           </div>
 
           {/* Guild Actions: Create & Join */}
-          <div className="p-3 grid grid-cols-2 gap-2 border-b border-[#E4DFD1] bg-[#FFFFFF]">
+          <div className="p-3 grid grid-cols-2 gap-2 border-b border-[rgba(255,255,255,0.08)] bg-[#0a0a0c]">
             <button
               onClick={() => setIsCreateModalOpen(true)}
-              className="py-2 px-2.5 rounded-[8px] bg-[#D85A30] hover:bg-[#D85A30]/90 text-white font-bold text-[11px] transition-all flex items-center justify-center gap-1"
+              className="py-2 px-2.5 rounded-[8px] bg-[#fcfdff] hover:bg-[#f1f7fe] text-[#000000] font-medium text-[11px] transition-all flex items-center justify-center gap-1 cursor-pointer"
             >
               <Plus size={13} />
               Create Guild
             </button>
             <button
               onClick={() => setIsJoinModalOpen(true)}
-              className="py-2 px-2.5 rounded-[8px] bg-transparent hover:bg-[#FBF9F3] border border-[#B4B2A9] text-[#444441] font-bold text-[11px] transition-all flex items-center justify-center gap-1"
+              className="py-2 px-2.5 rounded-[8px] bg-[#101012] hover:bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.14)] text-[#fcfdff] font-medium text-[11px] transition-all flex items-center justify-center gap-1 cursor-pointer"
             >
               <Users size={13} />
               Join Guild
@@ -342,30 +357,30 @@ def has_cycle(head):
           {/* Scrollable Guild Stats & Roadmap Days */}
           <div className="flex-1 overflow-y-auto p-3 space-y-4">
             {/* Daily Challenge & Leaderboard Widget */}
-            <div className="p-4 rounded-[12px] bg-[#FFFFFF] border border-[#E4DFD1] space-y-3 card-elevation">
+            <div className="p-4 rounded-[12px] bg-[#101012] border border-[rgba(255,255,255,0.14)] space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-[#2C2A24] flex items-center gap-1.5">
-                  <Trophy size={13} className="text-[#3C3489]" />
+                <span className="text-[11px] font-medium text-[#fcfdff] flex items-center gap-1.5">
+                  <Trophy size={13} className="text-[#ffc53d]" />
                   Guild Standing
                 </span>
-                <span className="text-[10px] bg-[#FBF9F3] text-[#5F5E5A] font-bold px-2 py-0.5 rounded-[8px] border border-[#E4DFD1]">
+                <span className="text-[10px] bg-[#0a0a0c] text-[#888e90] font-mono px-2 py-0.5 rounded-full border border-[rgba(255,255,255,0.08)]">
                   Day {activeGuild.unlockedDay} / {activeGuild.days.length}
                 </span>
               </div>
 
-              <p className="text-[11px] text-[#5F5E5A] leading-snug">
-                Pass daily quizzes with <strong>≥ 75%</strong> to unlock roadmap topics and earn up to <strong>+20 XP</strong> per question.
+              <p className="text-[11px] text-[rgba(252,253,255,0.7)] leading-snug">
+                Pass daily quizzes with <strong className="text-[#fcfdff]">≥ 75%</strong> to unlock roadmap topics and earn up to <strong className="text-[#11ff99]">+20 XP</strong> per question.
               </p>
 
-              <div className="pt-2 border-t border-[#EDE8DB] flex items-center justify-between text-xs">
+              <div className="pt-2 border-t border-[rgba(255,255,255,0.06)] flex items-center justify-between text-xs">
                 <button
                   onClick={() => handleOpenDailyLeaderboard(activeGuild.unlockedDay, 0, false)}
-                  className="text-[11px] text-[#3C3489] hover:underline font-bold flex items-center gap-1"
+                  className="text-[11px] text-[#3b9eff] hover:underline font-medium flex items-center gap-1 cursor-pointer"
                 >
                   <Trophy size={12} />
                   Daily Leaderboard
                 </button>
-                <span className="text-[11px] bg-[#EEEDFE] text-[#3C3489] font-bold px-2 py-0.5 rounded-[8px] flex items-center gap-1">
+                <span className="text-[11px] bg-[#000000] text-[#11ff99] font-mono font-medium px-2 py-0.5 rounded-full border border-[rgba(34,255,153,0.3)] flex items-center gap-1">
                   <Zap size={11} />
                   {activeGuild.userXP} XP
                 </span>
@@ -374,7 +389,7 @@ def has_cycle(head):
 
             {/* Daily Roadmap Topic List */}
             <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-[#888780] uppercase tracking-wider px-2 block mb-2">
+              <span className="text-[10px] font-mono text-[#888e90] uppercase tracking-wider px-2 block mb-2">
                 Roadmap Outline ({activeGuild.days.length} Days)
               </span>
 
@@ -387,26 +402,26 @@ def has_cycle(head):
                     key={d.day_number}
                     className={`p-2.5 rounded-[8px] text-xs border flex items-center justify-between transition-colors ${
                       isCompleted
-                        ? "bg-[#E1F5EE] border-[#E1F5EE] text-[#085041]"
+                        ? "bg-[rgba(34,255,153,0.08)] border-[rgba(34,255,153,0.3)] text-[#11ff99]"
                         : isUnlocked
-                        ? "bg-[#FFFFFF] border-[#E4DFD1] text-[#2C2A24]"
-                        : "bg-[#FBF9F3] border-[#EDE8DB] text-[#888780] opacity-70"
+                        ? "bg-[#101012] border-[rgba(255,255,255,0.14)] text-[#fcfdff]"
+                        : "bg-[#06060a] border-[rgba(255,255,255,0.04)] text-[#464a4d] opacity-70"
                     }`}
                   >
                     <div className="flex items-center gap-2 truncate">
-                      <span className={`w-5 h-5 rounded-[6px] flex items-center justify-center font-bold text-[10px] shrink-0 ${
+                      <span className={`w-5 h-5 rounded-[4px] flex items-center justify-center font-mono font-bold text-[10px] shrink-0 ${
                         isCompleted
-                          ? "bg-[#085041] text-white"
+                          ? "bg-[#11ff99] text-[#000000]"
                           : isUnlocked
-                          ? "bg-[#D85A30] text-white"
-                          : "bg-[#EDE8DB] text-[#888780]"
+                          ? "bg-[#fcfdff] text-[#000000]"
+                          : "bg-[#464a4d] text-[#000000]"
                       }`}>
                         D{d.day_number}
                       </span>
                       <span className="truncate font-medium">{d.title}</span>
                     </div>
 
-                    <span className="text-[10px] font-bold shrink-0">
+                    <span className="text-[10px] font-mono shrink-0">
                       {isCompleted ? "✓ Passed" : isUnlocked ? "Unlocked" : "Locked"}
                     </span>
                   </div>
@@ -416,15 +431,15 @@ def has_cycle(head):
           </div>
 
           {/* User Profile & Guild Victory Footer */}
-          <div className="p-3.5 border-t border-[#E4DFD1] bg-[#FFFFFF] flex items-center justify-between">
+          <div className="p-3.5 border-t border-[rgba(255,255,255,0.08)] bg-[#0a0a0c] flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#FBF9F3] border border-[#E4DFD1] flex items-center justify-center font-extrabold text-xs text-[#2C2A24]">
+              <div className="w-8 h-8 rounded-full bg-[#101012] border border-[rgba(255,255,255,0.14)] flex items-center justify-center font-bold text-xs text-[#fcfdff]">
                 HA
               </div>
               <div>
-                <div className="font-bold text-xs text-[#2C2A24]">Harsha A</div>
-                <div className="text-[10px] text-[#5F5E5A] flex items-center gap-1">
-                  <span className="text-[#3C3489] font-bold flex items-center gap-0.5">
+                <div className="font-bold text-xs text-[#fcfdff]">Harsha A</div>
+                <div className="text-[10px] text-[#888e90] flex items-center gap-1 font-mono">
+                  <span className="text-[#11ff99] font-medium flex items-center gap-0.5">
                     <Zap size={10} />
                     {activeGuild.userXP} XP
                   </span>
@@ -433,13 +448,22 @@ def has_cycle(head):
               </div>
             </div>
 
-            <button
-              onClick={() => setIsFinalLeaderboardOpen(true)}
-              className="p-1.5 text-[#5F5E5A] hover:text-[#2C2A24] rounded-[8px] hover:bg-[#FBF9F3] transition-colors"
-              title="Final Winner Podium"
-            >
-              <Crown size={17} />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setIsSettingsModalOpen(true)}
+                className="p-1.5 text-[#888e90] hover:text-[#11ff99] rounded-[8px] hover:bg-[#101012] transition-colors cursor-pointer"
+                title="API Key Settings (BYOK)"
+              >
+                <Settings size={17} />
+              </button>
+              <button
+                onClick={() => setIsFinalLeaderboardOpen(true)}
+                className="p-1.5 text-[#888e90] hover:text-[#ffc53d] rounded-[8px] hover:bg-[#101012] transition-colors cursor-pointer"
+                title="Final Winner Podium"
+              >
+                <Crown size={17} />
+              </button>
+            </div>
           </div>
         </div>
       </aside>
@@ -453,25 +477,34 @@ def has_cycle(head):
       )}
 
       {/* ── 2. CENTER COLUMN: STUDY CANVAS ── */}
-      <main className="flex-1 flex flex-col min-w-0 h-full relative overflow-hidden bg-[#F7F3EA]">
+      <main className="flex-1 flex flex-col min-w-0 h-full relative overflow-hidden bg-[#000000]">
         {/* Mobile Navbar Header */}
-        <div className="md:hidden px-4 py-2.5 bg-[#FFFFFF] border-b border-[#E4DFD1] flex items-center justify-between">
+        <div className="md:hidden px-4 py-2.5 bg-[#0a0a0c] border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between">
           <button
             onClick={() => setIsSidebarOpenMobile(true)}
-            className="p-1.5 rounded-[8px] bg-[#FBF9F3] border border-[#E4DFD1] text-[#2C2A24]"
+            className="p-1.5 rounded-[8px] bg-[#101012] border border-[rgba(255,255,255,0.12)] text-[#fcfdff]"
           >
             <Menu size={18} />
           </button>
-          <span className="font-extrabold text-xs tracking-tight text-[#2C2A24]">
+          <span className="font-extrabold text-xs tracking-tight text-[#fcfdff]">
             StudyGPT Guild
           </span>
-          <button
-            onClick={() => setIsAITutorCollapsed(!isAITutorCollapsed)}
-            className="p-1.5 rounded-[8px] border border-[#B4B2A9] text-[#444441] font-bold text-xs flex items-center gap-1"
-          >
-            <Sparkles size={14} />
-            AI Tutor
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsSettingsModalOpen(true)}
+              className="p-1.5 rounded-[8px] border border-[rgba(255,255,255,0.12)] text-[#11ff99] font-bold text-xs"
+              title="Settings"
+            >
+              <Settings size={15} />
+            </button>
+            <button
+              onClick={() => setIsAITutorCollapsed(!isAITutorCollapsed)}
+              className="p-1.5 rounded-[8px] border border-[rgba(255,255,255,0.12)] text-[#fcfdff] font-bold text-xs flex items-center gap-1"
+            >
+              <Sparkles size={14} />
+              AI Tutor
+            </button>
+          </div>
         </div>
 
         <StudyCanvas 
@@ -493,6 +526,11 @@ def has_cycle(head):
       />
 
       {/* ── MODALS ── */}
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+      />
+
       <CreateGuildModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}

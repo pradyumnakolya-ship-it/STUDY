@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { X, Trophy, Medal, Zap, ArrowRight } from "lucide-react";
+import { X, Trophy, Zap, ArrowRight } from "lucide-react";
 import { getDailyLeaderboard } from "@/lib/api";
 
 export interface LeaderboardEntry {
@@ -53,26 +53,26 @@ export default function DailyLeaderboardModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-[#FFFFFF] border border-[#E4DFD1] rounded-[12px] shadow-2xl overflow-hidden p-6 md:p-8 space-y-6 text-[#2C2A24]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
+      <div className="relative w-full max-w-lg bg-[#0a0a0c] border border-[rgba(255,255,255,0.12)] rounded-[12px] shadow-2xl overflow-hidden p-6 md:p-8 space-y-6 text-[#fcfdff]">
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-[#EDE8DB] pb-4">
+        <div className="flex items-start justify-between border-b border-[rgba(255,255,255,0.08)] pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[8px] bg-[#FBF9F3] border border-[#E4DFD1] flex items-center justify-center text-[#3C3489]">
+            <div className="w-10 h-10 rounded-[8px] bg-[#101012] border border-[rgba(255,255,255,0.1)] flex items-center justify-center text-[#a5b4fc]">
               <Trophy size={22} />
             </div>
             <div>
-              <div className="text-[10px] text-[#888780] uppercase tracking-wider font-semibold">
+              <div className="text-[10px] text-[#888e90] uppercase tracking-wider font-semibold">
                 {guildName}
               </div>
-              <h2 className="text-xl font-bold text-[#2C2A24] tracking-tight">
+              <h2 className="text-xl font-bold text-[#fcfdff] tracking-tight">
                 Day {dayNumber} Quiz Leaderboard
               </h2>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-[#5F5E5A] hover:text-[#2C2A24] p-1 rounded-[6px] hover:bg-[#FBF9F3] transition-colors"
+            className="text-[rgba(252,253,255,0.7)] hover:text-[#fcfdff] p-1 rounded-[6px] hover:bg-[#101012] transition-colors"
           >
             <X size={20} />
           </button>
@@ -85,23 +85,23 @@ export default function DailyLeaderboardModal({
               key={item.name}
               className={`p-3.5 rounded-[8px] border flex items-center justify-between transition-all card-elevation ${
                 item.isCurrentUser
-                  ? "bg-[#FAECE7] border-2 border-[#D85A30]"
-                  : "bg-[#FFFFFF] border-[#E4DFD1]"
+                  ? "bg-[#101012] border-2 border-[#fcfdff]"
+                  : "bg-[#0a0a0c] border-[rgba(255,255,255,0.08)]"
               }`}
             >
               <div className="flex items-center gap-3">
                 <div className={`w-7 h-7 rounded-[6px] flex items-center justify-center font-bold text-xs ${
                   item.rank === 1
-                    ? "bg-[#EEEDFE] text-[#3C3489] font-black"
-                    : "bg-[#FBF9F3] text-[#5F5E5A] border border-[#E4DFD1]"
+                    ? "bg-[#a5b4fc]/20 text-[#a5b4fc] font-black border border-[#a5b4fc]/40"
+                    : "bg-[#101012] text-[#888e90] border border-[rgba(255,255,255,0.08)]"
                 }`}>
                   #{item.rank}
                 </div>
                 <div>
-                  <div className={`text-xs font-bold ${item.isCurrentUser ? "text-[#D85A30]" : "text-[#2C2A24]"}`}>
+                  <div className={`text-xs font-bold ${item.isCurrentUser ? "text-[#fcfdff]" : "text-[rgba(252,253,255,0.9)]"}`}>
                     {item.name} {item.isCurrentUser && "(You)"}
                   </div>
-                  <div className="text-[10px] text-[#888780]">
+                  <div className="text-[10px] text-[#888e90]">
                     Total Guild XP: {item.totalXP}
                   </div>
                 </div>
@@ -109,12 +109,12 @@ export default function DailyLeaderboardModal({
 
               <div className="flex items-center gap-3">
                 <div className="text-right">
-                  <div className="text-xs font-bold text-[#3C3489] flex items-center gap-1 justify-end">
-                    <Zap size={12} className="text-[#3C3489]" />
+                  <div className="text-xs font-bold text-[#a5b4fc] flex items-center gap-1 justify-end">
+                    <Zap size={12} className="text-[#a5b4fc]" />
                     +{item.dailyXP} XP
                   </div>
                   <span className={`text-[9px] uppercase font-bold px-2 py-0.5 rounded-[6px] ${
-                    item.passed ? "bg-[#E1F5EE] text-[#085041]" : "bg-[#FAEAF0] text-[#72243E]"
+                    item.passed ? "bg-[#085041]/20 text-[#2fe0b4]" : "bg-[#72243E]/20 text-[#ff7b9c]"
                   }`}>
                     {item.passed ? "Passed" : "Retrying"}
                   </span>
@@ -125,8 +125,8 @@ export default function DailyLeaderboardModal({
         </div>
 
         {/* Action Button */}
-        <div className="pt-2 flex items-center justify-between border-t border-[#EDE8DB]">
-          <span className="text-xs text-[#5F5E5A]">
+        <div className="pt-2 flex items-center justify-between border-t border-[rgba(255,255,255,0.08)]">
+          <span className="text-xs text-[rgba(252,253,255,0.7)]">
             {canProceed 
               ? "Day passed (≥ 75%)! You unlocked the next day." 
               : "Score < 75%. Retry quiz to proceed."}
@@ -137,7 +137,7 @@ export default function DailyLeaderboardModal({
                 onProceedNextDay();
                 onClose();
               }}
-              className="px-5 py-2.5 rounded-[8px] bg-[#D85A30] hover:bg-[#D85A30]/90 text-white font-bold text-xs transition-all flex items-center gap-1.5"
+              className="px-5 py-2.5 rounded-[8px] bg-[#fcfdff] hover:bg-white/90 text-[#000000] font-bold text-xs transition-all flex items-center gap-1.5"
             >
               Continue to Day {dayNumber + 1}
               <ArrowRight size={14} />
@@ -145,7 +145,7 @@ export default function DailyLeaderboardModal({
           ) : (
             <button
               onClick={onClose}
-              className="px-5 py-2 rounded-[8px] bg-transparent border border-[#B4B2A9] text-[#444441] text-xs font-bold hover:bg-[#FBF9F3]"
+              className="px-5 py-2 rounded-[8px] bg-transparent border border-[rgba(255,255,255,0.12)] text-[#fcfdff] text-xs font-bold hover:bg-[#101012]"
             >
               Close
             </button>

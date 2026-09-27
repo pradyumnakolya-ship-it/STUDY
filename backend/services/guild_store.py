@@ -16,11 +16,36 @@ _LOCK = threading.Lock()
 
 def _load() -> dict[str, Any]:
     if not _STORE_PATH.exists():
-        return {"guilds": {}}
-    try:
-        return json.loads(_STORE_PATH.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {"guilds": {}}
+        data = {"guilds": {}}
+    else:
+        try:
+            data = json.loads(_STORE_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            data = {"guilds": {}}
+
+    if "guild-algo-aces" not in data.get("guilds", {}):
+        data.setdefault("guilds", {})["guild-algo-aces"] = {
+            "id": "guild-algo-aces",
+            "name": "⚔️ Algorithm Aces",
+            "topic": "Data Structures & Pointer Algorithms",
+            "creator": "Prof. Ada",
+            "material_text": "Default Algorithm Aces study material",
+            "days": [
+                {
+                    "day_number": 1,
+                    "title": "Singly Linked Lists & Node Architecture",
+                    "learning_objectives": ["Understand memory addresses", "Implement node insertion O(1)", "Traverse nodes with head pointer"],
+                    "key_concepts": ["Node Structure", "Pointer References", "Memory Allocation"],
+                    "study_content": "A Singly Linked List is a linear data structure...",
+                }
+            ],
+            "members": {
+                "Harsha A": {"total_xp": 340, "unlocked_day": 1, "completed_days": []}
+            },
+            "quizzes": {},
+            "attempts": [],
+        }
+    return data
 
 
 def _save(data: dict[str, Any]) -> None:
@@ -155,7 +180,10 @@ def get_quiz(guild_id: str, username: str, day_number: int) -> list[dict[str, An
         return guild["quizzes"].get(str(day_number))
 
 
-def submit_attempt(
+import asyncio
+from services import progress_store
+
+async def submit_attempt(
     guild_id: str,
     username: str,
     day_number: int,
@@ -188,12 +216,16 @@ def submit_attempt(
             if answer is not None and answer == question["correct_idx"]
         )
         passed = score_percent >= 75
+        
+        if day_number in member["completed_days"]:
+            earned_xp = 0
+            
         missed = [
             {
                 "question": question["question"],
-                "chosen_answer": question["options"][answer] if answer is not None else "Unanswered",
+                "chosen_answer": question["options"][answer] if answer is not None and answer < len(question["options"]) else "Unanswered",
                 "correct_answer": question["options"][question["correct_idx"]],
-                "concept_tag": question["concept_tag"],
+                "concept_tag": question.get("concept_tag", "General"),
             }
             for answer, question in zip(answers, questions)
             if answer is None or answer != question["correct_idx"]
@@ -215,13 +247,25 @@ def submit_attempt(
             }
         )
         _save(data)
-        return {
-            "guild": _guild_view(guild, username),
-            "score_percent": score_percent,
-            "earned_xp": earned_xp,
-            "passed": passed,
-            "missed_questions": missed,
-        }
+        
+    topic = guild["days"][day_number - 1]["title"] if day_number <= len(guild["days"]) else guild["topic"]
+    await progress_store.record_quiz_attempt(
+        user_id=username,
+        username=username,
+        topic=topic,
+        score_percent=score_percent,
+        total_questions=len(questions),
+        correct_count=correct_count,
+        xp_earned=earned_xp
+    )
+    
+    return {
+        "guild": _guild_view(guild, username),
+        "score_percent": score_percent,
+        "earned_xp": earned_xp,
+        "passed": passed,
+        "missed_questions": missed,
+    }
 
 
 def daily_leaderboard(guild_id: str, username: str, day_number: int) -> list[dict[str, Any]]:

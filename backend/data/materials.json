@@ -191,6 +191,270 @@
       "chunk_count": 1,
       "summary": "Water is H2O. It is a molecule.",
       "created_at": "2026-09-27T14:33:55.642108+00:00"
+    },
+    {
+      "id": "mat-822c310d",
+      "user_id": "testuser_ef64af",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-27T15:39:08.137909+00:00"
+    },
+    {
+      "id": "mat-59c1eaff",
+      "user_id": "testuser_99dec4",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-27T15:39:08.350443+00:00"
+    },
+    {
+      "id": "mat-a1181cfa",
+      "user_id": "testuser_a6350a",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-27T15:39:09.272090+00:00"
+    },
+    {
+      "id": "mat-61dca4e6",
+      "user_id": "testuser_6e30ec",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-27T17:33:03.163048+00:00"
+    },
+    {
+      "id": "mat-1b90af8d",
+      "user_id": "testuser_c57322",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-27T17:33:03.349829+00:00"
+    },
+    {
+      "id": "mat-04d5db00",
+      "user_id": "testuser_1886cc",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-27T17:33:03.875317+00:00"
+    },
+    {
+      "id": "mat-dc3df346",
+      "user_id": "Harsha A",
+      "title": "RENEWABLE ENERGY SOURCES",
+      "filename": "RENEWABLE ENERGY SOURCES.pdf",
+      "file_type": "pdf",
+      "file_size": 273962,
+      "total_pages": 5,
+      "chunk_count": 5,
+      "summary": "INTRODUCTION TO VERTICAL AXIS WIND TURBINES \u2756 Main Concept :- Unlike traditional \"windmill\" turbines, the main rotor shaft is arranged vertically. \u2756 Key Advantages :- They can capt...",
+      "created_at": "2026-09-27T18:29:54.467489+00:00"
+    },
+    {
+      "id": "mat-60b48867",
+      "user_id": "testuser_d9b19c",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-27T18:41:03.687954+00:00"
+    },
+    {
+      "id": "mat-759f4b7f",
+      "user_id": "testuser_eb0e3c",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-27T18:41:03.889585+00:00"
+    },
+    {
+      "id": "mat-43ba602c",
+      "user_id": "testuser_8ece85",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-27T18:41:04.436820+00:00"
+    },
+    {
+      "id": "mat-209f3f5f",
+      "user_id": "testuser_3bd2c5",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-27T18:43:58.724002+00:00"
+    },
+    {
+      "id": "mat-f1e859c8",
+      "user_id": "testuser_52e2ef",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-27T18:43:59.006868+00:00"
+    },
+    {
+      "id": "mat-3a8e39c0",
+      "user_id": "testuser_cf9e97",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-27T18:44:01.024574+00:00"
+    },
+    {
+      "id": "mat-c6e7821c",
+      "user_id": "testuser_15fba3",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-27T18:51:55.153491+00:00"
+    },
+    {
+      "id": "mat-9e691268",
+      "user_id": "testuser_73647b",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-27T18:51:55.349611+00:00"
+    },
+    {
+      "id": "mat-ca9c31d3",
+      "user_id": "testuser_465417",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-27T18:51:57.243526+00:00"
+    },
+    {
+      "id": "mat-9a49d99d",
+      "user_id": "testuser_1c2c48",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-27T19:08:20.323474+00:00"
+    },
+    {
+      "id": "mat-2ce09120",
+      "user_id": "testuser_a48129",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-27T19:08:20.517386+00:00"
+    },
+    {
+      "id": "mat-4157bc09",
+      "user_id": "testuser_62d521",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-27T19:08:22.609145+00:00"
+    },
+    {
+      "id": "mat-1e1cec99",
+      "user_id": "testuser_c13ec0",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-27T19:13:58.795883+00:00"
+    },
+    {
+      "id": "mat-62593487",
+      "user_id": "testuser_df975f",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-27T19:13:59.001216+00:00"
+    },
+    {
+      "id": "mat-a00f7f99",
+      "user_id": "testuser_e1adaa",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-27T19:14:02.676925+00:00"
     }
   ],
   "chunks": {
@@ -363,6 +627,284 @@
       {
         "id": "chk-5b01e4e2",
         "material_id": "mat-2147aaac",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-822c310d": [
+      {
+        "id": "chk-ae262513",
+        "material_id": "mat-822c310d",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-59c1eaff": [
+      {
+        "id": "chk-fa9734ea",
+        "material_id": "mat-59c1eaff",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-a1181cfa": [
+      {
+        "id": "chk-9114a078",
+        "material_id": "mat-a1181cfa",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-61dca4e6": [
+      {
+        "id": "chk-e27ca574",
+        "material_id": "mat-61dca4e6",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-1b90af8d": [
+      {
+        "id": "chk-079d4108",
+        "material_id": "mat-1b90af8d",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-04d5db00": [
+      {
+        "id": "chk-9397738d",
+        "material_id": "mat-04d5db00",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-dc3df346": [
+      {
+        "id": "chk-db481108",
+        "material_id": "mat-dc3df346",
+        "chunk_index": 0,
+        "page_number": 2,
+        "text": "INTRODUCTION TO VERTICAL AXIS WIND TURBINES \u2756 Main Concept :- Unlike traditional \"windmill\" turbines, the main rotor shaft is arranged vertically. \u2756 Key Advantages :- They can capture wind from any direction (360 degrees) without needing to rotate or face the wind. \u2756 Best Use Cases :-Ideal for urban areas, rooftops, and places with turbulent or unpredictable wind patterns.",
+        "char_count": 375,
+        "embedding": null
+      },
+      {
+        "id": "chk-c0505494",
+        "material_id": "mat-dc3df346",
+        "chunk_index": 1,
+        "page_number": 3,
+        "text": "The Savonius Wind Turbine (Drag-Driven) \u2756Design: Shaped like an \"S\" from above; looks like two half-cylinders or hollow cups facing opposite directions. \u2756How it works: It relies entirely on drag (the wind pushes against the cups to force them to rotate). \u2756Pros: * Self-starting (starts spinning even in very low wind speeds). \u2756Reliable, durable, and highly cost-effective. \u2756Cons: Lower aerodynamic efficiency compared to lift-driven models.",
+        "char_count": 440,
+        "embedding": null
+      },
+      {
+        "id": "chk-02d78049",
+        "material_id": "mat-dc3df346",
+        "chunk_index": 2,
+        "page_number": 4,
+        "text": "The Darrieus Wind Turbine (Lift-Driven) \u2756Design: Often called an \"eggbeater\" turbine due to its curved, vertical blades attached at the top and bottom. \u2756How it works: It relies on lift (aerodynamic principles similar to airplane wings) to spin rapidly. \u2756Pros: * High efficiency and high-speed operation. \u2756Can produce significantly more electricity than drag-driven models. \u2756Cons: * Not self-starting (requires an external motor or a small Savonius starter to get moving). \u2756High stress on the blades can cause wear over time.",
+        "char_count": 524,
+        "embedding": null
+      },
+      {
+        "id": "chk-d62c8bca",
+        "material_id": "mat-dc3df346",
+        "chunk_index": 3,
+        "page_number": 5,
+        "text": "H-Rotor / Giromill (A Variant of Darrieus) \u2756Design: Instead of curved blades, it uses straight, vertical blades attached to the center shaft by horizontal arms (forming an \"H\" shape). \u2756How it works: A lift-driven system where the straight blades capture wind uniformly along their entire length. \u2756Pros: Easier and cheaper to manufacture than curved eggbeater blades. \u2756Cons: Strong bending forces on the horizontal arms require sturdy engineering.",
+        "char_count": 446,
+        "embedding": null
+      },
+      {
+        "id": "chk-325205ca",
+        "material_id": "mat-dc3df346",
+        "chunk_index": 4,
+        "page_number": 6,
+        "text": "Twisted / Helical Savonius \u2756 Design: Blades are twisted into a continuous spiral around the central shaft. \u2756 How it Works: The twist ensures a constant blade angle to the wind, creating smooth, continuous torque. \u2756 Pros: \u2756 Eliminates the pulsating, jerky motion of standard vertical turbines. \u2756 Extremely quiet and visually attractive (ideal for urban areas). \u2756 Reduces mechanical vibration, extending the system's lifespan. \u2756 Cons: \u2756 Complex, specialized manufacturing increases upfront costs. \u2756 Lower peak energy output compared to massive horizontal turbines.",
+        "char_count": 562,
+        "embedding": null
+      }
+    ],
+    "mat-60b48867": [
+      {
+        "id": "chk-07845177",
+        "material_id": "mat-60b48867",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-759f4b7f": [
+      {
+        "id": "chk-2dc42d99",
+        "material_id": "mat-759f4b7f",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-43ba602c": [
+      {
+        "id": "chk-0db00f41",
+        "material_id": "mat-43ba602c",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-209f3f5f": [
+      {
+        "id": "chk-0bbcc6c5",
+        "material_id": "mat-209f3f5f",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-f1e859c8": [
+      {
+        "id": "chk-4b01a535",
+        "material_id": "mat-f1e859c8",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-3a8e39c0": [
+      {
+        "id": "chk-ae198bea",
+        "material_id": "mat-3a8e39c0",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-c6e7821c": [
+      {
+        "id": "chk-b8bc078f",
+        "material_id": "mat-c6e7821c",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-9e691268": [
+      {
+        "id": "chk-08a032cc",
+        "material_id": "mat-9e691268",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-ca9c31d3": [
+      {
+        "id": "chk-a2f75677",
+        "material_id": "mat-ca9c31d3",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-9a49d99d": [
+      {
+        "id": "chk-fd587e23",
+        "material_id": "mat-9a49d99d",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-2ce09120": [
+      {
+        "id": "chk-132e116e",
+        "material_id": "mat-2ce09120",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-4157bc09": [
+      {
+        "id": "chk-9a43f29a",
+        "material_id": "mat-4157bc09",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-1e1cec99": [
+      {
+        "id": "chk-20789fca",
+        "material_id": "mat-1e1cec99",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-62593487": [
+      {
+        "id": "chk-a51d63b4",
+        "material_id": "mat-62593487",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-a00f7f99": [
+      {
+        "id": "chk-c8335d6c",
+        "material_id": "mat-a00f7f99",
         "chunk_index": 0,
         "page_number": 1,
         "text": "Water is H2O. It is a molecule.",

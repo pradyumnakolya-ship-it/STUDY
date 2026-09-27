@@ -1,11 +1,40 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const USER_NAME = 'Harsha A';
 
+export function getCustomApiKey(): string {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('studygpt_custom_gemini_key') || '';
+  }
+  return '';
+}
+
+export function setCustomApiKey(key: string): void {
+  if (typeof window !== 'undefined') {
+    if (key.trim()) {
+      localStorage.setItem('studygpt_custom_gemini_key', key.trim());
+    } else {
+      localStorage.removeItem('studygpt_custom_gemini_key');
+    }
+  }
+}
+
+export function getApiHeaders(extra: Record<string, string> = {}): Record<string, string> {
+  const headers: Record<string, string> = { ...extra };
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('studygpt_token');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const customKey = localStorage.getItem('studygpt_custom_gemini_key');
+    if (customKey) headers['X-Gemini-Api-Key'] = customKey;
+  }
+  headers['X-User-Name'] = USER_NAME;
+  return headers;
+}
+
 async function guildRequest(path: string, init: RequestInit = {}): Promise<Response> {
-  const headers = new Headers(init.headers);
-  headers.set('X-User-Name', USER_NAME);
+  const headers = getApiHeaders(init.headers as Record<string, string> || {});
   return fetch(`${API_BASE}${path}`, { ...init, headers });
 }
+
 
 export interface AIModelInfo {
   id: string;
@@ -36,7 +65,8 @@ export async function getAvailableAIModels(): Promise<{
   try {
     const res = await fetch(`${API_BASE}/ask/models`);
     if (!res.ok) throw new Error('Failed to fetch AI models');
-    return await res.json();
+    const catalog = await res.json();
+    return { ...catalog, models: catalog.models.filter((model: AIModelInfo) => model.is_free) };
   } catch (err) {
     console.warn("Could not fetch remote AI models catalog, using defaults:", err);
     return {
@@ -80,84 +110,6 @@ export async function getAvailableAIModels(): Promise<{
           is_default: false,
           is_free: true,
         },
-        {
-          id: "gpt-4o-mini",
-          provider: "openai",
-          name: "GPT-4o Mini",
-          provider_display: "OpenAI ChatGPT",
-          badge: "Fast & Efficient",
-          description: "OpenAI's most cost-efficient, high-speed tutor for study questions and homework guidance.",
-          icon: "Bot",
-          env_var: "OPENAI_API_KEY",
-          is_configured: false,
-          is_default: false,
-          is_free: false,
-        },
-        {
-          id: "gpt-3.5-turbo",
-          provider: "openai",
-          name: "GPT-3.5 Turbo",
-          provider_display: "OpenAI ChatGPT",
-          badge: "Standard Light",
-          description: "Lightweight and reliable model suitable for straightforward study help.",
-          icon: "Bot",
-          env_var: "OPENAI_API_KEY",
-          is_configured: false,
-          is_default: false,
-          is_free: false,
-        },
-        {
-          id: "claude-3-5-haiku-20241022",
-          provider: "anthropic",
-          name: "Claude 3.5 Haiku",
-          provider_display: "Anthropic Claude",
-          badge: "Rapid & Clear",
-          description: "Anthropic's fastest and most cost-effective model with exceptional writing and explanation clarity.",
-          icon: "Brain",
-          env_var: "ANTHROPIC_API_KEY",
-          is_configured: false,
-          is_default: false,
-          is_free: false,
-        },
-        {
-          id: "claude-3-haiku-20240307",
-          provider: "anthropic",
-          name: "Claude 3 Haiku",
-          provider_display: "Anthropic Claude",
-          badge: "Lightweight",
-          description: "Compact and rapid response model for instant study tutoring.",
-          icon: "Brain",
-          env_var: "ANTHROPIC_API_KEY",
-          is_configured: false,
-          is_default: false,
-          is_free: false,
-        },
-        {
-          id: "grok-beta",
-          provider: "grok",
-          name: "Grok Beta",
-          provider_display: "xAI Grok",
-          badge: "Fast Beta",
-          description: "Fast-paced Grok model tuned for rapid study reasoning and problem-solving.",
-          icon: "Zap",
-          env_var: "XAI_API_KEY",
-          is_configured: false,
-          is_default: false,
-          is_free: false,
-        },
-        {
-          id: "grok-2-latest",
-          provider: "grok",
-          name: "Grok 2",
-          provider_display: "xAI Grok",
-          badge: "Direct & Witty",
-          description: "Straightforward, intuitive answers with fresh problem-solving insights.",
-          icon: "Zap",
-          env_var: "XAI_API_KEY",
-          is_configured: false,
-          is_default: false,
-          is_free: false,
-        },
       ],
       default_provider: "gemini",
       default_model: "gemini-1.5-flash",
@@ -172,7 +124,7 @@ export async function askQuestionDetailed(
 ): Promise<AskQuestionResult> {
   const res = await fetch(`${API_BASE}/ask`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getApiHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ question, provider, model }),
   });
   if (!res.ok) {
@@ -581,7 +533,7 @@ export async function searchStudents(query: string = ''): Promise<UserSearchItem
   return res.json();
 }
 
-export async function getDirectMessages(connectionId: string): Promise<any[]> {
+export async function getDirectMessages(connectionId: string): Promise<Record<string, unknown>[]> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('studygpt_token') : null;
   const res = await fetch(`${API_BASE}/social/dm/${connectionId}`, {
     headers: {

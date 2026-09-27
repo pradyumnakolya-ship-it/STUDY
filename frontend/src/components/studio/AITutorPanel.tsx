@@ -16,10 +16,7 @@ import {
   Minimize2,
   BookOpen,
   ChevronDown,
-  Check,
-  Brain,
-  Zap,
-  Cpu
+  Check
 } from "lucide-react";
 import { askQuestionDetailed, getAvailableAIModels, AIModelInfo } from "@/lib/api";
 
@@ -87,13 +84,6 @@ export default function AITutorPanel({
     scrollToBottom();
   }, [messages, loading]);
 
-  useEffect(() => {
-    if (externalPrompt) {
-      sendMessage(externalPrompt);
-      if (onClearExternalPrompt) onClearExternalPrompt();
-    }
-  }, [externalPrompt]);
-
   const sendMessage = async (textToSend: string) => {
     if (!textToSend.trim() || loading) return;
 
@@ -141,6 +131,16 @@ export default function AITutorPanel({
     }
   };
 
+  useEffect(() => {
+    if (externalPrompt) {
+      const timer = setTimeout(() => {
+        sendMessage(externalPrompt);
+        if (onClearExternalPrompt) onClearExternalPrompt();
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [externalPrompt, onClearExternalPrompt]);
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -158,50 +158,50 @@ export default function AITutorPanel({
     return (
       <button
         onClick={onToggleCollapse}
-        className="h-full w-12 bg-[#FBF9F3] border-l border-[#E4DFD1] hover:bg-[#FFFFFF] flex flex-col items-center justify-between py-6 transition-colors group cursor-pointer"
+        className="h-full w-12 bg-[#0a0a0c] border-l border-[rgba(255,255,255,0.08)] hover:bg-[#101012] flex flex-col items-center justify-between py-6 transition-colors group cursor-pointer"
         title="Expand AI Tutor Panel"
       >
-        <div className="p-2 rounded-[8px] bg-[#EEEDFE] text-[#3C3489] transition-transform">
+        <div className="p-2 rounded-[8px] bg-[#101012] text-[#fcfdff] transition-transform">
           <Sparkles size={18} />
         </div>
-        <span className="text-xs font-bold tracking-widest text-[#5F5E5A] uppercase [writing-mode:vertical-rl] rotate-180 flex items-center gap-2">
+        <span className="text-xs font-bold tracking-widest text-[#888e90] uppercase [writing-mode:vertical-rl] rotate-180 flex items-center gap-2">
           AI Tutor Co-Pilot
         </span>
-        <ChevronLeft size={18} className="text-[#888780] group-hover:text-[#2C2A24]" />
+        <ChevronLeft size={18} className="text-[#888e90] group-hover:text-[#fcfdff]" />
       </button>
     );
   }
 
   return (
     <aside 
-      className={`h-full bg-[#FBF9F3] border-l border-[#E4DFD1] flex flex-col transition-all duration-300 ${
+      className={`h-full bg-[#0a0a0c] border-l border-[rgba(255,255,255,0.08)] flex flex-col transition-all duration-300 ${
         isExpanded ? "w-full md:w-[540px]" : "w-full md:w-[390px]"
       }`}
     >
       {/* Panel Header */}
-      <div className="p-3.5 border-b border-[#E4DFD1] flex items-center justify-between bg-[#FFFFFF] relative z-20">
+      <div className="p-3.5 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between bg-[#0a0a0c] relative z-20">
         <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-[8px] bg-[#FBF9F3] border border-[#E4DFD1] text-[#2C2A24]">
+          <div className="p-1.5 rounded-[8px] bg-[#101012] border border-[rgba(255,255,255,0.14)] text-[#fcfdff]">
             <Bot size={20} />
           </div>
           <div>
             <div className="flex items-center gap-1.5 relative">
-              <h3 className="font-bold text-sm text-[#2C2A24]">StudyGPT Tutor</h3>
+              <h3 className="font-bold text-sm text-[#fcfdff]">StudyGPT Tutor</h3>
               
               {/* Interactive model selector */}
               <div className="relative">
                 <button
                   onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-                  className="flex items-center gap-1 text-[10px] bg-[#FBF9F3] hover:bg-[#EDE8DB] text-[#2C2A24] font-bold px-2 py-0.5 rounded-[6px] border border-[#E4DFD1] transition-colors"
+                  className="flex items-center gap-1 text-[10px] bg-[#101012] hover:bg-[rgba(255,255,255,0.06)] text-[#fcfdff] font-medium px-2 py-0.5 rounded-[6px] border border-[rgba(255,255,255,0.14)] transition-colors cursor-pointer"
                   title="Switch AI Model"
                 >
                   <span className="truncate max-w-[90px]">{selectedModel?.name || "Model"}</span>
-                  <ChevronDown size={11} className="text-[#888780]" />
+                  <ChevronDown size={11} className="text-[#888e90]" />
                 </button>
 
                 {modelDropdownOpen && (
-                  <div className="absolute left-0 mt-1 w-64 bg-[#FFFFFF] border border-[#E4DFD1] rounded-lg shadow-lg z-50 p-1.5 animate-in fade-in duration-100">
-                    <p className="text-[10px] font-bold text-[#888780] px-2 py-1 uppercase tracking-wider">Select AI Model</p>
+                  <div className="absolute left-0 mt-1 w-64 bg-[#101012] border border-[rgba(255,255,255,0.14)] rounded-lg shadow-lg z-50 p-1.5 animate-in fade-in duration-100">
+                    <p className="text-[10px] font-mono text-[#888e90] px-2 py-1 uppercase tracking-wider">Select AI Model</p>
                     <div className="max-h-56 overflow-y-auto space-y-0.5">
                       {models.map((m) => (
                         <button
@@ -210,15 +210,15 @@ export default function AITutorPanel({
                             setSelectedModel(m);
                             setModelDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-2 py-1.5 rounded text-xs flex items-center justify-between transition-colors ${
-                            selectedModel?.id === m.id ? "bg-[#F7F3EA] font-semibold text-[#D85A30]" : "hover:bg-[#FBF9F3] text-[#2C2A24]"
+                          className={`w-full text-left px-2 py-1.5 rounded text-xs flex items-center justify-between transition-colors cursor-pointer ${
+                            selectedModel?.id === m.id ? "bg-[rgba(255,255,255,0.1)] font-semibold text-[#fcfdff]" : "hover:bg-[rgba(255,255,255,0.06)] text-[#888e90]"
                           }`}
                         >
                           <div className="truncate">
                             <span>{m.name}</span>
-                            <span className="block text-[9px] text-[#888780] truncate">{m.provider_display}</span>
+                            <span className="block text-[9px] text-[#888e90] truncate">{m.provider_display}</span>
                           </div>
-                          {selectedModel?.id === m.id && <Check size={12} className="text-[#D85A30] shrink-0" />}
+                          {selectedModel?.id === m.id && <Check size={12} className="text-[#11ff99] shrink-0" />}
                         </button>
                       ))}
                     </div>
@@ -226,8 +226,8 @@ export default function AITutorPanel({
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-1 text-[11px] text-[#5F5E5A]">
-              <BookOpen size={11} className="text-[#3C3489]" />
+            <div className="flex items-center gap-1 text-[11px] text-[#888e90]">
+              <BookOpen size={11} className="text-[#3b9eff]" />
               <span className="truncate max-w-[170px]">{currentTopic}</span>
             </div>
           </div>
@@ -236,7 +236,7 @@ export default function AITutorPanel({
         <div className="flex items-center gap-1">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 text-[#5F5E5A] hover:text-[#2C2A24] rounded-[6px] hover:bg-[#FBF9F3] transition-colors hidden md:block"
+            className="p-1.5 text-[#888e90] hover:text-[#fcfdff] rounded-[6px] hover:bg-[#101012] transition-colors hidden md:block cursor-pointer"
             title={isExpanded ? "Standard width" : "Expand width"}
           >
             {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
@@ -252,14 +252,14 @@ export default function AITutorPanel({
                 },
               ]);
             }}
-            className="p-1.5 text-[#5F5E5A] hover:text-[#2C2A24] rounded-[6px] hover:bg-[#FBF9F3] transition-colors"
+            className="p-1.5 text-[#888e90] hover:text-[#fcfdff] rounded-[6px] hover:bg-[#101012] transition-colors cursor-pointer"
             title="Clear Chat"
           >
             <RefreshCw size={15} />
           </button>
           <button
             onClick={onToggleCollapse}
-            className="p-1.5 text-[#5F5E5A] hover:text-[#2C2A24] rounded-[6px] hover:bg-[#FBF9F3] transition-colors"
+            className="p-1.5 text-[#888e90] hover:text-[#fcfdff] rounded-[6px] hover:bg-[#101012] transition-colors cursor-pointer"
             title="Collapse Panel"
           >
             <ChevronRight size={18} />
@@ -268,22 +268,22 @@ export default function AITutorPanel({
       </div>
 
       {/* Messages Stream */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#F7F3EA]">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#06060a]">
         {messages.map((msg) => (
           <div 
             key={msg.id}
             className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
           >
             {msg.role === "ai" && (
-              <div className="w-7 h-7 rounded-full bg-[#FFFFFF] border border-[#E4DFD1] text-[#3C3489] flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-7 h-7 rounded-full bg-[#101012] border border-[rgba(255,255,255,0.14)] text-[#ffc53d] flex items-center justify-center shrink-0 mt-0.5">
                 <Sparkles size={14} />
               </div>
             )}
             <div 
-              className={`max-w-[88%] rounded-[12px] px-4 py-3 text-xs md:text-sm leading-relaxed card-elevation ${
+              className={`max-w-[88%] rounded-[12px] px-4 py-3 text-xs md:text-sm leading-relaxed ${
                 msg.role === "user"
-                  ? "bg-[#D85A30] text-white font-medium rounded-br-none"
-                  : "bg-[#FFFFFF] text-[#2C2A24] border border-[#EDE8DB] rounded-bl-none prose prose-xs max-w-none prose-p:my-1.5 prose-headings:my-2 prose-pre:bg-[#FBF9F3] prose-pre:border prose-pre:border-[#EDE8DB] prose-pre:text-[#2C2A24] prose-pre:p-2.5 prose-pre:rounded-[8px]"
+                  ? "bg-[#fcfdff] text-[#000000] font-medium rounded-br-none"
+                  : "bg-[#0a0a0c] text-[#fcfdff] border border-[rgba(255,255,255,0.08)] rounded-bl-none prose prose-invert prose-xs max-w-none prose-p:my-1.5 prose-headings:my-2 prose-pre:bg-[#101012] prose-pre:border prose-pre:border-[rgba(255,255,255,0.14)] prose-pre:text-[#fcfdff] prose-pre:p-2.5 prose-pre:rounded-[8px]"
               }`}
             >
               {msg.role === "ai" ? (
@@ -293,12 +293,12 @@ export default function AITutorPanel({
               ) : (
                 msg.content
               )}
-              <span className={`block text-[10px] mt-1 text-right ${msg.role === "user" ? "text-white/80" : "text-[#888780]"}`}>
+              <span className={`block text-[10px] mt-1 text-right ${msg.role === "user" ? "text-black/60 font-mono" : "text-[#888e90] font-mono"}`}>
                 {msg.timestamp}
               </span>
             </div>
             {msg.role === "user" && (
-              <div className="w-7 h-7 rounded-full bg-[#FFFFFF] border border-[#E4DFD1] text-[#D85A30] flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-7 h-7 rounded-full bg-[#fcfdff] text-[#000000] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
                 <User size={14} />
               </div>
             )}
@@ -307,14 +307,14 @@ export default function AITutorPanel({
 
         {loading && (
           <div className="flex gap-2.5 items-start">
-            <div className="w-7 h-7 rounded-full bg-[#FFFFFF] border border-[#E4DFD1] text-[#3C3489] flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-full bg-[#101012] border border-[rgba(255,255,255,0.14)] text-[#ffc53d] flex items-center justify-center shrink-0">
               <Sparkles size={14} />
             </div>
-            <div className="bg-[#FFFFFF] border border-[#EDE8DB] rounded-[12px] rounded-bl-none px-4 py-3 flex items-center gap-1.5 card-elevation">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#D85A30] animate-pulse" />
-              <div className="w-1.5 h-1.5 rounded-full bg-[#D85A30] animate-pulse [animation-delay:200ms]" />
-              <div className="w-1.5 h-1.5 rounded-full bg-[#D85A30] animate-pulse [animation-delay:400ms]" />
-              <span className="text-xs text-[#5F5E5A] ml-1">AI Tutor thinking...</span>
+            <div className="bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] rounded-[12px] rounded-bl-none px-4 py-3 flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#ff801f] animate-pulse" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#ff801f] animate-pulse [animation-delay:200ms]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#ff801f] animate-pulse [animation-delay:400ms]" />
+              <span className="text-xs text-[#888e90] ml-1 font-mono">AI Tutor thinking...</span>
             </div>
           </div>
         )}
@@ -322,42 +322,42 @@ export default function AITutorPanel({
       </div>
 
       {/* Quick Prompts Bar */}
-      <div className="px-3 py-2 border-t border-[#E4DFD1] bg-[#FBF9F3] flex gap-1.5 overflow-x-auto no-scrollbar">
+      <div className="px-3 py-2 border-t border-[rgba(255,255,255,0.08)] bg-[#0a0a0c] flex gap-1.5 overflow-x-auto no-scrollbar">
         {quickPrompts.map((qp, idx) => (
           <button
             key={idx}
             onClick={() => sendMessage(qp.text)}
-            className="text-[11px] whitespace-nowrap bg-transparent hover:bg-[#FFFFFF] border border-[#B4B2A9] text-[#444441] px-3 py-1 rounded-[8px] transition-colors flex items-center gap-1 font-medium"
+            className="text-[11px] whitespace-nowrap bg-[#101012] hover:bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.14)] text-[#fcfdff] px-3 py-1 rounded-[8px] transition-colors flex items-center gap-1 font-medium cursor-pointer"
           >
-            <Lightbulb size={11} className="text-[#3C3489] shrink-0" />
+            <Lightbulb size={11} className="text-[#ffc53d] shrink-0" />
             {qp.label}
           </button>
         ))}
       </div>
 
       {/* Input Box */}
-      <div className="p-3 border-t border-[#E4DFD1] bg-[#FFFFFF]">
-        <div className="relative flex items-center bg-[#FBF9F3] rounded-[8px] border border-[#E4DFD1] focus-within:border-[#D85A30] transition-colors">
+      <div className="p-3 border-t border-[rgba(255,255,255,0.08)] bg-[#0a0a0c]">
+        <div className="relative flex items-center bg-[#101012] rounded-[8px] border border-[rgba(255,255,255,0.14)] focus-within:border-[rgba(255,255,255,0.3)] transition-colors">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={1}
             placeholder={`Ask about ${currentTopic}...`}
-            className="w-full bg-transparent text-[#2C2A24] placeholder:text-[#888780] text-xs md:text-sm pl-3.5 pr-11 py-3 focus:outline-none resize-none max-h-28 overflow-y-auto"
+            className="w-full bg-transparent text-[#fcfdff] placeholder:text-[#888e90] text-xs md:text-sm pl-3.5 pr-11 py-3 focus:outline-none resize-none max-h-28 overflow-y-auto"
             style={{ minHeight: "44px" }}
           />
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || loading}
-            className="absolute right-2 p-2 rounded-[6px] bg-[#D85A30] text-white font-bold hover:bg-[#D85A30]/90 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="absolute right-2 p-2 rounded-[6px] bg-[#fcfdff] text-[#000000] font-bold hover:bg-[#f1f7fe] disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
             title="Send message"
           >
             <Send size={14} />
           </button>
         </div>
-        <p className="text-[10px] text-center text-[#888780] mt-1.5">
-          StudyGPT AI Tutor • Powered by Google Gemini
+        <p className="text-[10px] text-center text-[#888e90] mt-1.5 font-mono">
+          StudyGPT AI Tutor • Powered by Google Gemini 3.8 Flash
         </p>
       </div>
     </aside>

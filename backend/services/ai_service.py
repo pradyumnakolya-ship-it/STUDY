@@ -24,9 +24,9 @@ logger = logging.getLogger(__name__)
 AVAILABLE_MODELS = [
     # Google Gemini (Free Tier via Google AI Studio)
     {
-        "id": "gemini-1.5-flash",
+        "id": "gemini-3.8-flash",
         "provider": "gemini",
-        "name": "Gemini 1.5 Flash (Free Tier)",
+        "name": "Gemini 3.8 Flash (Free Tier)",
         "provider_display": "Google Gemini",
         "badge": "Free & Fast",
         "description": "Lightning-fast free tier model on Google AI Studio, optimized for study explanations and instant concept checks.",
@@ -35,20 +35,20 @@ AVAILABLE_MODELS = [
         "is_free": True,
     },
     {
-        "id": "gemini-2.0-flash",
+        "id": "gemini-3.5-flash",
         "provider": "gemini",
-        "name": "Gemini 2.0 Flash (Free Tier)",
+        "name": "Gemini 3.5 Flash (Free Tier)",
         "provider_display": "Google Gemini",
         "badge": "Next-Gen Free",
-        "description": "Next-generation multimodal model with generous free-tier quotas on Google AI Studio.",
+        "description": "Next-generation model with generous free-tier quotas on Google AI Studio.",
         "icon": "Sparkles",
         "env_var": "GEMINI_API_KEY",
         "is_free": True,
     },
     {
-        "id": "gemini-1.5-flash-8b",
+        "id": "gemini-flash-latest",
         "provider": "gemini",
-        "name": "Gemini 1.5 Flash 8B (Free Tier)",
+        "name": "Gemini Flash Latest (Free Tier)",
         "provider_display": "Google Gemini",
         "badge": "Ultra Fast",
         "description": "Ultra lightweight, high-speed free tier model for rapid question answering.",
@@ -133,43 +133,46 @@ AVAILABLE_MODELS = [
 
 def get_models_catalog() -> List[Dict[str, Any]]:
     """
-    Return all supported AI models decorated with real-time configuration status.
+    Return only free-credit models decorated with real-time configuration status.
     """
     catalog = []
     for m in AVAILABLE_MODELS:
+        if not m["is_free"]:
+            continue
         provider = m["provider"]
         is_configured = settings.is_provider_configured(provider)
         catalog.append({
             **m,
             "is_configured": is_configured,
-            "is_default": (provider == "gemini" and m["id"] == "gemini-1.5-flash"),
+            "is_default": (provider == "gemini" and m["id"] == "gemini-3.8-flash"),
         })
     return catalog
 
 
+def _get_free_model(model_id: Optional[str], provider: str) -> Dict[str, Any]:
+    """Resolve a requested model while enforcing the free-credit policy."""
+    candidates = [m for m in AVAILABLE_MODELS if m["is_free"] and m["provider"] == provider]
+    if model_id:
+        for model in candidates:
+            if model["id"] == model_id:
+                return model
+        raise ValueError("Only configured free-credit models are available. Select a free Gemini model.")
+    if candidates:
+        return candidates[0]
+    raise ValueError("Only configured free-credit models are available. Select a free Gemini model.")
+
+
 # ── Provider Implementation Callers ─────────────────────────────────────────
 
-async def _call_gemini(question: str, model_id: Optional[str] = None) -> str:
-    """Call Google Gemini using google-generativeai SDK."""
-    if not settings.is_provider_configured("gemini"):
+async def _call_gemini(question: str, model_id: Optional[str] = None, byok_key: Optional[str] = None) -> str:
+    """Call Google Gemini using gemini_service with multi-key rotation and caching."""
+    if not settings.is_provider_configured("gemini") and not (byok_key and len(byok_key.strip()) > 10):
         raise ValueError(
             "Google Gemini API key is not configured. "
-            "Please add GEMINI_API_KEY to your backend/.env file."
+            "Please add GEMINI_API_KEY to your backend/.env file or configure a custom API key in settings."
         )
-    
-    # Use specified model or fallback to configured setting
-    target_model = model_id or settings.GEMINI_MODEL
-    
-    import google.generativeai as genai
-    genai.configure(api_key=settings.GEMINI_API_KEY)
-    model_instance = genai.GenerativeModel(
-        model_name=target_model,
-        system_instruction=STUDY_TUTOR_PROMPT,
-    )
-    response = model_instance.generate_content(question)
-    if not response or not response.text:
-        raise RuntimeError("Empty response received from Gemini.")
-    return response.text
+    return await gemini_generate_answer(question, byok_key=byok_key)
+
 
 
 async def _call_openai(question: str, model_id: Optional[str] = None) -> str:
@@ -302,18 +305,11 @@ async def generate_study_answer(
     question: str,
     provider: Optional[str] = "gemini",
     model: Optional[str] = None,
+    byok_key: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Route question to the chosen AI provider and return the study tutor answer
     along with resolved provider and model metadata.
-
-    Args:
-        question: Student's study prompt.
-        provider: 'gemini', 'openai' / 'chatgpt', 'anthropic' / 'claude', or 'grok' / 'xai'.
-        model: Specific model ID (optional, defaults to provider best practice).
-
-    Returns:
-        Dict with keys: answer, provider, model, provider_display.
     """
     prov = (provider or "gemini").lower().strip()
 
@@ -327,17 +323,10 @@ async def generate_study_answer(
     elif prov in ("google",):
         prov = "gemini"
 
+    free_model = _get_free_model(model, prov)
+
     # Resolve default model ID if not explicitly specified
-    resolved_model = model
-    if not resolved_model:
-        if prov == "gemini":
-            resolved_model = settings.GEMINI_MODEL
-        elif prov == "openai":
-            resolved_model = settings.OPENAI_MODEL
-        elif prov == "anthropic":
-            resolved_model = settings.ANTHROPIC_MODEL
-        elif prov == "grok":
-            resolved_model = settings.GROK_MODEL
+    resolved_model = free_model["id"]
 
     display_names = {
         "gemini": "Google Gemini",
@@ -347,7 +336,7 @@ async def generate_study_answer(
     }
 
     if prov == "gemini":
-        answer = await _call_gemini(question, resolved_model)
+        answer = await _call_gemini(question, resolved_model, byok_key=byok_key)
     elif prov == "openai":
         answer = await _call_openai(question, resolved_model)
     elif prov == "anthropic":
@@ -372,15 +361,10 @@ async def generate_study_answer_stream(
     question: str,
     provider: Optional[str] = "gemini",
     model: Optional[str] = None,
+    byok_key: Optional[str] = None,
 ):
     """
     Async generator that streams study tutor answer chunks token by token.
-
-    Gemini supports native streaming via the SDK; other providers yield the full
-    answer as a single chunk (still consistent SSE protocol from the client's perspective).
-
-    Yields:
-        str: Text chunks / tokens.
     """
     prov = (provider or "gemini").lower().strip()
 
@@ -394,33 +378,13 @@ async def generate_study_answer_stream(
     elif prov in ("google",):
         prov = "gemini"
 
-    # Resolve model
-    resolved_model = model
-    if not resolved_model:
-        if prov == "gemini":
-            resolved_model = settings.GEMINI_MODEL
-        elif prov == "openai":
-            resolved_model = settings.OPENAI_MODEL
-        elif prov == "anthropic":
-            resolved_model = settings.ANTHROPIC_MODEL
-        elif prov == "grok":
-            resolved_model = settings.GROK_MODEL
+    free_model = _get_free_model(model, prov)
+    resolved_model = free_model["id"]
 
     if prov == "gemini":
-        # Native Gemini streaming via google-generativeai SDK
-        if not settings.is_provider_configured("gemini"):
-            raise ValueError("Google Gemini API key is not configured.")
-        import google.generativeai as genai
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        model_instance = genai.GenerativeModel(
-            model_name=resolved_model or settings.GEMINI_MODEL,
-            system_instruction=STUDY_TUTOR_PROMPT,
-        )
-        response = model_instance.generate_content(question, stream=True)
-        for chunk in response:
-            if chunk.text:
-                yield chunk.text
+        async for chunk in gemini_service.generate_answer_stream(question, byok_key=byok_key):
+            yield chunk
     else:
-        # Non-streaming providers: call normally and yield full answer as one chunk
-        result = await generate_study_answer(question, provider=prov, model=resolved_model)
+        result = await generate_study_answer(question, provider=prov, model=resolved_model, byok_key=byok_key)
         yield result["answer"]
+

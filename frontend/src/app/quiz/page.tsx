@@ -1,8 +1,10 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, HelpCircle, CheckCircle2, AlertCircle, ArrowRight, Award, Loader2, Sparkles } from "lucide-react";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 interface Question {
   id: string;
@@ -31,7 +33,7 @@ export default function QuizPage() {
     setUserAnswers({});
     try {
       const token = localStorage.getItem("studygpt_token");
-      const res = await fetch("http://localhost:8000/quiz/generate", {
+      const res = await fetch(`${API_BASE}/quiz/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,25 +89,25 @@ export default function QuizPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] flex flex-col">
-      <header className="border-b border-[var(--border)] bg-white sticky top-0 z-30 px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-[#000000] text-[#fcfdff] flex flex-col">
+      <header className="border-b border-[rgba(255,255,255,0.08)] bg-[#0a0a0c] sticky top-0 z-30 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/home" className="p-2 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface-nested)] transition-colors">
+          <Link href="/home" className="p-2 rounded-xl border border-[rgba(255,255,255,0.12)] text-[#888e90] hover:text-[#fcfdff] hover:bg-[#101012] transition-colors">
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="font-bold text-base text-[var(--text-primary)]">Quiz & Knowledge Check</h1>
-            <p className="text-xs text-[var(--text-secondary)]">Test your grasp on any topic and analyze results</p>
+            <h1 className="font-bold text-base text-[#fcfdff]">Quiz & Knowledge Check</h1>
+            <p className="text-xs text-[#888e90]">Test your grasp on any topic and analyze results</p>
           </div>
         </div>
       </header>
 
       <main className="max-w-3xl w-full mx-auto px-6 py-8 flex-1">
         {/* Quiz Creator Form */}
-        <div className="bg-white border border-[var(--border)] rounded-2xl p-6 shadow-xs mb-8">
+        <div className="bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6 shadow-xs mb-8">
           <form onSubmit={handleGenerate} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#888e90] mb-1.5">
                 Target Subject / Topic
               </label>
               <input
@@ -114,38 +116,38 @@ export default function QuizPage() {
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder="e.g. Graph Algorithms, Kubernetes, Operating Systems..."
-                className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--cta-primary)] focus:bg-white transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-[rgba(255,255,255,0.1)] bg-[#101012] text-[#fcfdff] placeholder:text-[#888e90] text-sm focus:outline-none focus:border-[#fcfdff] transition-all"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#888e90] mb-1.5">
                   Difficulty Level
                 </label>
                 <select
                   value={difficulty}
                   onChange={(e) => setDifficulty(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--cta-primary)]"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[rgba(255,255,255,0.1)] bg-[#101012] text-[#fcfdff] text-sm focus:outline-none focus:border-[#fcfdff]"
                 >
-                  <option value="Easy">Easy (Fundamentals)</option>
-                  <option value="Medium">Medium (Applied understanding)</option>
-                  <option value="Hard">Hard (Deep edge cases)</option>
+                  <option value="Easy" className="bg-[#101012] text-[#fcfdff]">Easy (Fundamentals)</option>
+                  <option value="Medium" className="bg-[#101012] text-[#fcfdff]">Medium (Applied understanding)</option>
+                  <option value="Hard" className="bg-[#101012] text-[#fcfdff]">Hard (Deep edge cases)</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#888e90] mb-1.5">
                   Questions Count
                 </label>
                 <select
                   value={count}
                   onChange={(e) => setCount(Number(e.target.value))}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--surface-nested)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--cta-primary)]"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[rgba(255,255,255,0.1)] bg-[#101012] text-[#fcfdff] text-sm focus:outline-none focus:border-[#fcfdff]"
                 >
-                  <option value={3}>3 Questions</option>
-                  <option value={5}>5 Questions</option>
-                  <option value={10}>10 Questions</option>
+                  <option value={3} className="bg-[#101012] text-[#fcfdff]">3 Questions</option>
+                  <option value={5} className="bg-[#101012] text-[#fcfdff]">5 Questions</option>
+                  <option value={10} className="bg-[#101012] text-[#fcfdff]">10 Questions</option>
                 </select>
               </div>
             </div>
@@ -153,11 +155,11 @@ export default function QuizPage() {
             <button
               type="submit"
               disabled={loading || !topic.trim()}
-              className="w-full py-3 px-4 rounded-xl bg-[var(--cta-primary)] text-white font-medium text-sm flex items-center justify-center gap-2 hover:bg-[var(--cta-primary-hover)] transition-all cursor-pointer disabled:opacity-50 shadow-sm"
+              className="w-full py-3 px-4 rounded-xl bg-[#fcfdff] hover:bg-white/90 text-[#000000] font-medium text-sm flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 shadow-sm"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin text-[#000000]" />
                   <span>Synthesizing Exam with Gemini...</span>
                 </>
               ) : (
@@ -174,15 +176,15 @@ export default function QuizPage() {
         {questions.length > 0 && (
           <div className="space-y-6">
             {submitted && (
-              <div className="p-6 rounded-2xl bg-white border border-[var(--border)] shadow-xs flex items-center justify-between">
+              <div className="p-6 rounded-2xl bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] shadow-xs flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-[var(--text-primary)]">Quiz Completed!</h2>
-                  <p className="text-xs text-[var(--text-secondary)] mt-1">
+                  <h2 className="text-xl font-bold text-[#fcfdff]">Quiz Completed!</h2>
+                  <p className="text-xs text-[#888e90] mt-1">
                     You scored {calculateScore()} out of {questions.length} (
                     {Math.round((calculateScore() / questions.length) * 100)}%)
                   </p>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--badge-reward-bg)] border border-[#DDD9FC] text-[var(--badge-reward-text)] font-bold text-sm">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#a5b4fc]/20 border border-[#a5b4fc]/40 text-[#a5b4fc] font-bold text-sm">
                   <Award className="w-4 h-4" />
                   <span>+{calculateScore() * 15} XP Earned</span>
                 </div>
@@ -194,31 +196,31 @@ export default function QuizPage() {
               const isCorrect = selected === q.correct_answer;
 
               return (
-                <div key={q.id} className="p-6 rounded-2xl bg-white border border-[var(--border)] shadow-xs space-y-4">
+                <div key={q.id} className="p-6 rounded-2xl bg-[#0a0a0c] border border-[rgba(255,255,255,0.08)] shadow-xs space-y-4">
                   <div className="flex items-start justify-between gap-4">
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-[var(--surface-nested)] border border-[var(--border)] text-[var(--text-secondary)]">
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-[#101012] border border-[rgba(255,255,255,0.08)] text-[#888e90]">
                       Question {idx + 1}
                     </span>
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[var(--surface-nested)] text-[var(--text-secondary)]">
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#101012] text-[#888e90]">
                       {q.difficulty}
                     </span>
                   </div>
 
-                  <h3 className="font-semibold text-base text-[var(--text-primary)] leading-snug">
+                  <h3 className="font-semibold text-base text-[#fcfdff] leading-snug">
                     {q.question}
                   </h3>
 
                   <div className="grid grid-cols-1 gap-2.5 pt-2">
                     {q.options.map((opt, oIdx) => {
-                      let itemClass = "border-[var(--border)] bg-white text-[var(--text-primary)] hover:border-[var(--border-strong)]";
+                      let itemClass = "border-[rgba(255,255,255,0.08)] bg-[#101012] text-[rgba(252,253,255,0.85)] hover:border-[rgba(255,255,255,0.18)]";
                       
                       if (!submitted && selected === opt) {
-                        itemClass = "border-[var(--selected-border)] bg-[var(--selected-bg)] text-[var(--selected-text)] font-medium";
+                        itemClass = "border-[#fcfdff] bg-[#101012] text-[#fcfdff] font-medium ring-1 ring-[#fcfdff]";
                       } else if (submitted) {
                         if (opt === q.correct_answer) {
-                          itemClass = "border-[#085041] bg-[#E1F5EE] text-[#085041] font-semibold";
+                          itemClass = "border-[#085041] bg-[#085041]/20 text-[#2fe0b4] font-semibold";
                         } else if (selected === opt && !isCorrect) {
-                          itemClass = "border-[#72243E] bg-[#FAEAF0] text-[#72243E]";
+                          itemClass = "border-[#72243E] bg-[#72243E]/20 text-[#ff7b9c]";
                         }
                       }
 
@@ -231,10 +233,10 @@ export default function QuizPage() {
                         >
                           <span>{opt}</span>
                           {submitted && opt === q.correct_answer && (
-                            <CheckCircle2 className="w-4 h-4 text-[#085041]" />
+                            <CheckCircle2 className="w-4 h-4 text-[#2fe0b4]" />
                           )}
                           {submitted && selected === opt && !isCorrect && (
-                            <AlertCircle className="w-4 h-4 text-[#72243E]" />
+                            <AlertCircle className="w-4 h-4 text-[#ff7b9c]" />
                           )}
                         </button>
                       );
@@ -242,8 +244,8 @@ export default function QuizPage() {
                   </div>
 
                   {submitted && (
-                    <div className="p-3.5 rounded-xl bg-[var(--surface-nested)] border border-[var(--border-subtle)] text-xs text-[var(--text-secondary)] leading-relaxed">
-                      <strong>Explanation:</strong> {q.explanation}
+                    <div className="p-3.5 rounded-xl bg-[#101012] border border-[rgba(255,255,255,0.06)] text-xs text-[#888e90] leading-relaxed">
+                      <strong className="text-[#fcfdff]">Explanation:</strong> {q.explanation}
                     </div>
                   )}
                 </div>
@@ -254,7 +256,7 @@ export default function QuizPage() {
               <button
                 onClick={() => setSubmitted(true)}
                 disabled={Object.keys(userAnswers).length === 0}
-                className="w-full py-3.5 px-4 rounded-xl bg-[var(--cta-primary)] text-white font-medium text-sm flex items-center justify-center gap-2 hover:bg-[var(--cta-primary-hover)] transition-all cursor-pointer disabled:opacity-50 shadow-sm"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#fcfdff] hover:bg-white/90 text-[#000000] font-medium text-sm flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 shadow-sm"
               >
                 <span>Submit Answers</span>
                 <ArrowRight className="w-4 h-4" />

@@ -16,7 +16,8 @@ class Settings:
 
     # AI Model Settings
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    GEMINI_API_KEYS_RAW: str = os.getenv("GEMINI_API_KEYS", "")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
     OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
@@ -26,6 +27,17 @@ class Settings:
 
     XAI_API_KEY: str = os.getenv("XAI_API_KEY") or os.getenv("GROK_API_KEY", "")
     GROK_MODEL: str = os.getenv("GROK_MODEL", "grok-beta")
+
+    def get_gemini_keys(self) -> list[str]:
+        """Return all configured Gemini API keys from pool or single key setting."""
+        keys = []
+        if self.GEMINI_API_KEYS_RAW:
+            keys.extend([k.strip() for k in self.GEMINI_API_KEYS_RAW.split(",") if k.strip()])
+        if self.GEMINI_API_KEY and self.GEMINI_API_KEY != "your_gemini_api_key_here":
+            if self.GEMINI_API_KEY not in keys:
+                keys.append(self.GEMINI_API_KEY)
+        return keys
+
 
     # CORS — allowed origins for the frontend
     CORS_ORIGINS: list[str] = [
@@ -48,7 +60,8 @@ class Settings:
         """Check if an API key is configured for a specific AI provider."""
         p = provider.lower()
         if p in ("gemini", "google"):
-            return bool(self.GEMINI_API_KEY and self.GEMINI_API_KEY != "your_gemini_api_key_here")
+            has_single_key = bool(self.GEMINI_API_KEY and self.GEMINI_API_KEY != "your_gemini_api_key_here")
+            return has_single_key or len(self.get_gemini_keys()) > 0
         if p in ("openai", "chatgpt"):
             return bool(self.OPENAI_API_KEY and self.OPENAI_API_KEY != "your_openai_api_key_here")
         if p in ("anthropic", "claude"):

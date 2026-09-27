@@ -14,5 +14,171 @@
     "created_at": "2026-09-27T14:33:53.969015+00:00",
     "updated_at": "2026-09-27T14:33:53.969015+00:00",
     "messages": []
+  },
+  {
+    "id": "conv-797d943b",
+    "user_id": "user-3946be3618",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T15:39:07.447462+00:00",
+    "updated_at": "2026-09-27T15:39:07.447462+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-fe131d53",
+    "user_id": "user-32cca73d22",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T17:33:02.325104+00:00",
+    "updated_at": "2026-09-27T17:33:02.325104+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-f22c1ae8",
+    "user_id": "user-97463ed7af",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T17:33:57.323654+00:00",
+    "updated_at": "2026-09-27T17:33:57.323654+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-11d866f6",
+    "user_id": "user-2f0cfee0bb",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T17:38:21.402823+00:00",
+    "updated_at": "2026-09-27T17:38:21.402823+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-7382fb27",
+    "user_id": "user-3a0f71c53b",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T18:17:51.500162+00:00",
+    "updated_at": "2026-09-27T18:17:51.500162+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-db8b31c7",
+    "user_id": "user-885444ed1e",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T18:26:33.109451+00:00",
+    "updated_at": "2026-09-27T18:26:33.109451+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-db9accf7",
+    "user_id": "user-dd417848a3",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T18:41:03.082013+00:00",
+    "updated_at": "2026-09-27T18:41:03.082013+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-976dc51c",
+    "user_id": "user-97c26d8d8e",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T18:43:57.843058+00:00",
+    "updated_at": "2026-09-27T18:43:57.843058+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-27e655e9",
+    "user_id": "user-5298803350",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T18:51:54.545798+00:00",
+    "updated_at": "2026-09-27T18:51:54.545798+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-ca53b031",
+    "user_id": "user-3b82621942",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T19:08:19.716934+00:00",
+    "updated_at": "2026-09-27T19:08:19.716934+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-2410d3c2",
+    "user_id": "user-537d59c6fb",
+    "title": "Hello tutor! Can you explain binary...",
+    "created_at": "2026-09-27T19:13:34.459518+00:00",
+    "updated_at": "2026-09-27T19:13:34.460214+00:00",
+    "messages": [
+      {
+        "id": "msg-b66df7",
+        "role": "user",
+        "content": "Hello tutor! Can you explain binary search?",
+        "timestamp": "2026-09-27T19:13:34.460214+00:00"
+      }
+    ]
+  },
+  {
+    "id": "conv-81b567b4",
+    "user_id": "user-3c35293a8b",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T19:13:58.190329+00:00",
+    "updated_at": "2026-09-27T19:13:58.190329+00:00",
+    "messages": []
+  },
+  {
+    "id": "conv-95d7da49",
+    "user_id": "user-beae74508d",
+    "title": "Hello tutor! Can you explain binary...",
+    "created_at": "2026-09-27T19:20:40.610689+00:00",
+    "updated_at": "2026-09-27T19:21:12.140161+00:00",
+    "messages": [
+      {
+        "id": "msg-c944cd",
+        "role": "user",
+        "content": "Hello tutor! Can you explain binary search?",
+        "timestamp": "2026-09-27T19:20:40.611381+00:00"
+      },
+      {
+        "id": "msg-d74f09",
+        "role": "assistant",
+        "content": "Hello! I am so excited to help you learn about **Binary Search** today! It is one of the most fundamental and elegant algorithms in computer science. \n\nOnce you understand how it works, you'll see why computer scientists love it\u2014it is incredibly fast! Let's break it down step-by-step.\n\n---\n\n## \ud83d\udcd6 The Big Picture: What is Binary Search?\n\nImagine I ask you to play a game. I am thinking of a number between **1 and 100**, and you have to guess it. Every time you guess, I will tell you if my number is **higher** or **lower**.\n\nHow would you play?\n*   You *could* start at 1, then guess 2, then 3, then 4... but that would take forever if my number was 99! (This is called **Linear Search**).\n*   Instead, you would probably start by guessing **50**. \n\nIf I say, *\"My number is higher,\"* you instantly eliminate numbers 1 through 50! You just cut your work in half with a single guess. Now, you would guess **75** (halfway between 50 and 100), and repeat the process.\n\n**Binary Search** is exactly like this guessing game. It is a search algorithm that finds the position of a target value within a **sorted** list by repeatedly dividing the search interval in half.\n\n> \u26a0\ufe0f **The Golden Rule:** Binary search **only** works if your list is already sorted (in numerical or alphabetical order). If the list is messy, you can't be sure which half to throw away!\n\n---\n\n## \ud83d\udee0\ufe0f How It Works (Step-by-Step)\n\nLet\u2019s say we have a sorted list of numbers: `[2, 5, 8, 12, 16, 23, 38, 56, 72, 91]` and we want to find the number **23**.\n\nHere is how Binary Search does it:\n\n### **Step 1: Find the middle**\nLook at the very middle element of the list. \n* Our list has 10 elements. The middle element is **16**.\n\n### **Step 2: Compare**\nCompare the middle element to our target (**23**).\n* Is 16 equal to 23? No.\n* Is 23 larger or smaller than 16? It's **larger**.\n\n### **Step 3: Throw away half**\nSince 23 is larger than 16, and the list is sorted, we know 23 *cannot* be on the left side of 16. We can completely ignore `[2, 5, 8, 12, 16]`. \n\nOur new search area is just the right half: `[23, 38, 56, 72, 91]`.\n\n### **Step 4: Repeat!**\nWe find the middle of our new list, which is **56**.\n* Is 56 equal to 23? No.\n* Is 23 larger or smaller than 56? It's **smaller**.\n* Throw away the right half! Now we only have: `[23, 38]`.\n\nWe repeat one more time: the middle is **23**. \n* Is 23 equal to 23? **Yes!** We found it! \ud83c\udf89\n\n---\n\n## \ud83d\udcbb Binary Search in Code (Python)\n\nHere is how we write this in Python. I've added comments to show you how the pointers (markers for the left and right sides) move.\n\n```python\ndef binary_search(my_list, target):\n    left = 0                      # Start pointer at the beginning of the list\n    right = len(my_list) - 1      # End pointer at the end of the list\n\n    while left <= right:\n        mid = (left + right) // 2  # Find the middle index (using integer division)\n        \n        # Check if the middle element is our target\n        if my_list[mid] == target:\n            return mid  # Success! Return the index where we found it.\n            \n        # If the target is smaller, ignore the right half\n        elif my_list[mid] > target:\n            right = mid - 1\n            \n        # If the target is larger, ignore the left half\n        else:\n            left = mid + 1\n            \n    return -1  # If we exit the loop, the target is not in the list\n\n# --- Let's test it! ---\nnumbers = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]\ntarget_number = 23\n\nresult = binary_search(numbers, target_number)\n\nif result != -1:\n    print(f\"Target found at index: {result}\")\nelse:\n    print(\"Target not found in the list.\")\n```\n\n### **Output:**\n```text\nTarget found at index: 5\n```\n\n---\n\n## \ud83e\udde0 Check Your Understanding!\n\nYou are doing great! To help lock this concept in your brain, try to answer these two friendly challenge questions:\n\n1. **Why won't Binary Search work on this list: `[5, 12, 3, 91, 16]`?**\n2. **If you have a sorted list of 8 items, what is the maximum number of guesses/checks Binary Search would need to find any number (or realize it's not there)?** *(Hint: Keep dividing 8 by 2!)*\n\nGive it a think, and let me know your answers. I'm right here to help if you get stuck!",
+        "timestamp": "2026-09-27T19:21:12.140161+00:00"
+      }
+    ]
+  },
+  {
+    "id": "conv-06fffea7",
+    "user_id": "user-3eab4f87c8",
+    "title": "Hello tutor! Can you explain binary...",
+    "created_at": "2026-09-27T19:23:44.618906+00:00",
+    "updated_at": "2026-09-27T19:24:15.376466+00:00",
+    "messages": [
+      {
+        "id": "msg-50687a",
+        "role": "user",
+        "content": "Hello tutor! Can you explain binary search?",
+        "timestamp": "2026-09-27T19:23:44.619405+00:00"
+      },
+      {
+        "id": "msg-a89508",
+        "role": "assistant",
+        "content": "Hello! I would love to help you understand **Binary Search**! It is one of the most famous and useful algorithms in computer science. \n\nDon't worry if it sounds intimidating\u2014by the end of this explanation, you'll see that it's actually a strategy you probably already use in real life!\n\n---\n\n## \ud83c\udf1f The Big Idea: The Guessing Game\n\nImagine we are playing a game. I am thinking of a number between **1 and 100**, and you have to guess it. Every time you guess, I will tell you if my number is **higher** or **lower**.\n\nIf you guess like this: *1, 2, 3, 4, 5...* it could take you 100 guesses! That is called **Linear Search** (checking one by one).\n\nInstead, what is your first guess? **50!** \n\nWhy? Because 50 is right in the middle. \n* If I say, *\"My number is higher,\"* you instantly eliminate numbers 1 through 50. \n* Just like that, with **one guess**, you cut your search space in half! Now you only have to search between 51 and 100.\n* Your next guess would be **75** (right in the middle of 51 and 100).\n\nThis \"divide and conquer\" strategy is exactly what **Binary Search** is!\n\n---\n\n## \u26a0\ufe0f The Golden Rule of Binary Search\n\nBefore we look at how it works in code, there is one super important rule you must remember:\n\n> **The list MUST be sorted!** \n\nIf your list of numbers or items is messy and out of order, Binary Search won't work. (Just like you couldn't guess my number if the numbers 1 to 100 were in a random, scrambled order!)\n\n---\n\n## \ud83d\udee0\ufe0f Step-by-Step: How It Works\n\nLet's say we have a sorted list of numbers: `[2, 5, 8, 12, 16, 23, 38, 56, 72, 91]`, and we want to find the number **23**.\n\nHere is how Binary Search does it step-by-step:\n\n1. **Find the middle element:** The middle of our list is either `16` or `23`. Let's pick `16`.\n2. **Compare:** Is our target (23) equal to 16? No. Is it bigger or smaller? \n   * Since **23 is bigger than 16**, we can completely ignore 16 and everything to the left of it.\n3. **Repeat with the remaining half:** Our new list to search is `[23, 38, 56, 72, 91]`.\n   * The new middle is `56`.\n   * Is 23 bigger or smaller than 56? **Smaller!**\n   * We ignore 56 and everything to the right of it.\n4. **Repeat again:** Our new list is `[23, 38]`.\n   * The middle is `23` (or 38, depending on how we round).\n   * We compare: **23 matches our target!** We found it! \ud83c\udf89\n\n---\n\n## \ud83d\udcbb Binary Search in Code (Python)\n\nHere is how we write this in Python. Read through the comments to see how the code matches our steps above.\n\n```python\ndef binary_search(my_list, target):\n    # 'low' and 'high' keep track of the part of the list we are searching\n    low = 0\n    high = len(my_list) - 1\n\n    while low <= high:\n        # Find the middle index\n        mid = (low + high) // 2\n        guess = my_list[mid]\n\n        # Scenario 1: We found the item! Return its position (index)\n        if guess == target:\n            return mid\n        \n        # Scenario 2: The guess was too high. Look at the left half.\n        elif guess > target:\n            high = mid - 1\n            \n        # Scenario 3: The guess was too low. Look at the right half.\n        else:\n            low = mid + 1\n\n    # If we finish the loop without finding the target, it's not in the list\n    return -1\n\n# Let's test our function!\nnumbers = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]\ntarget_number = 23\n\nresult = binary_search(numbers, target_number)\n\nif result != -1:\n    print(f\"Success! Found {target_number} at index {result}.\")\nelse:\n    print(\"Item not found in the list.\")\n```\n\n### Output:\n```text\nSuccess! Found 23 at index 5.\n```\n\n---\n\n## \ud83d\ude80 Why is Binary Search so amazing?\n\nIt is incredibly fast! \n\nIf you had a list of **1 million items**, a linear search (one-by-one) could take up to 1,000,000 steps. \nBinary Search can find any item in that list in **at most 20 steps**! \n\nIn computer science, we say its time complexity is **$O(\\log n)$**, which is just a fancy way of saying \"super-duper fast, even for huge amounts of data.\"\n\n---\n\n## \ud83e\udde0 Quick Check-in! (Your Turn)\n\nTo help lock this concept into your brain, try to answer these two quick practice questions. Don't worry about getting them perfect\u2014just give it your best shot!\n\n1. **Why can't we use Binary Search on this list: `[10, 3, 45, 22, 99, 14]`?**\n2. **If you are searching for the number 5 in the list `[1, 3, 5, 7, 9]`, what is the very first number the Binary Search algorithm will look at?**\n\nLooking forward to hearing your thoughts! You're doing great! \ud83d\udcaa",
+        "timestamp": "2026-09-27T19:24:15.376466+00:00"
+      }
+    ]
+  },
+  {
+    "id": "conv-52d38ae5",
+    "user_id": "user-8dda8a366c",
+    "title": "Hello tutor! Can you explain binary...",
+    "created_at": "2026-09-27T19:25:12.870770+00:00",
+    "updated_at": "2026-09-27T19:25:35.948608+00:00",
+    "messages": [
+      {
+        "id": "msg-5bf78f",
+        "role": "user",
+        "content": "Hello tutor! Can you explain binary search?",
+        "timestamp": "2026-09-27T19:25:12.871619+00:00"
+      },
+      {
+        "id": "msg-dcda76",
+        "role": "assistant",
+        "content": "Hello there! I would love to help you understand **Binary Search**! It is one of the most famous and useful algorithms in computer science. Once you understand how it works, it feels like a magic trick. \n\nLet\u2019s break it down step-by-step!\n\n---\n\n## \ud83d\udca1 The Big Idea: The High-Low Game\n\nImagine I\u2019m thinking of a number between 1 and 100, and you have to guess it. \n\nIf you guess **1**, and I say \"higher,\" then you guess **2**, and I say \"higher,\" that would take a long time! This is called **Linear Search** (checking one by one).\n\nInstead, you would probably guess **50** (right in the middle). \n* If I say, *\"My number is higher,\"* you instantly eliminate numbers 1 through 50. \n* Now, you only have to search between 51 and 100. You just cut your work in **half** with a single guess!\n\nThat is exactly how **Binary Search** works. It is an efficient way to find an item in a list by repeatedly cutting the search area in half.\n\n> \u26a0\ufe0f **The Golden Rule:** Binary search **only** works if your list is already **sorted** (in order, like alphabetical or numerical). If the list is messy, binary search gets lost!\n\n---\n\n## \ud83d\udee0\ufe0f Step-by-Step: How It Works\n\nLet's say we have a sorted list of numbers: `[2, 4, 7, 10, 15, 21, 30]` and we want to find the number **21**.\n\n1. **Find the Middle:** We look at the exact middle of our list. Here, the middle is **10**.\n2. **Compare:** Is 21 equal to, less than, or greater than 10?\n   * Since 21 is **greater** than 10, we can ignore 10 and everything to its left.\n3. **Cut in Half:** Now our search area is just `[15, 21, 30]`.\n4. **Repeat:** Find the new middle, which is **21**.\n5. **Success!** We found our target in just 2 steps instead of searching all 7 numbers one by one!\n\n---\n\n## \ud83d\udcbb Binary Search in Code (Python)\n\nHere is how we write this in Python. Read through the comments to see how the code matches our steps above:\n\n```python\ndef binary_search(sorted_list, target):\n    # Set our starting search boundaries\n    left = 0\n    right = len(sorted_list) - 1\n\n    while left <= right:\n        # Find the middle index\n        mid = (left + right) // 2\n        \n        # Check if the middle item is our target\n        if sorted_list[mid] == target:\n            return f\"Found {target} at index {mid}!\"\n        \n        # If the target is smaller, ignore the right half\n        elif sorted_list[mid] > target:\n            right = mid - 1\n            \n        # If the target is larger, ignore the left half\n        else:\n            left = mid + 1\n            \n    return \"Item not found in the list.\"\n\n# --- Let's test it! ---\nmy_numbers = [2, 4, 7, 10, 15, 21, 30]\ntarget_number = 21\n\nresult = binary_search(my_numbers, target_number)\nprint(result)\n```\n\n### Output:\n```text\nFound 21 at index 5!\n```\n\n---\n\n## \u26a1 Why is Binary Search so amazing?\n\nImagine searching for a word in a physical dictionary containing **1,000,000** words:\n* **Linear Search:** If you turned page by page from the beginning, it could take you up to 1,000,000 page turns!\n* **Binary Search:** By flipping to the middle, cutting the book in half, and repeating, it will take you a **maximum of 20 guesses** to find any word. 20 vs. 1,000,000! That is the power of binary search.\n\n---\n\n## \ud83e\udde0 Friendly Challenge!\n\nTo test your understanding, try answering these two quick questions. Don't worry about getting them perfect\u2014just give it your best guess!\n\n1. Why can't we use Binary Search on this list: `[10, 3, 25, 8, 12]`?\n2. If you have a sorted list of **8 items**, what is the absolute *maximum* number of steps (divisions) it would take for Binary Search to find an item (or realize it's not there)? *(Hint: Keep dividing 8 in half!)*\n\nYou're doing great! Let me know your thoughts or if you'd like me to explain any of the code lines in more detail. \ud83c\udf1f",
+        "timestamp": "2026-09-27T19:25:35.948608+00:00"
+      }
+    ]
   }
 ]

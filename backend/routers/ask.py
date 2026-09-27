@@ -5,7 +5,7 @@ Provides the POST /ask endpoint and GET /ask/stream SSE endpoint for the AI tuto
 """
 
 import json
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Header
 from fastapi.responses import StreamingResponse
 from typing import Optional
 from models.ask import AskRequest, AskResponse, AIModelCatalogResponse
@@ -24,24 +24,25 @@ async def get_available_models():
     return AIModelCatalogResponse(
         models=models,
         default_provider="gemini",
-        default_model="gemini-1.5-flash",
+        default_model="gemini-3.8-flash",
     )
 
 
 @router.post("/ask", response_model=AskResponse)
-async def ask_question(request: AskRequest):
+async def ask_question(
+    request: AskRequest,
+    x_gemini_api_key: Optional[str] = Header(None, alias="X-Gemini-Api-Key")
+):
     """
     Receive a student's question and return an AI-generated study explanation
     using the chosen AI provider (Gemini, ChatGPT, Claude, or Grok).
-
-    The AI acts as a friendly study tutor: it explains concepts simply,
-    gives concrete analogies, breaks down code, and offers practice questions.
     """
     try:
         result = await ai_service.generate_study_answer(
             question=request.question,
             provider=request.provider,
             model=request.model,
+            byok_key=x_gemini_api_key,
         )
         return AskResponse(
             answer=result["answer"],
@@ -50,13 +51,11 @@ async def ask_question(request: AskRequest):
             provider_display=result["provider_display"],
         )
     except ValueError as e:
-        # Configuration or user input issues (e.g. missing API key)
         raise HTTPException(
             status_code=400,
             detail=str(e),
         )
     except Exception as e:
-        # Upstream AI API or network failures
         raise HTTPException(
             status_code=500,
             detail=f"Failed to generate answer: {str(e)}",
@@ -68,7 +67,9 @@ async def stream_question(
     question: str = Query(..., description="The student's question"),
     provider: Optional[str] = Query("gemini", description="AI provider: gemini, openai, anthropic, grok"),
     model: Optional[str] = Query(None, description="Specific model ID (optional)"),
+    x_gemini_api_key: Optional[str] = Header(None, alias="X-Gemini-Api-Key"),
 ):
+
     """
     Stream an AI tutor answer token-by-token using Server-Sent Events (SSE).
 
@@ -83,6 +84,7 @@ async def stream_question(
                 question=question,
                 provider=provider,
                 model=model,
+                byok_key=x_gemini_api_key,
             ):
                 yield f"data: {json.dumps({'token': chunk})}\n\n"
         except ValueError as e:

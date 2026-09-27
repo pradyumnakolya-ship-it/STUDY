@@ -68,6 +68,7 @@ async def send_chat_message(cid: str, req: SendMessageRequest, current_user: Use
     conv = await conversation_store.get_conversation(cid, current_user.id)
     if not conv:
         conv = await conversation_store.create_conversation(current_user.id, title=req.message[:35])
+        cid = conv["id"]
 
     user_msg = await conversation_store.add_message(cid, "user", req.message)
 
@@ -95,7 +96,8 @@ async def stream_chat_message(
     """
     conv = await conversation_store.get_conversation(cid, current_user.id)
     if not conv:
-        await conversation_store.create_conversation(current_user.id, title=req.message[:35])
+        conv = await conversation_store.create_conversation(current_user.id, title=req.message[:35])
+        cid = conv["id"]
 
     await conversation_store.add_message(cid, "user", req.message)
 
@@ -190,6 +192,8 @@ async def get_roadmap_history(current_user: UserProfile = Depends(get_current_us
 
 # ----------------- 3. STANDALONE QUIZZES & PRACTICE -----------------
 
+QUIZZES_STORE = {}
+
 @router.post("/quiz/generate")
 async def generate_quiz(req: QuizGenerateRequest, current_user: UserProfile = Depends(get_current_user)):
     prompt = (
@@ -232,10 +236,23 @@ async def generate_quiz(req: QuizGenerateRequest, current_user: UserProfile = De
             }
         ]
     
+    QUIZZES_STORE[req.topic] = questions
     return {"topic": req.topic, "difficulty": req.difficulty, "questions": questions}
 
 @router.post("/quiz/submit")
 async def submit_quiz(req: QuizSubmitRequest, current_user: UserProfile = Depends(get_current_user)):
+    correct_count = 0
+    earned_xp = 0
+    score_percent = 0
+    questions = QUIZZES_STORE.get(req.topic, [])
+    
+    if questions:
+        for q in questions:
+            if req.answers.get(q["id"]) == q["correct_answer"]:
+                correct_count += 1
+                earned_xp += 10
+        score_percent = round((correct_count / len(questions)) * 100)
+    
     # Record attempt
     now = datetime.now(timezone.utc).isoformat()
     record = {
@@ -244,10 +261,20 @@ async def submit_quiz(req: QuizSubmitRequest, current_user: UserProfile = Depend
         "username": current_user.username,
         "topic": req.topic,
         "answers": req.answers,
+        "correct_count": correct_count,
+        "earned_xp": earned_xp,
+        "score_percent": score_percent,
         "submitted_at": now
     }
     QUIZ_ATTEMPTS_STORE[record["id"]] = record
-    return {"status": "success", "attempt_id": record["id"], "message": "Quiz submission recorded"}
+    return {
+        "status": "success", 
+        "attempt_id": record["id"], 
+        "message": "Quiz submission recorded",
+        "score_percent": score_percent,
+        "earned_xp": earned_xp,
+        "correct_count": correct_count
+    }
 
 
 # ----------------- 4. SOCIAL CONNECT & DIRECT MESSAGING -----------------

@@ -9,7 +9,7 @@ Integrates with Google Gemini (gemini-3.6-flash) to:
 
 import json
 import re
-import google.generativeai as genai
+from services import gemini_service
 from config import settings
 from models.guild import (
     RoadmapDay,
@@ -20,21 +20,6 @@ from models.guild import (
     ConceptAnalysis,
     AnalyzeMistakesResponse,
 )
-
-_model = None
-
-
-def get_guild_model():
-    """Retrieve or initialize the Gemini model for Guild AI tasks."""
-    global _model
-    if not settings.is_configured():
-        raise ValueError(
-            "GEMINI_API_KEY is not configured in backend/.env. Please add your key."
-        )
-    if _model is None:
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        _model = genai.GenerativeModel(model_name=settings.GEMINI_MODEL)
-    return _model
 
 
 def _clean_json_output(raw_text: str) -> str:
@@ -55,8 +40,6 @@ async def generate_guild_roadmap(
     """
     Generate an AI learning roadmap distributed across specific days (Section 8.1).
     """
-    model = get_guild_model()
-
     material_context = f"\nUploaded Material/Notes:\n{notes_text[:3000]}" if notes_text else ""
 
     prompt = f"""You are an elite curriculum designer for StudyGPT.
@@ -82,10 +65,9 @@ Return ONLY a valid JSON object matching this schema:
 Do NOT include extra commentary outside the JSON.
 """
 
-    response = model.generate_content(prompt)
-    cleaned = _clean_json_output(response.text)
-    
     try:
+        response_text = await gemini_service.generate_answer(prompt)
+        cleaned = _clean_json_output(response_text)
         data = json.loads(cleaned)
         days = [RoadmapDay(**item) for item in data.get("days", [])]
         return CreateGuildRoadmapResponse(guild_name=guild_name, topic=topic, days=days)
@@ -113,8 +95,6 @@ async def generate_difficult_quiz(
     Generate a difficult quiz using AI for a specific day's roadmap topic (Section 8.4).
     Rules: Easy question = 10 XP, Hard question = 20 XP (Section 8.7).
     """
-    model = get_guild_model()
-
     context = f"\nContext Material:\n{material_text[:2000]}" if material_text else ""
 
     prompt = f"""You are a master examiner for StudyGPT.
@@ -151,10 +131,9 @@ Return ONLY a valid JSON object matching this schema:
 Do NOT include extra commentary outside the JSON.
 """
 
-    response = model.generate_content(prompt)
-    cleaned = _clean_json_output(response.text)
-
     try:
+        response_text = await gemini_service.generate_answer(prompt)
+        cleaned = _clean_json_output(response_text)
         data = json.loads(cleaned)
         questions = [QuizQuestion(**q) for q in data.get("questions", [])]
         return GenerateGuildQuizResponse(topic=topic, day_number=day_number, questions=questions)
@@ -222,8 +201,6 @@ async def analyze_quiz_mistakes(
             overall_suggestions=["Flawless performance! You answered every question correctly."]
         )
 
-    model = get_guild_model()
-
     missed_summary = "\n".join([
         f"- Question: {m.question}\n  Student Answer: {m.chosen_answer}\n  Correct Answer: {m.correct_answer}\n  Concept: {m.concept_tag}"
         for m in missed_questions
@@ -256,10 +233,9 @@ Return ONLY a valid JSON object matching this schema:
 Do NOT include extra commentary outside the JSON.
 """
 
-    response = model.generate_content(prompt)
-    cleaned = _clean_json_output(response.text)
-
     try:
+        response_text = await gemini_service.generate_answer(prompt)
+        cleaned = _clean_json_output(response_text)
         data = json.loads(cleaned)
         analyses = [ConceptAnalysis(**a) for a in data.get("analyses", [])]
         overall = data.get("overall_suggestions", [])

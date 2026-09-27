@@ -1,111 +1,142 @@
 @import "tailwindcss";
 
 :root {
-  /* BASE SURFACES */
-  --background: #F7F3EA;
-  --surface: #FFFFFF;
-  --surface-raised: #FBF9F3;
-  --surface-card: #FFFFFF;
-  --border: #E4DFD1;
-  --border-subtle: #EDE8DB;
-  --border-outline: #B4B2A9;
+  /* RESEND COLOR TOKENS */
+  --canvas: #000000;
+  --surface-card: #0a0a0c;
+  --surface-elevated: #101012;
+  --surface-deep: #06060a;
+  --hairline: rgba(255, 255, 255, 0.06);
+  --hairline-strong: rgba(255, 255, 255, 0.14);
+  --divider-soft: rgba(255, 255, 255, 0.04);
 
-  /* TEXT */
-  --text-primary: #2C2A24;
-  --text-secondary: #5F5E5A;
-  --text-muted: #888780;
+  /* TEXT TOKENS */
+  --ink: #fcfdff;
+  --body: rgba(252, 253, 255, 0.86);
+  --charcoal: rgba(252, 253, 255, 0.7);
+  --mute: #a1a4a5;
+  --ash: #888e90;
+  --stone: #464a4d;
 
-  /* SEMANTIC COLORS */
-  --tag-easy-bg: #E1F5EE;
-  --tag-easy-text: #085041;
-  --tag-hard-bg: #FAEAF0;
-  --tag-hard-text: #72243E;
-  --badge-reward-bg: #EEEDFE;
-  --badge-reward-text: #3C3489;
+  /* ACCENTS & GLOWS */
+  --accent-orange: #ff801f;
+  --accent-orange-glow: rgba(255, 89, 0, 0.22);
+  --accent-yellow: #ffc53d;
+  --accent-blue: #3b9eff;
+  --accent-blue-glow: rgba(0, 117, 255, 0.34);
+  --accent-green: #11ff99;
+  --accent-green-glow: rgba(34, 255, 153, 0.18);
+  --accent-red: #ff2047;
+  --accent-red-glow: rgba(255, 32, 71, 0.34);
+  --link: #3b9eff;
 
-  /* SELECTED & PRIMARY CTA */
-  --selected-border: #D85A30;
-  --selected-bg: #FAECE7;
-  --cta-primary: #D85A30;
-  --cta-primary-text: #FFFFFF;
+  /* MAP TO BASE APP TOKENS */
+  --background: #000000;
+  --surface: #0a0a0c;
+  --surface-raised: #101012;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-outline: rgba(255, 255, 255, 0.14);
 
-  /* BUTTONS / OUTLINE */
-  --btn-outline-border: #B4B2A9;
-  --btn-outline-text: #444441;
-}
+  --text-primary: #fcfdff;
+  --text-secondary: rgba(252, 253, 255, 0.7);
+  --text-muted: #888e90;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
-  --color-surface-card: var(--surface-card);
-  --color-border: var(--border);
-  --color-border-subtle: var(--border-subtle);
-  --color-border-outline: var(--border-outline);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
-  --color-accent: var(--cta-primary);
+  --cta-primary: #fcfdff;
+  --cta-primary-text: #000000;
 }
 
 body {
-  background-color: var(--background);
-  color: var(--text-primary);
-  font-family: var(--font-inter, sans-serif);
+  background-color: #000000;
+  color: #fcfdff;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Custom Scrollbar */
+/* Editorial Serif Heading Utility */
+.font-editorial {
+  font-family: "Domaine Display", "Tiempos Headline", "Georgia", serif;
+  font-feature-settings: "ss01", "ss04", "ss11";
+  letter-spacing: -0.02em;
+}
+
+/* Resend Glow Backdrops */
+.glow-orange {
+  background: radial-gradient(600px circle at 50% 0%, rgba(255, 89, 0, 0.18), transparent 70%);
+}
+
+.glow-blue {
+  background: radial-gradient(600px circle at 50% 0%, rgba(0, 117, 255, 0.2), transparent 70%);
+}
+
+.glow-green {
+  background: radial-gradient(600px circle at 50% 0%, rgba(34, 255, 153, 0.14), transparent 70%);
+}
+
+.glow-red {
+  background: radial-gradient(600px circle at 50% 0%, rgba(255, 32, 71, 0.18), transparent 70%);
+}
+
+/* Resend Hairline Border Utilities */
+.resend-card {
+  background-color: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.resend-card-elevated {
+  background-color: #101012;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+}
+
+.resend-code-well {
+  background-color: #06060a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+}
+
+.resend-button-primary {
+  background-color: #fcfdff;
+  color: #000000;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.resend-button-primary:hover {
+  background-color: #f1f7fe;
+  transform: translateY(-1px);
+}
+
+.resend-button-ghost {
+  background-color: #101012;
+  color: #fcfdff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.resend-button-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Custom Scrollbar for Dark Canvas */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-outline);
-}
-
-/* Subtle elevation card without heavy drop shadow */
-.card-elevation {
-  box-shadow: 0 1px 3px rgba(44, 42, 36, 0.05), 0 1px 2px rgba(44, 42, 36, 0.03);
-}
-
-.card-elevation-hover:hover {
-  box-shadow: 0 4px 12px rgba(44, 42, 36, 0.06);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1E1D1A;
-    --surface: #272521;
-    --surface-raised: #302E29;
-    --surface-card: #272521;
-    --border: #44423C;
-    --border-subtle: #383631;
-    --border-outline: #737067;
-
-    --text-primary: #F7F3EA;
-    --text-secondary: #C8C5BD;
-    --text-muted: #9C9990;
-
-    --tag-easy-bg: #113830;
-    --tag-easy-text: #66E0C2;
-    --tag-hard-bg: #401B26;
-    --tag-hard-text: #F8B4C8;
-    --badge-reward-bg: #2B255E;
-    --badge-reward-text: #C3BEFF;
-
-    --selected-border: #E56E46;
-    --selected-bg: #3E241B;
-    --cta-primary: #E56E46;
-    --cta-primary-text: #FFFFFF;
-
-    --btn-outline-border: #737067;
-    --btn-outline-text: #E5E2DA;
-  }
+  background: rgba(255, 255, 255, 0.25);
 }

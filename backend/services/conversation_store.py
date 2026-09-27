@@ -96,26 +96,28 @@ async def add_message(cid: str, role: str, content: str) -> dict:
         "timestamp": now
     }
 
-    if cid in _conversations:
-        conv = _conversations[cid]
-        conv["messages"].append(msg)
-        conv["updated_at"] = now
-        
-        # Auto-title from first user message if still default
-        if len(conv["messages"]) == 1 and role == "user":
-            conv["title"] = content[:35] + ("..." if len(content) > 35 else "")
+    if cid not in _conversations:
+        raise KeyError(f"Conversation {cid} not found")
 
-        _save_to_disk()
+    conv = _conversations[cid]
+    conv["messages"].append(msg)
+    conv["updated_at"] = now
+    
+    # Auto-title from first user message if still default
+    if len(conv["messages"]) == 1 and role == "user":
+        conv["title"] = content[:35] + ("..." if len(content) > 35 else "")
 
-        db = database.get_db()
-        if db is not None:
-            try:
-                await db["conversations"].update_one(
-                    {"id": cid},
-                    {"$set": {"messages": conv["messages"], "updated_at": now, "title": conv["title"]}}
-                )
-            except Exception as e:
-                print(f"MongoDB update conversation error: {e}")
+    _save_to_disk()
+
+    db = database.get_db()
+    if db is not None:
+        try:
+            await db["conversations"].update_one(
+                {"id": cid},
+                {"$set": {"messages": conv["messages"], "updated_at": now, "title": conv["title"]}}
+            )
+        except Exception as e:
+            print(f"MongoDB update conversation error: {e}")
 
     return msg
 

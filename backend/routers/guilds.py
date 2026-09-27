@@ -149,7 +149,7 @@ async def submit_persisted_quiz_endpoint(
     if request.day_number != day_number:
         raise HTTPException(status_code=400, detail="The submitted day does not match the URL")
     try:
-        return submit_attempt(guild_id, _user_name(x_user_name), day_number, request.answers)
+        return await submit_attempt(guild_id, _user_name(x_user_name), day_number, request.answers)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except PermissionError as exc:
