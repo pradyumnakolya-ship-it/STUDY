@@ -25,7 +25,7 @@ class Settings:
     ANTHROPIC_MODEL: str = os.getenv("ANTHROPIC_MODEL", "claude-3-5-haiku-20241022")
 
     XAI_API_KEY: str = os.getenv("XAI_API_KEY") or os.getenv("GROK_API_KEY", "")
-    GROK_MODEL: str = os.getenv("GROK_MODEL", "grok-2-latest")
+    GROK_MODEL: str = os.getenv("GROK_MODEL", "grok-beta")
 
     # CORS — allowed origins for the frontend
     CORS_ORIGINS: list[str] = [
