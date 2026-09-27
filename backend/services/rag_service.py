@@ -255,11 +255,11 @@ async def generate_rag_answer(
         f"{context_str}\n"
         f"----------------------------------------\n\n"
         f"INSTRUCTIONS FOR YOUR RESPONSE:\n"
-        f"1. Answer the question accurately and clearly, relying primarily on the source excerpts provided above.\n"
-        f"2. Explicitly cite the page or excerpt where key facts were found (e.g. 'According to Page 2...').\n"
-        f"3. Use structured Markdown: bold key terms, use bullet points, and explain any difficult terms simply.\n"
-        f"4. If the excerpts do not contain enough information to fully answer the question, state that clearly and offer a brief general explanation while reminding the student it is outside the provided notes.\n"
-        f"5. End with a friendly one-sentence check-for-understanding question."
+        f"1. GROUNDING: Answer the question accurately and clearly, relying STRICTLY on the source excerpts provided above. Do NOT invent facts or hallucinate external knowledge.\n"
+        f"2. CITATIONS: Whenever you state a fact from the document, explicitly cite the page or excerpt in your text (e.g. 'According to Page 2...' or '[Page 2]').\n"
+        f"3. FORMATTING: Use structured Markdown. Bold key terms, use bullet points for lists, and explain any difficult terms simply.\n"
+        f"4. MISSING INFO: If the excerpts do not contain enough information to fully answer the question, state that clearly. You may offer a brief general explanation, but you MUST remind the student it is outside the provided notes.\n"
+        f"5. ENGAGEMENT: End with a friendly one-sentence check-for-understanding question."
     )
 
     try:

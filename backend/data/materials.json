@@ -155,6 +155,42 @@
       "chunk_count": 1,
       "summary": "Water is H2O. It is a molecule.",
       "created_at": "2026-09-20T17:51:56.162456+00:00"
+    },
+    {
+      "id": "mat-4c27d320",
+      "user_id": "testuser_e99258",
+      "title": "Python Intro",
+      "filename": "test_doc.txt",
+      "file_type": "txt",
+      "file_size": 81,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Python is a high-level programming language. It is great for AI and data science.",
+      "created_at": "2026-09-27T14:33:55.065236+00:00"
+    },
+    {
+      "id": "mat-6977af08",
+      "user_id": "testuser_785d99",
+      "title": "Biology Notes",
+      "filename": "bio.txt",
+      "file_type": "txt",
+      "file_size": 94,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+      "created_at": "2026-09-27T14:33:55.344587+00:00"
+    },
+    {
+      "id": "mat-2147aaac",
+      "user_id": "testuser_47d4be",
+      "title": "Chemistry",
+      "filename": "chem.txt",
+      "file_type": "txt",
+      "file_size": 31,
+      "total_pages": 1,
+      "chunk_count": 1,
+      "summary": "Water is H2O. It is a molecule.",
+      "created_at": "2026-09-27T14:33:55.642108+00:00"
     }
   ],
   "chunks": {
@@ -294,6 +330,39 @@
       {
         "id": "chk-c145cb39",
         "material_id": "mat-129e13c8",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Water is H2O. It is a molecule.",
+        "char_count": 31,
+        "embedding": null
+      }
+    ],
+    "mat-4c27d320": [
+      {
+        "id": "chk-fceb4aec",
+        "material_id": "mat-4c27d320",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Python is a high-level programming language. It is great for AI and data science.",
+        "char_count": 81,
+        "embedding": null
+      }
+    ],
+    "mat-6977af08": [
+      {
+        "id": "chk-7f91fd83",
+        "material_id": "mat-6977af08",
+        "chunk_index": 0,
+        "page_number": 1,
+        "text": "Photosynthesis is the process by which plants convert sunlight into glucose using chlorophyll.",
+        "char_count": 94,
+        "embedding": null
+      }
+    ],
+    "mat-2147aaac": [
+      {
+        "id": "chk-5b01e4e2",
+        "material_id": "mat-2147aaac",
         "chunk_index": 0,
         "page_number": 1,
         "text": "Water is H2O. It is a molecule.",

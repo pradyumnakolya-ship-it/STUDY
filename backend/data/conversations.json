@@ -6,5 +6,13 @@
     "created_at": "2026-09-20T17:51:44.932602+00:00",
     "updated_at": "2026-09-20T17:51:44.932602+00:00",
     "messages": []
+  },
+  {
+    "id": "conv-f13bea4e",
+    "user_id": "user-5f2b578cac",
+    "title": "New Study Session",
+    "created_at": "2026-09-27T14:33:53.969015+00:00",
+    "updated_at": "2026-09-27T14:33:53.969015+00:00",
+    "messages": []
   }
 ]

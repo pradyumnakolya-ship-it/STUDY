@@ -49,5 +49,56 @@
     "active_dates": [
       "2026-09-20"
     ]
+  },
+  "user-5e91115dbe": {
+    "user_id": "user-5e91115dbe",
+    "username": "testuser_28341a",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-20143ab1df": {
+    "user_id": "user-20143ab1df",
+    "username": "testuser_15a9be",
+    "total_xp": 125,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-9345937c",
+        "topic": "Math",
+        "difficulty": "General",
+        "correct": true,
+        "xp": 5,
+        "timestamp": "2026-09-27T14:33:53.233426+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
+  },
+  "user-b9c55726fa": {
+    "user_id": "user-b9c55726fa",
+    "username": "testuser_c92e19",
+    "total_xp": 120,
+    "history": [],
+    "practice_drills": [
+      {
+        "id": "prac-3c999c91",
+        "topic": "Geography",
+        "difficulty": "General",
+        "correct": false,
+        "xp": 0,
+        "timestamp": "2026-09-27T14:33:53.597488+00:00"
+      }
+    ],
+    "quiz_attempts": [],
+    "active_dates": [
+      "2026-09-27"
+    ]
   }
 }
