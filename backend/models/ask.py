@@ -64,6 +64,7 @@ class AIModelItem(BaseModel):
     env_var: str
     is_configured: bool
     is_default: bool
+    is_free: bool = False
 
 
 class AIModelCatalogResponse(BaseModel):
